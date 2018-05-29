@@ -48,13 +48,19 @@ export class Tenant extends React.Component {
       },
       buttons: [
         {
-          title: "新建",
+          title: "生产",
           onClick: () => {
             this.setState({ visible: true });
           }
         }
       ],
-      search: {},
+      search: [
+        {
+          type: "field",
+          field: "batchNo",
+          title: "订单编号"
+        }
+      ],
       columns: [
         {
           title: "二维码",
@@ -68,14 +74,10 @@ export class Tenant extends React.Component {
           key: "batchNo"
         },
         {
-          title: "值",
-          dataIndex: "value",
-          key: "value"
-        },
-        {
-          title: "url",
-          dataIndex: "url",
-          key: "url"
+          title: "激活状态",
+          dataIndex: "activated",
+          key: "activated",
+          render: text => (text ? "已激活" : "未激活")
         },
         {
           title: "所属兑奖中心",
@@ -91,6 +93,17 @@ export class Tenant extends React.Component {
               return record.box.name || record.box.serial;
             }
           }
+        },
+        {
+          title: "扫码次数",
+          dataIndex: "times",
+          key: "times"
+        },
+        {
+          title: "是否已中奖",
+          dataIndex: "awardId",
+          key: "awardId",
+          render: text => (text ? "是" : "否")
         }
       ]
     };

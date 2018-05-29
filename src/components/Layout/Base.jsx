@@ -22,7 +22,7 @@ class Base extends React.Component {
 
           <section>{this.props.children}</section>
 
-          <Footer />
+          {/* <Footer /> */}
         </div>
       );
     }

@@ -43,7 +43,7 @@ export class StaffManager extends React.Component {
           }
         }
       ],
-      search: {},
+      search: [],
       columns: [
         {
           title: "用户名",

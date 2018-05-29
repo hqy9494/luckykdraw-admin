@@ -17,9 +17,22 @@ export class Tenant extends React.Component {
     this.uuid = uuid.v1();
   }
 
-  componentWillMount() {}
+  componentWillMount() {
+    this.getTenant();
+  }
 
   componentWillReceiveProps(nextProps) {}
+
+  getTenant = () => {
+    this.props.rts(
+      {
+        method: "get",
+        url: `/tenants`
+      },
+      this.uuid,
+      "tenant"
+    );
+  };
 
   submitNew = values => {
     this.props.rts(
@@ -29,10 +42,12 @@ export class Tenant extends React.Component {
         data: {
           name: values.name,
           serial: values.serial,
+          tenantId: values.tenantId,
           location: {
             name: values.locationName,
             address: values.address,
             contactMobile: values.contactMobile,
+            contact: values.contact,
             regionId: "ByWbXglYJ7"
           }
         }
@@ -46,6 +61,18 @@ export class Tenant extends React.Component {
   };
 
   render() {
+    const { tenant } = this.props;
+    let tenantList = [];
+
+    if (tenant && tenant[this.uuid]) {
+      tenantList = tenant[this.uuid].map(t => {
+        return {
+          title: t.name,
+          value: t.id
+        };
+      });
+    }
+
     const config = {
       api: {
         rts: this.props.rts,
@@ -60,7 +87,7 @@ export class Tenant extends React.Component {
           }
         }
       ],
-      search: {},
+      search: [],
       columns: [
         {
           title: "名称",
@@ -71,6 +98,22 @@ export class Tenant extends React.Component {
           title: "序列号",
           dataIndex: "serial",
           key: "serial"
+        },
+        {
+          title: "地址",
+          dataIndex: "tenant.address",
+          key: "tenant.address"
+        },
+        {
+          title: "联系方式",
+          dataIndex: "tenant",
+          key: "tenant",
+          render: (text, record) =>
+            record.tenant &&
+            record.tenant.contact &&
+            record.tenant.contactMobile &&
+            `${record.tenant.contact || ""}(${record.tenant.contactMobile ||
+              ""})`
         },
         {
           title: "所属兑奖中心",
@@ -84,7 +127,13 @@ export class Tenant extends React.Component {
       <Grid fluid>
         <Row>
           <Col lg={12}>
-            <TableExpand {...config} />
+            <TableExpand
+              {...config}
+              refresh={this.state.refreshTable}
+              onRefreshEnd={() => {
+                this.setState({ refreshTable: false });
+              }}
+            />
           </Col>
         </Row>
         <Modal
@@ -98,9 +147,18 @@ export class Tenant extends React.Component {
           <FormExpand
             elements={[
               {
+                label: "兑奖中心",
+                field: "tenantId",
+                type: "select",
+                options: tenantList,
+                params: {
+                  rules: [{ required: true, message: "必填项" }]
+                }
+              },
+              {
                 type: "text",
                 field: "name",
-                label: "名称",
+                label: "设备名称",
                 params: {
                   rules: [{ required: true, message: "必填项" }]
                 }
@@ -116,7 +174,7 @@ export class Tenant extends React.Component {
               {
                 type: "text",
                 field: "locationName",
-                label: "位置名称",
+                label: "所在位置",
                 params: {
                   rules: [{ required: true, message: "必填项" }]
                 }
@@ -140,7 +198,10 @@ export class Tenant extends React.Component {
               {
                 type: "text",
                 field: "contact",
-                label: "其他联系"
+                label: "联系人",
+                params: {
+                  rules: [{ required: true, message: "必填项" }]
+                }
               }
             ]}
             onSubmit={values => {
@@ -161,9 +222,11 @@ const mapDispatchToProps = dispatch => {
 };
 
 const Tenantuuid = state => state.get("rts").get("uuid");
+const tenant = state => state.get("rts").get("tenant");
 
 const mapStateToProps = createStructuredSelector({
-  Tenantuuid
+  Tenantuuid,
+  tenant
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Tenant);

@@ -2,7 +2,7 @@ export default {
   home: {
     module: "",
     path: "/",
-    redirect: "/dashboard",
+    redirect: "/tenant",
     subs: {
       //主页
       dashboard: {

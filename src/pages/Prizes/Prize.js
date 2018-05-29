@@ -52,7 +52,7 @@ export class Tenant extends React.Component {
           }
         }
       ],
-      search: {},
+      search: [],
       columns: [
         {
           title: "名称",

@@ -9,7 +9,6 @@ import { makeUserFetchState } from "../../services/global/selectors";
 import Form from "../../components/Form";
 import { message } from "antd";
 
-
 class Login extends React.Component {
   static defaultProps = {
     user: null
@@ -62,11 +61,20 @@ class Login extends React.Component {
         <div className="panel panel-dark panel-flat">
           <div className="panel-heading text-center">
             <a href="#">
-              <img
+              {/* <img
                 src="assets/img/logo.png"
                 alt="Image"
                 className="block-center img-rounded"
-              />
+              /> */}
+              <span
+                style={{
+                  fontSize: "30px",
+                  color: "#fff",
+                  lineHeight: "35px"
+                }}
+              >
+                lucky Ones
+              </span>
             </a>
           </div>
           <div className="panel-body">

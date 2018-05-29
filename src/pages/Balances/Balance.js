@@ -76,12 +76,14 @@ export class Tenant extends React.Component {
     }
 
     if (award && award[this.uuid]) {
-      awardList = award[this.uuid].map(a => {
-        return {
-          title: a.name,
-          value: a.id
-        };
-      });
+      awardList = award[this.uuid]
+        .filter(aw => aw.type === "material")
+        .map(a => {
+          return {
+            title: a.name,
+            value: a.id
+          };
+        });
     }
 
     const config = {
@@ -92,13 +94,13 @@ export class Tenant extends React.Component {
       },
       buttons: [
         {
-          title: "新建",
+          title: "入库",
           onClick: () => {
             this.setState({ visible: true, curRow: null });
           }
         }
       ],
-      search: {},
+      search: [],
       columns: [
         {
           title: "兑奖中心名称",
@@ -127,7 +129,7 @@ export class Tenant extends React.Component {
                   this.setState({ curRow: record, visible: true });
                 }}
               >
-                编辑库存
+                编辑入库
               </a>
             </span>
           )
@@ -139,7 +141,13 @@ export class Tenant extends React.Component {
       <Grid fluid>
         <Row>
           <Col lg={12}>
-            <TableExpand {...config} />
+            <TableExpand
+              {...config}
+              refresh={this.state.refreshTable}
+              onRefreshEnd={() => {
+                this.setState({ refreshTable: false });
+              }}
+            />
           </Col>
         </Row>
         <Modal
@@ -163,7 +171,7 @@ export class Tenant extends React.Component {
                 }
               },
               {
-                label: "机器",
+                label: "奖品",
                 field: "awardId",
                 type: "select",
                 options: awardList,
@@ -175,9 +183,8 @@ export class Tenant extends React.Component {
               {
                 type: "number",
                 field: "inventory",
-                label: "新增数量",
+                label: "添加数量",
                 params: {
-                  initialValue: curRow && curRow.inventory,
                   rules: [{ required: true, message: "必填项" }]
                 }
               }

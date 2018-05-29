@@ -32,7 +32,7 @@ export class RoleManager extends React.Component {
           }
         }
       ],
-      search: {},
+      search: [],
       columns: [
         {
           title: "名称",

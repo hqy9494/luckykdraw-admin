@@ -61,7 +61,7 @@ class FormExpand extends React.Component {
       case "text":
         return <Input />;
       case "number":
-        return <InputNumber />;
+        return <InputNumber style={{ width: "100%" }} />;
       case "textarea":
         return <TextArea rows={ele.rows || 4} />;
       case "select":
