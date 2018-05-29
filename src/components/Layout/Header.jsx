@@ -49,7 +49,7 @@ class Header extends React.Component {
                     lineHeight: "35px"
                   }}
                 >
-                  Lucky Ones
+                  幸运先生
                 </span>
               </div>
               <div className="brand-logo-collapsed">
@@ -61,7 +61,7 @@ class Header extends React.Component {
                     lineHeight: "35px"
                   }}
                 >
-                  Lucky
+                  幸运
                 </span>
               </div>
             </a>

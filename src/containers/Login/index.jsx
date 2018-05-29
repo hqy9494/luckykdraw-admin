@@ -73,7 +73,7 @@ class Login extends React.Component {
                   lineHeight: "35px"
                 }}
               >
-                lucky Ones
+                幸运先生
               </span>
             </a>
           </div>

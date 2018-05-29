@@ -58,7 +58,7 @@ export class Tenant extends React.Component {
         {
           type: "field",
           field: "batchNo",
-          title: "订单编号"
+          title: "批次号"
         }
       ],
       columns: [

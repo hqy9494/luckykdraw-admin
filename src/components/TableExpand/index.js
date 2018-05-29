@@ -133,7 +133,9 @@ export default class TableExpand extends React.Component {
     let where = {};
 
     searchs.map(s => {
-      if (s.type === "field" || s.type === "relevance") {
+      if (s.type === "field") {
+        where[s.field] = { like: `%${s.values}%` };
+      } else if (s.type === "relevance") {
         where[s.field] = s.values;
       } else if (s.type === "option") {
         where[s.field] = s.values.value;
