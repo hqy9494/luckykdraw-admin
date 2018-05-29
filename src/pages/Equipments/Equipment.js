@@ -101,18 +101,18 @@ export class Tenant extends React.Component {
         },
         {
           title: "地址",
-          dataIndex: "tenant.address",
-          key: "tenant.address"
+          dataIndex: "location.address",
+          key: "location.address"
         },
         {
           title: "联系方式",
-          dataIndex: "tenant",
-          key: "tenant",
+          dataIndex: "location",
+          key: "location",
           render: (text, record) =>
-            record.tenant &&
-            record.tenant.contact &&
-            record.tenant.contactMobile &&
-            `${record.tenant.contact || ""}(${record.tenant.contactMobile ||
+            record.location &&
+            record.location.contact &&
+            record.location.contactMobile &&
+            `${record.location.contact || ""}(${record.location.contactMobile ||
               ""})`
         },
         {
