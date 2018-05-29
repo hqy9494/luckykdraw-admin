@@ -74,6 +74,11 @@ export class Tenant extends React.Component {
           key: "batchNo"
         },
         {
+          title: "code",
+          dataIndex: "code",
+          key: "code"
+        },
+        {
           title: "激活状态",
           dataIndex: "activated",
           key: "activated",
