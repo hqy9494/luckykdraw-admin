@@ -174,7 +174,7 @@ export class Tenant extends React.Component {
               {
                 type: "text",
                 field: "locationName",
-                label: "所在位置",
+                label: "位置名称",
                 params: {
                   rules: [{ required: true, message: "必填项" }]
                 }
@@ -182,7 +182,7 @@ export class Tenant extends React.Component {
               {
                 type: "text",
                 field: "address",
-                label: "地址",
+                label: "详细地址",
                 params: {
                   rules: [{ required: true, message: "必填项" }]
                 }
@@ -190,7 +190,7 @@ export class Tenant extends React.Component {
               {
                 type: "text",
                 field: "contactMobile",
-                label: "电话",
+                label: "联系电话",
                 params: {
                   rules: [{ required: true, message: "必填项" }]
                 }

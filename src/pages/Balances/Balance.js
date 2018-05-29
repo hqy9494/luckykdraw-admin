@@ -129,7 +129,7 @@ export class Tenant extends React.Component {
                   this.setState({ curRow: record, visible: true });
                 }}
               >
-                编辑入库
+                入库
               </a>
             </span>
           )
