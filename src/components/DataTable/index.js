@@ -59,7 +59,6 @@ export default class RoleManager extends React.Component {
                 bsSize="small"
                 className="form-control page-select-120"
                 onChange={e => {
-                  console.log(e.target.value);
                   onSizeChange && onSizeChange(e.target.value);
                 }}
               >
@@ -101,7 +100,6 @@ export default class RoleManager extends React.Component {
                       key={`thead-th-${i}`}
                       className={c.order ? "sorted" : ""}
                       onClick={() => {
-                        console.log(c.dataIndex, i);
                         if (c.order && onSortChange) {
                           onSortChange(c.dataIndex, i);
                         }
@@ -146,7 +144,6 @@ export default class RoleManager extends React.Component {
               items={pageNumber || 1}
               maxButtons={5}
               onSelect={page => {
-                console.log(page);
                 onPageChange && onPageChange(page);
               }}
             />

@@ -16,13 +16,7 @@ class Base extends React.Component {
         <div className="wrapper">
           <Header />
 
-          <Sidebar
-            menu={
-              this.props.user && this.props.user.menu
-                ? this.props.user.menu
-                : []
-            }
-          />
+          <Sidebar noSync />
 
           <Offsidebar />
 

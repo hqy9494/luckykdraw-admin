@@ -99,7 +99,6 @@ export default class SearchExpand extends React.Component {
       });
     }
 
-    console.log(newSearchs);
     this.setState({ searchs: newSearchs, searchText: null });
     this.props.onSearchChange && this.props.onSearchChange(newSearchs);
   };
@@ -324,7 +323,6 @@ export default class SearchExpand extends React.Component {
                             locale={rdrLocales["zhCN"]}
                             date={this.state.searchState[search.field].value}
                             onChange={value => {
-                              console.log("gt", value);
                               this.setState(
                                 {
                                   searchState: {
@@ -355,7 +353,6 @@ export default class SearchExpand extends React.Component {
                             locale={rdrLocales["zhCN"]}
                             date={this.state.searchState[search.field].value}
                             onChange={value => {
-                              console.log("lt", value);
                               this.setState(
                                 {
                                   searchState: {
@@ -389,7 +386,6 @@ export default class SearchExpand extends React.Component {
                               this.state.searchState[search.field].value
                             ]}
                             onChange={values => {
-                              console.log("lt", values.range1);
                               this.setState({
                                 searchState: {
                                   ...this.state.searchState,

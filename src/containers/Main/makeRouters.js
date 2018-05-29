@@ -7,10 +7,20 @@ import { withRouter, Route, Switch, Redirect } from "react-router-dom";
 import BaseConstructor from "./base";
 
 import Indexs from "../Indexs/modules";
+import Tenants from "../Tenants/modules";
+import QrCodes from "../QrCodes/modules";
+import Prizes from "../Prizes/modules";
+import Balances from "../Balances/modules";
+import Equipments from "../Equipments/modules";
 import Setting from "../Setting/modules";
 
 const modules = {
   Indexs,
+  Tenants,
+  QrCodes,
+  Prizes,
+  Balances,
+  Equipments,
   Setting
 };
 

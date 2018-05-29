@@ -4,6 +4,7 @@ import pubsub from "pubsub-js";
 import { Collapse } from "react-bootstrap";
 import { Icon } from "antd";
 import SidebarRun from "./Sidebar.run";
+import menuConfig from "./../../common/menu";
 
 class Sidebar extends React.Component {
   constructor(props, context) {
@@ -93,6 +94,12 @@ class Sidebar extends React.Component {
   }
 
   render() {
+    let menu =
+      this.props.menu && this.props.menu.length > 0 ? this.props.menu : [];
+    if (this.props.noSync) {
+      menu = menuConfig;
+    }
+
     return (
       <aside className="aside">
         {/* START Sidebar (left) */}
@@ -133,91 +140,80 @@ class Sidebar extends React.Component {
                 <span data-localize="sidebar.heading.HEADER">主 菜单</span>
               </li>
 
-              {this.props.menu && this.props.menu.length > 0
-                ? this.props.menu.map((m, i) => {
-                    if (!m.children) {
-                      return (
-                        <li
-                          key={m.id}
-                          className={
-                            this.routeActive(m.component) ? "active" : ""
-                          }
+              {menu.map((m, i) => {
+                if (!m.children) {
+                  return (
+                    <li
+                      key={m.id}
+                      className={this.routeActive(m.component) ? "active" : ""}
+                    >
+                      <Link to={`/${m.component}`} title={m.name}>
+                        <Icon
+                          type={m.icon || "ellipsis"}
+                          style={{ marginRight: 8 }}
+                        />
+                        <span
+                          data-localize={`sidebar.nav.${m.component.toLocaleUpperCase()}`}
                         >
-                          <Link to={`/${m.component}`} title={m.name}>
-                            <Icon
-                              type={m.icon || "ellipsis"}
-                              style={{ marginRight: 8 }}
-                            />
-                            <span
-                              data-localize={`sidebar.nav.${m.component.toLocaleUpperCase()}`}
-                            >
-                              {m.name}
-                            </span>
-                          </Link>
-                        </li>
-                      );
-                    } else {
-                      return (
-                        <li
-                          key={m.id}
-                          className={
-                            this.routeActive(m.component) ? "active" : ""
-                          }
+                          {m.name}
+                        </span>
+                      </Link>
+                    </li>
+                  );
+                } else {
+                  return (
+                    <li
+                      key={m.id}
+                      className={this.routeActive(m.component) ? "active" : ""}
+                    >
+                      <div
+                        className="nav-item"
+                        onClick={this.toggleItemCollapse.bind(
+                          this,
+                          m.component
+                        )}
+                      >
+                        <Icon
+                          type={m.icon || "ellipsis"}
+                          style={{ marginRight: 8 }}
+                        />
+                        <span
+                          data-localize={`sidebar.nav.${m.component.toLocaleUpperCase()}`}
                         >
-                          <div
-                            className="nav-item"
-                            onClick={this.toggleItemCollapse.bind(
-                              this,
-                              m.component
-                            )}
-                          >
-                            <Icon
-                              type={m.icon || "ellipsis"}
-                              style={{ marginRight: 8 }}
-                            />
-                            <span
-                              data-localize={`sidebar.nav.${m.component.toLocaleUpperCase()}`}
-                            >
-                              {m.name}
-                            </span>
-                          </div>
-                          <Collapse
-                            in={this.state.collapse[m.component]}
-                            timeout={100}
-                          >
-                            <ul id={m.component} className="nav sidebar-subnav">
-                              <li className="sidebar-subnav-header">
-                                {m.name}
+                          {m.name}
+                        </span>
+                      </div>
+                      <Collapse
+                        in={this.state.collapse[m.component]}
+                        timeout={100}
+                      >
+                        <ul id={m.component} className="nav sidebar-subnav">
+                          <li className="sidebar-subnav-header">{m.name}</li>
+                          {m.children.map((mc, j) => {
+                            return (
+                              <li
+                                key={mc.id}
+                                className={
+                                  this.routeActive(m.component, mc.component)
+                                    ? "active"
+                                    : ""
+                                }
+                              >
+                                <Link
+                                  to={`/${m.component}/${mc.component}`}
+                                  title={mc.name}
+                                >
+                                  <span>{mc.name}</span>
+                                </Link>
                               </li>
-                              {m.children.map((mc, j) => {
-                                return (
-                                  <li
-                                    key={mc.id}
-                                    className={
-                                      this.routeActive(
-                                        m.component,
-                                        mc.component
-                                      )
-                                        ? "active"
-                                        : ""
-                                    }
-                                  >
-                                    <Link
-                                      to={`/${m.component}/${mc.component}`}
-                                      title={mc.name}
-                                    >
-                                      <span>{mc.name}</span>
-                                    </Link>
-                                  </li>
-                                );
-                              })}
-                            </ul>
-                          </Collapse>
-                        </li>
-                      );
-                    }
-                  })
-                : ""}
+                            );
+                          })}
+                        </ul>
+                      </Collapse>
+                    </li>
+                  );
+                }
+              })}
             </ul>
             {/* END sidebar nav */}
           </nav>

@@ -16,12 +16,13 @@ import "./style.scss";
 // 图标字体必要css
 import "./font_icon/iconfont.css";
 
+import breadcrumb from "../../breadcrumb";
+
 import modules from "../../pages/modules";
 import BaseContent from "./Layout/BaseContent";
 import ContentWrapper from "../../components/Layout/ContentWrapper";
 import { parseParameter } from "../../utils/utils";
 
-const isMobile = /(iPhone|iPad|iPod|iOS|Android)/i.test(navigator.userAgent);
 // 根据配置读取并拼接组件
 const BaseConstructor = (config, title) => {
   class Base extends React.Component {
@@ -36,6 +37,7 @@ const BaseConstructor = (config, title) => {
     constructor(props) {
       super(props);
       this.state = this.getInitialState();
+      this.breadcrumb = this.getBreadcrumb(breadcrumb);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -70,6 +72,26 @@ const BaseConstructor = (config, title) => {
       return initialState;
     };
 
+    // 根据路由生成面包屑
+    getBreadcrumb = breadcrumb => {
+      let arr = [];
+      let cur = breadcrumb.filter(b => b.path === this.props.match.path)[0];
+
+      const dg = curBre => {
+        if (curBre) {
+          arr.push(curBre);
+          if (curBre.pid) {
+            dg(breadcrumb.filter(b => b.id === curBre.pid)[0]);
+          }
+        }
+      };
+
+      dg(cur);
+      arr.push(breadcrumb[0]);
+      arr.reverse();
+      return arr;
+    };
+
     // 根据config配置传入base中state或props中对应属性到组件的props中
     setConfigProps = index => {
       let extraProps = {};
@@ -94,7 +116,7 @@ const BaseConstructor = (config, title) => {
     };
 
     render() {
-      const { spin } = this.props;
+      const { spin, user } = this.props;
       let innerComponents = [];
       for (let i = 0; i < config.component.length; i++) {
         innerComponents.push(modules[config.component[i].module]);
@@ -107,19 +129,38 @@ const BaseConstructor = (config, title) => {
                 {config.initialState.title || "无标题"}
               </span>
               {config.initialState.subtitle && (
-                <span className="text-sm hidden-xs">{config.initialState.subtitle}</span>
+                <span className="text-sm hidden-xs">
+                  {config.initialState.subtitle}
+                </span>
               )}
-              {config.initialState.breadcrumb && (
-                <ol className="breadcrumb">
-                  <li>
-                    <a href="#">首页</a>
-                  </li>
-                  <li>
-                    <a href="#">设置</a>
-                  </li>
-                  <li className="active">角色管理</li>
-                </ol>
-              )}
+              {config.initialState.breadcrumb &&
+                this.breadcrumb &&
+                this.breadcrumb.length > 0 && (
+                  <ol className="breadcrumb">
+                    {this.breadcrumb.map(bre => {
+                      if (bre.path === this.props.match.path) {
+                        return (
+                          <li key={`breadcrumb-${bre.id}`} className="active">
+                            {bre.title}
+                          </li>
+                        );
+                      } else {
+                        return (
+                          <li key={`breadcrumb-${bre.id}`}>
+                            <a
+                              href="javascript:;"
+                              onClick={() => {
+                                this.props.to(bre.path);
+                              }}
+                            >
+                              {bre.title}
+                            </a>
+                          </li>
+                        );
+                      }
+                    })}
+                  </ol>
+                )}
             </h3>
             {innerComponents.map((item, index) => {
               return React.createElement(
@@ -130,11 +171,11 @@ const BaseConstructor = (config, title) => {
                     key: index,
                     user: this.props.user,
                     to: this.props.to,
+                    replace: this.props.replace,
                     match: this.props.match,
                     info: config["component"][index]["info"],
                     changeBaseState: this.changeBaseState,
                     subTitle: this.state.subTitle,
-                    isMobile,
                     params: parseParameter(),
                     goBack: this.props.goBack
                   },

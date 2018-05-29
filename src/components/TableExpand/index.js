@@ -27,7 +27,13 @@ export default class TableExpand extends React.Component {
     this.getData();
   }
 
-  componentWillReceiveProps(nextProps) {}
+  componentWillReceiveProps(nextProps) {
+    if (this.props.refresh === false && nextProps.refresh === true) {
+      this.getData(() => {
+        this.props.onRefreshEnd && this.props.onRefreshEnd();
+      });
+    }
+  }
 
   componentWillUnmount() {
     this._isUnmounted = true;
@@ -41,7 +47,7 @@ export default class TableExpand extends React.Component {
     this.setState(newState, cb);
   }
 
-  getData = () => {
+  getData = cb => {
     const { api, uuid } = this.props;
     const { skip, pageSize } = this.state;
     if (api.data) {
@@ -71,6 +77,7 @@ export default class TableExpand extends React.Component {
           "data",
           data => {
             this.updateState({ data, total: data.length });
+            cb && cb();
           }
         );
       } else {
@@ -99,6 +106,7 @@ export default class TableExpand extends React.Component {
           "data",
           data => {
             this.updateState({ data });
+            cb && cb();
           }
         );
       }
@@ -216,7 +224,7 @@ export default class TableExpand extends React.Component {
       total
     };
 
-    if (api.count) {
+    if (api.total) {
       pagination.current = Math.ceil(skip / pageSize + 1);
       pagination.onChange = this.onChange;
     }

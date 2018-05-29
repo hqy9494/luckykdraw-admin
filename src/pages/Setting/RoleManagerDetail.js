@@ -235,8 +235,6 @@ export class RoleManagerDetail extends React.Component {
       }
     });
 
-    // console.log(acls);
-
     this.props.params &&
       this.props.params.name &&
       this.props.rts(
@@ -266,7 +264,6 @@ export class RoleManagerDetail extends React.Component {
           newMethodNames.push(`${api.model}-${ams.name}`);
           newMethods.push(ams);
         } else {
-          // console.log(`${api.model}-${ams.name}`);
         }
       });
       return {

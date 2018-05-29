@@ -89,7 +89,7 @@ export class BasicLayout extends Component {
         >
           <div className="logo">
             <a>
-              <h1>我是模板</h1>
+              <h1>王老吉定制</h1>
             </a>
           </div>
           <Menu

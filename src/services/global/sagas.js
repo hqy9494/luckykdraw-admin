@@ -47,10 +47,10 @@ export function* clientToken(action) {
       localStorage.token = action.token;
       yield put(fetchUserState("fetching"));
       const user = yield getme(action.token);
-      const menu = yield getMenu(action.token);
-      if (user && menu) {
-        user.menu = menu;
-      }
+      // const menu = yield getMenu(action.token);
+      // if (user && menu) {
+      //   user.menu = menu;
+      // }
       yield put(authSuccess(user));
       yield put(fetchUserState("fetched"));
     } else {

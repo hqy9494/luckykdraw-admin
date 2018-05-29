@@ -187,7 +187,14 @@ class FormExpand extends React.Component {
               <Button type="primary" htmlType="submit">
                 保存
               </Button>
-              <Button>取消</Button>
+              <Button
+                onClick={() => {
+                  this.props.form.resetFields();
+                  this.props.onCancel && this.props.onCancel();
+                }}
+              >
+                取消
+              </Button>
             </ButtonGroup>
           </FormItem>
         </div>
