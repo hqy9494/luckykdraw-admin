@@ -28,7 +28,8 @@ export default class TableExpand extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.refresh === false && nextProps.refresh === true) {
+
+    if (!this.props.refresh && nextProps.refresh === true) {
       this.getData(() => {
         this.props.onRefreshEnd && this.props.onRefreshEnd();
       });
@@ -117,7 +118,11 @@ export default class TableExpand extends React.Component {
           method: "get",
           url: api.total,
           params: {
-            where: this.searchsToWhere(this.params.searchs)
+            where: Object.assign(
+              {},
+              this.searchsToWhere(this.params.searchs),
+              api.where
+            ),
           }
         },
         api.uuid,
@@ -139,12 +144,20 @@ export default class TableExpand extends React.Component {
         where[s.field] = s.values;
       } else if (s.type === "option") {
         where[s.field] = s.values.value;
-      } else if (s.type === "number" || s.type === "date") {
+      } else if (s.type === "number") {
         if (s.values && s.values.constructor === Array) {
           where[s.field] = Object.assign(
             {},
             s.values[0] && { gt: s.values[0] },
             s.values[1] && { lt: s.values[1] }
+          );
+        }
+      } else if (s.type === "date") {
+        if (s.values && s.values.constructor === Object) {
+          where[s.field] = Object.assign(
+            {},
+            s.values.startDate && { gt: s.values.startDate },
+            s.values.endDate && { lt: s.values.endDate }
           );
         }
       }
@@ -204,12 +217,16 @@ export default class TableExpand extends React.Component {
     this.props.replace(this.props.path, `?q=${JSON.stringify(params)}`);
   };
 
+  simplifySearchs = searchs => {};
+
   formatValue = (type, value) => {
     switch (type) {
       case "date":
         return moment(value).format("YYYY-MM-DD HH:mm");
       case "fromNow":
         return moment(value).fromNow();
+      case "penny":
+        return Math.floor(value / 100);
       default:
         return value;
     }

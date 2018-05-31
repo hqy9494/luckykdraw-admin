@@ -43,6 +43,8 @@ export default class SearchExpand extends React.Component {
           //   endDate: new Date()
           // }
         };
+      } else if (s.type === "number") {
+        searchState[s.field] = {};
       }
     });
     return { searchState };
@@ -98,14 +100,17 @@ export default class SearchExpand extends React.Component {
         }
       });
     }
-
+    // console.log(newSearchs);
     this.setState({ searchs: newSearchs, searchText: null });
     this.props.onSearchChange && this.props.onSearchChange(newSearchs);
   };
 
   removeSearch = field => {
     const { searchs } = this.state;
-    this.setState({ searchs: searchs.filter(s => s.field !== field) });
+    this.setState({ searchs: searchs.filter(s => s.field !== field) }, () => {
+      this.props.onSearchChange &&
+        this.props.onSearchChange(this.state.searchs);
+    });
   };
 
   returnSearchItem = search => {
@@ -132,7 +137,7 @@ export default class SearchExpand extends React.Component {
         );
       case "relevance":
         return (
-          <li>
+          <li key={search.field}>
             <div
               className="o-dropdown-option"
               onClick={() => {
@@ -157,7 +162,7 @@ export default class SearchExpand extends React.Component {
         );
       case "number":
         return (
-          <li>
+          <li key={search.field}>
             <div
               className="o-dropdown-option"
               onClick={() => {
@@ -170,16 +175,47 @@ export default class SearchExpand extends React.Component {
               <Icon type="right" />
               <span>搜索 金额 范围</span>
             </div>
-            <ul className="o-dropdown-child-menu">
+            <ul
+              className="o-dropdown-child-menu"
+              style={
+                this.state.openField === search.field
+                  ? { display: "block" }
+                  : { display: "none" }
+              }
+            >
               <li>
-                <div className="o-dropdown-option">
+                <div
+                  className="o-dropdown-option"
+                  onClick={() => {
+                    if (Number(this.state.searchText)) {
+                      this.addSearch(
+                        [Number(this.state.searchText), null],
+                        search.type,
+                        search.field,
+                        search.title
+                      );
+                    }
+                  }}
+                >
                   <span style={{ marginRight: 8 }}>{`金额`}</span>
                   <span style={{ marginRight: 8 }}>{`>`}</span>
                   <span>{this.state.searchText}</span>
                 </div>
               </li>
               <li>
-                <div className="o-dropdown-option">
+                <div
+                  className="o-dropdown-option"
+                  onClick={() => {
+                    if (Number(this.state.searchText)) {
+                      this.addSearch(
+                        [null, Number(this.state.searchText)],
+                        search.type,
+                        search.field,
+                        search.title
+                      );
+                    }
+                  }}
+                >
                   <span style={{ marginRight: 8 }}>{`金额`}</span>
                   <span style={{ marginRight: 8 }}>{`<`}</span>
                   <span>{this.state.searchText}</span>
@@ -193,20 +229,88 @@ export default class SearchExpand extends React.Component {
                   <span style={{ marginRight: 8 }}>{`<`}</span>
                   <span style={{ marginRight: 8 }}>{`金额`}</span>
                   <span style={{ marginRight: 8 }}>{`<`}</span>
-                  <InputNumber size="small" />
-                  <Button style={{ marginLeft: 8 }} type="primary" size="small">
+                  <InputNumber
+                    size="small"
+                    value={this.state.searchState[search.field].lt}
+                    onChange={val => {
+                      this.setState({
+                        searchState: {
+                          ...this.state.searchState,
+                          [search.field]: {
+                            lt: val
+                          }
+                        }
+                      });
+                    }}
+                  />
+                  <Button
+                    style={{ marginLeft: 8 }}
+                    type="primary"
+                    size="small"
+                    onClick={() => {
+                      if (
+                        this.state.searchText &&
+                        Number(this.state.searchText) &&
+                        this.state.searchState[search.field].lt &&
+                        Number(this.state.searchState[search.field].lt)
+                      ) {
+                        this.addSearch(
+                          [
+                            Number(this.state.searchText),
+                            Number(this.state.searchState[search.field].lt)
+                          ],
+                          search.type,
+                          search.field,
+                          search.title
+                        );
+                      }
+                    }}
+                  >
                     搜索
                   </Button>
                 </div>
               </li>
               <li>
                 <div className="o-dropdown-option">
-                  <InputNumber size="small" />
+                  <InputNumber
+                    size="small"
+                    value={this.state.searchState[search.field].gt}
+                    onChange={val => {
+                      this.setState({
+                        searchState: {
+                          ...this.state.searchState,
+                          [search.field]: {
+                            gt: val
+                          }
+                        }
+                      });
+                    }}
+                  />
                   <span style={{ marginLeft: 8 }}>{`<`}</span>
                   <span style={{ marginLeft: 8 }}>{`金额`}</span>
                   <span style={{ marginLeft: 8 }}>{`<`}</span>
                   <span style={{ marginLeft: 8 }}>{this.state.searchText}</span>
-                  <Button style={{ marginLeft: 8 }} type="primary" size="small">
+                  <Button
+                    style={{ marginLeft: 8 }}
+                    type="primary"
+                    size="small"
+                    onClick={() => {
+                      if (
+                        this.state.searchText &&
+                        this.state.searchState[search.field].gt
+                      ) {
+                        this.addSearch(
+                          [
+                            Number(this.state.searchState[search.field].gt),
+                            Number(this.state.searchText)
+                          ],
+                          search.type,
+                          search.field,
+                          search.title
+                        );
+                      }
+                    }}
+                  >
                     搜索
                   </Button>
                 </div>
@@ -440,6 +544,23 @@ export default class SearchExpand extends React.Component {
       case "relevance":
         break;
       case "number":
+        valueJsx = (
+          <div className="o_facet_values">
+            {(() => {
+              if (label.values[0] && label.values[1]) {
+                return (
+                  <span>{` > ${label.values[0]} && < ${
+                    label.values[1]
+                  } `}</span>
+                );
+              } else if (label.values[0]) {
+                return <span>{` > ${label.values[0]}`}</span>;
+              } else if (label.values[1]) {
+                return <span>{` < ${label.values[1]} `}</span>;
+              }
+            })()}
+          </div>
+        );
         break;
       case "option":
         valueJsx = (

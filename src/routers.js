@@ -18,6 +18,13 @@ export default {
         component: "Tenant",
         title: "兑奖中心"
       },
+      //中奖记录
+      tenant: {
+        path: "record",
+        module: "Records",
+        component: "Record",
+        title: "中奖记录"
+      },
       //二维码
       qrCode: {
         path: "qrCode",
@@ -26,11 +33,23 @@ export default {
         title: "二维码"
       },
       //奖品
-      prize: {
-        path: "prize",
+      prizeBase: {
+        path: "prize/base",
         module: "Prizes",
-        component: "Prize",
-        title: "奖品"
+        component: "PrizeBase",
+        title: "奖品管理"
+      },
+      prizeSuper: {
+        path: "prize/super",
+        module: "Prizes",
+        component: "PrizeSuper",
+        title: "超级大奖"
+      },
+      prizeCoupon: {
+        path: "prize/coupon",
+        module: "Prizes",
+        component: "PrizeCoupon",
+        title: "优惠券"
       },
       //库存
       balance: {
@@ -45,8 +64,7 @@ export default {
         module: "Equipments",
         component: "Equipment",
         title: "设备"
-      },
-      
+      }
     }
   }
 };

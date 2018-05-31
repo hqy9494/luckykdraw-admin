@@ -1,9 +1,9 @@
 import React from "react";
-import {connect} from "react-redux";
-import {createStructuredSelector} from "reselect";
+import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
 import uuid from "uuid";
-import {Col, Grid, Row} from "react-bootstrap";
-import {Modal} from "antd";
+import { Col, Grid, Row } from "react-bootstrap";
+import { Modal } from "antd";
 import TableExpand from "../../components/TableExpand";
 import FormExpand from "../../components/FormExpand";
 
@@ -18,10 +18,10 @@ export class Tenant extends React.Component {
   }
 
   componentWillMount() {
+    console.log(this.props);
   }
 
-  componentWillReceiveProps(nextProps) {
-  }
+  componentWillReceiveProps(nextProps) {}
 
   submitNew = values => {
     this.props.rts(
@@ -33,7 +33,7 @@ export class Tenant extends React.Component {
       this.uuid,
       "submitNew",
       () => {
-        this.setState({refreshTable: true, visible: false});
+        this.setState({ refreshTable: true, visible: false });
       }
     );
   };
@@ -49,7 +49,7 @@ export class Tenant extends React.Component {
         {
           title: "新建",
           onClick: () => {
-            this.setState({visible: true});
+            this.setState({ visible: true });
           }
         }
       ],
@@ -64,8 +64,8 @@ export class Tenant extends React.Component {
           title: "补货员注册地址",
           dataIndex: "id",
           key: "id",
-          render: function (id) {
-            return 'https://lkd.yooyuu.com.cn/wx/bind?tenantId=' + id;
+          render: function(id) {
+            return `${location.href.split("#")[0]}wx/bind?tenantId=${id}`;
           }
         },
         {
@@ -91,7 +91,7 @@ export class Tenant extends React.Component {
               {...config}
               refresh={this.state.refreshTable}
               onRefreshEnd={() => {
-                this.setState({refreshTable: false});
+                this.setState({ refreshTable: false });
               }}
             />
           </Col>
@@ -100,7 +100,7 @@ export class Tenant extends React.Component {
           visible={this.state.visible}
           title="新建"
           onCancel={() => {
-            this.setState({visible: false});
+            this.setState({ visible: false });
           }}
           footer={null}
         >
@@ -111,7 +111,7 @@ export class Tenant extends React.Component {
                 field: "name",
                 label: "名称",
                 params: {
-                  rules: [{required: true, message: "必填项"}]
+                  rules: [{ required: true, message: "必填项" }]
                 }
               }
             ]}
@@ -119,7 +119,7 @@ export class Tenant extends React.Component {
               this.submitNew(values);
             }}
             onCancel={() => {
-              this.setState({visible: false});
+              this.setState({ visible: false });
             }}
           />
         </Modal>

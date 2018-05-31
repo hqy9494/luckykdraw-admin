@@ -43,7 +43,7 @@ class FormExpand extends React.Component {
         for (let key in values) {
           if (pictureField.indexOf(key) !== -1) {
             if (values[key] && values[key].length > 0) {
-              newValues[key] = values[key].map(vk => vk.response.url);
+              newValues[key] = values[key].map(vk => vk.url || vk.response.url);
             } else {
               newValues[key] = [];
             }
@@ -59,9 +59,11 @@ class FormExpand extends React.Component {
   returnElement(ele) {
     switch (ele.type) {
       case "text":
-        return <Input />;
+        return <Input disabled={ele.disabled} />;
       case "number":
-        return <InputNumber style={{ width: "100%" }} />;
+        return (
+          <InputNumber style={{ width: "100%" }} disabled={ele.disabled} />
+        );
       case "textarea":
         return <TextArea rows={ele.rows || 4} />;
       case "select":

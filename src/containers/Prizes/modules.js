@@ -1,7 +1,11 @@
-import Prize from "./Prize";
+import PrizeSuper from "./PrizeSuper";
+import PrizeBase from "./PrizeBase";
+import PrizeCoupon from "./PrizeCoupon";
 
 const Prizes = {
-  Prize,
+  PrizeSuper,
+  PrizeBase,
+  PrizeCoupon
 };
 
 export default Prizes;

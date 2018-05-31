@@ -8,7 +8,7 @@ import { Divider, Popconfirm, Modal } from "antd";
 import TableExpand from "../../components/TableExpand";
 import FormExpand from "../../components/FormExpand";
 
-export class Tenant extends React.Component {
+export class PrizeSuper extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -23,18 +23,9 @@ export class Tenant extends React.Component {
   componentWillReceiveProps(nextProps) {}
 
   submitNew = values => {
-    this.props.rts(
-      {
-        method: "post",
-        url: `/awards`,
-        data: { ...values, type: "material" }
-      },
-      this.uuid,
-      "submitNew",
-      () => {
-        this.setState({ refreshTable: true, visible: false });
-      }
-    );
+    if (this.state.curRow && this.state.curRow.id) {
+    } else {
+    }
   };
 
   render() {
@@ -48,7 +39,7 @@ export class Tenant extends React.Component {
         {
           title: "新建",
           onClick: () => {
-            this.setState({ visible: true });
+            this.setState({ visible: true, curRow: null });
           }
         }
       ],
@@ -57,24 +48,20 @@ export class Tenant extends React.Component {
         {
           title: "名称",
           dataIndex: "name",
-          key: "name"
+          key: "name",
+          render: (text, record) => (
+            <span title={record.description}>{text}</span>
+          )
         },
         {
-          title: "描述",
-          dataIndex: "description",
-          key: "description"
+          title: "所属兑奖中心",
+          dataIndex: "tenant.name",
+          key: "tenant.name"
         },
         {
-          title: "类型",
-          dataIndex: "type",
-          key: "type",
-          render: (text, record) => {
-            if (text === "material") {
-              return "实物";
-            } else {
-              return "虚拟";
-            }
-          }
+          title: "所属机器",
+          dataIndex: "boxes.name",
+          key: "boxes.name"
         },
         {
           title: "面额",
@@ -92,6 +79,22 @@ export class Tenant extends React.Component {
               return "禁用";
             }
           }
+        },
+        {
+          title: "操作",
+          key: "handle",
+          render: (text, record) => (
+            <span>
+              <a
+                href="javascript:;"
+                onClick={() => {
+                  this.setState({ curRow: record, visible: true });
+                }}
+              >
+                编辑
+              </a>
+            </span>
+          )
         }
       ]
     };
@@ -124,19 +127,16 @@ export class Tenant extends React.Component {
                 field: "name",
                 label: "名称",
                 params: {
+                  initialValue: this.state.curRow && this.state.curRow.name,
                   rules: [{ required: true, message: "必填项" }]
                 }
-              },
-              {
-                type: "text",
-                field: "description",
-                label: "描述"
               },
               {
                 type: "number",
                 field: "value",
                 label: "面额",
                 params: {
+                  initialValue: this.state.curRow && this.state.curRow.value,
                   rules: [{ required: true, message: "必填项" }]
                 }
               }
@@ -158,10 +158,10 @@ const mapDispatchToProps = dispatch => {
   return {};
 };
 
-const Tenantuuid = state => state.get("rts").get("uuid");
+const PrizeSuperuuid = state => state.get("rts").get("uuid");
 
 const mapStateToProps = createStructuredSelector({
-  Tenantuuid
+  PrizeSuperuuid
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Tenant);
+export default connect(mapStateToProps, mapDispatchToProps)(PrizeSuper);

@@ -148,10 +148,12 @@ class Sidebar extends React.Component {
                       className={this.routeActive(m.component) ? "active" : ""}
                     >
                       <Link to={`/${m.component}`} title={m.name}>
-                        <Icon
-                          type={m.icon || "ellipsis"}
-                          style={{ marginRight: 8 }}
-                        />
+                        <em>
+                          <Icon
+                            type={m.icon || "ellipsis"}
+                            style={{ marginRight: 8 }}
+                          />
+                        </em>
                         <span
                           data-localize={`sidebar.nav.${m.component.toLocaleUpperCase()}`}
                         >
@@ -173,10 +175,12 @@ class Sidebar extends React.Component {
                           m.component
                         )}
                       >
-                        <Icon
-                          type={m.icon || "ellipsis"}
-                          style={{ marginRight: 8 }}
-                        />
+                        <em>
+                          <Icon
+                            type={m.icon || "ellipsis"}
+                            style={{ marginRight: 8 }}
+                          />
+                        </em>
                         <span
                           data-localize={`sidebar.nav.${m.component.toLocaleUpperCase()}`}
                         >

@@ -1,12 +1,12 @@
 export default {
     initialState: {
-      title: "奖品",
+      title: "超级大奖",
       subtitle: "",
       breadcrumb: true
     },
     component: [
       {
-        module: "Prize",
+        module: "PrizeSuper",
         getProps: ["rts"]
       }
     ]

@@ -13,6 +13,7 @@ import Prizes from "../Prizes/modules";
 import Balances from "../Balances/modules";
 import Equipments from "../Equipments/modules";
 import Setting from "../Setting/modules";
+import Records from "../Records/modules";
 
 const modules = {
   Indexs,
@@ -21,7 +22,8 @@ const modules = {
   Prizes,
   Balances,
   Equipments,
-  Setting
+  Setting,
+  Records
 };
 
 export function mapDispatchToProps(dispatch) {
