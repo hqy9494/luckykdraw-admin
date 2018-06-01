@@ -19,7 +19,7 @@ export default {
         title: "兑奖中心"
       },
       //中奖记录
-      tenant: {
+      record: {
         path: "record",
         module: "Records",
         component: "Record",
@@ -34,19 +34,19 @@ export default {
       },
       //奖品
       prizeBase: {
-        path: "prize/base",
+        path: "prizes/base",
         module: "Prizes",
         component: "PrizeBase",
         title: "奖品管理"
       },
       prizeSuper: {
-        path: "prize/super",
+        path: "prizes/super",
         module: "Prizes",
         component: "PrizeSuper",
         title: "超级大奖"
       },
       prizeCoupon: {
-        path: "prize/coupon",
+        path: "prizes/coupon",
         module: "Prizes",
         component: "PrizeCoupon",
         title: "优惠券"

@@ -24,10 +24,10 @@ const menu = [
     component: "equipment"
   },
   {
-    id: "prize",
+    id: "prizes",
     icon: "gift",
     name: "奖品",
-    component: "prize",
+    component: "prizes",
     children: [
       {
         id: "base",

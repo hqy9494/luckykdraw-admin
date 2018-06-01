@@ -109,6 +109,11 @@ export class Tenant extends React.Component {
           dataIndex: "awardId",
           key: "awardId",
           render: text => (text ? "是" : "否")
+        },
+        {
+          title: "奖品",
+          dataIndex: "award.name",
+          key: "award.name"
         }
       ]
     };

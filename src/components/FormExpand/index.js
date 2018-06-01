@@ -9,12 +9,14 @@ import {
   InputNumber,
   Upload,
   Icon,
-  Modal
+  Modal,
+  DatePicker
 } from "antd";
 const { TextArea } = Input;
 const { Option } = Select;
 const FormItem = Form.Item;
 const ButtonGroup = Button.Group;
+const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
 const formItemLayout = {
   labelCol: { span: 6 },
   wrapperCol: { span: 14 }
@@ -88,13 +90,15 @@ class FormExpand extends React.Component {
             ))}
           </RadioGroup>
         );
+      case "dateRange":
+        return <RangePicker placeholder={["开始时间", "结束时间"]} />;
       default:
         break;
     }
   }
   retrunPicture(ele) {
     const { getFieldDecorator } = this.props.form;
-
+    let total = ele.total || 1;
     return (
       <FormItem key={`item-${ele.field}`} {...formItemLayout} label={ele.label}>
         {getFieldDecorator(ele.field, {
@@ -114,16 +118,19 @@ class FormExpand extends React.Component {
         })(
           <Upload
             name="file"
-            action={`${config.apiUrl}/upload/image`}
+            action={`${config.apiUrl}${ele.upload || "/upload/image"}`}
             headers={{ Authorization: localStorage.token }}
             listType="picture-card"
             onPreview={this.handlePreview}
             onChange={this.uploadChange}
           >
-            <div>
-              <Icon type="plus" />
-              <div className="ant-upload-text">选择图片</div>
-            </div>
+            {this.props.form.getFieldValue(ele.field) &&
+            this.props.form.getFieldValue(ele.field).length >= total ? null : (
+              <div>
+                <Icon type="plus" />
+                <div className="ant-upload-text">选择图片</div>
+              </div>
+            )}
           </Upload>
         )}
       </FormItem>

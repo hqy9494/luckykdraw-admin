@@ -23,50 +23,121 @@ export class Record extends React.Component {
 
   componentWillReceiveProps(nextProps) {}
 
-  submitNew = values => {};
+  submitNew = values => {
+    if (this.state.curRow && this.state.curRow.id) {
+      this.props.rts(
+        {
+          method: "post",
+          url: `/awardrecords/${this.state.curRow.id}/fahuo`,
+          data: values
+        },
+        this.uuid,
+        "submitNew",
+        () => {
+          this.setState({ refreshTable1: true, visible: false });
+        }
+      );
+    }
+  };
 
   render() {
     const config1 = {
+      tab: 1,
       api: {
         rts: this.props.rts,
         uuid: this.uuid,
-        data: ""
+        data: "/awardrecords/search/fahuo",
+        total: "/awardrecords/count/fahuo"
       },
       buttons: [],
       search: [],
       columns: [
         {
-          title: "名称",
-          dataIndex: "name",
-          key: "name"
+          title: "奖品名称",
+          dataIndex: "award.name",
+          key: "award.name"
+        },
+        {
+          title: "所属兑奖中心",
+          dataIndex: "tenant.name",
+          key: "tenant.name"
+        },
+        {
+          title: "所属机器(名称/序列号)",
+          dataIndex: "box.name",
+          key: "box.name",
+          render: (text, record) => text || record.serial
+        },
+        {
+          title: "用户(昵称/全称)",
+          dataIndex: "user.nickname",
+          key: "user.nickname",
+          render: (text, record) => text || record.fullname
+        },
+        {
+          title: "时间",
+          dataIndex: "createdAt",
+          key: "createdAt",
+          type: "date"
+        },
+        {
+          title: "操作",
+          key: "handle",
+          render: (text, record) =>
+            record.fahuoed ? (
+              <span>已记录发货信息</span>
+            ) : (
+              <a
+                href="javascript:;"
+                onClick={() => {
+                  this.setState({ curRow: record, visible: true });
+                }}
+              >
+                发货
+              </a>
+            )
         }
       ]
     };
 
     const config2 = {
+      tab: 2,
       api: {
         rts: this.props.rts,
         uuid: this.uuid,
-        data: ""
+        data: "/awardrecords/search/virtual",
+        total: "/awardrecords/count/virtual"
       },
       buttons: [],
       search: [],
       columns: [
         {
-          title: "名称",
-          dataIndex: "name",
-          key: "name"
+          title: "奖品名称",
+          dataIndex: "award.name",
+          key: "award.name"
         },
         {
-          title: "操作",
-          key: "handle",
-          render: (text, record) => (
-            <span>
-              <a href="javascript:;" onClick={() => {}}>
-                发货
-              </a>
-            </span>
-          )
+          title: "所属兑奖中心",
+          dataIndex: "tenant.name",
+          key: "tenant.name"
+        },
+        {
+          title: "所属机器(名称/序列号)",
+          dataIndex: "box.name",
+          key: "box.name",
+          render: (text, record) => text || record.serial
+        },
+        {
+          title: "用户(昵称/全称)",
+          dataIndex: "user.nickname",
+          key: "user.nickname",
+          render: (text, record) => text || record.fullname
+        },
+        {
+          title: "时间",
+          dataIndex: "createdAt",
+          key: "createdAt",
+          type: "date"
         }
       ]
     };
@@ -78,17 +149,17 @@ export class Record extends React.Component {
             <Row>
               <Col lg={12}>
                 <TableExpand
-                  {...config2}
-                  refresh={this.state.refreshTable2}
+                  {...config1}
+                  refresh={this.state.refreshTable1}
                   onRefreshEnd={() => {
-                    this.setState({ refreshTable2: false });
+                    this.setState({ refreshTable1: false });
                   }}
                 />
               </Col>
             </Row>
             <Modal
               visible={this.state.visible}
-              title="实物发货"
+              title="发货信息"
               onCancel={() => {
                 this.setState({ visible: false });
               }}
@@ -97,11 +168,40 @@ export class Record extends React.Component {
               <FormExpand
                 elements={[
                   {
-                    type: "text",
-                    field: "name",
-                    label: "名称",
+                    label: "物流公司",
+                    field: "company",
+                    type: "select",
+                    options: [
+                      {
+                        title: "顺丰",
+                        value: "sf"
+                      },
+                      {
+                        title: "圆通",
+                        value: "yt"
+                      },
+                      {
+                        title: "EMS",
+                        value: "ems"
+                      },
+                      {
+                        title: "中通",
+                        value: "zt"
+                      },
+                      {
+                        title: "韵达",
+                        value: "yd"
+                      }
+                    ],
                     params: {
-                      initialValue: this.state.curRow && this.state.curRow.name,
+                      rules: [{ required: true, message: "必填项" }]
+                    }
+                  },
+                  {
+                    type: "text",
+                    field: "no",
+                    label: "快递单号",
+                    params: {
                       rules: [{ required: true, message: "必填项" }]
                     }
                   }
@@ -119,10 +219,10 @@ export class Record extends React.Component {
             <Row>
               <Col lg={12}>
                 <TableExpand
-                  {...config1}
-                  refresh={this.state.refreshTable1}
+                  {...config2}
+                  refresh={this.state.refreshTable2}
                   onRefreshEnd={() => {
-                    this.setState({ refreshTable1: false });
+                    this.setState({ refreshTable2: false });
                   }}
                 />
               </Col>
