@@ -18,7 +18,7 @@ import Main from "containers/Main";
 // import './global-styles';
 import boot from "./utils/boot";
 
-import initTranslation from "./components/Common/localize";
+// import initTranslation from "./components/Common/localize";
 import initLoadThemes from "./components/Common/load-themes";
 
 // Application Styles
@@ -26,7 +26,7 @@ import "./styles/bootstrap.scss";
 import "./styles/app.scss";
 
 // Init translation system
-initTranslation();
+// initTranslation();
 // Init css loader (for themes)
 initLoadThemes();
 
