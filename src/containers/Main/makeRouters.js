@@ -1,8 +1,8 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import createReactClass from "create-react-class";
-import { connect } from "react-redux";
-import { createStructuredSelector } from "reselect";
-import { withRouter, Route, Switch, Redirect } from "react-router-dom";
+import {connect} from "react-redux";
+import {createStructuredSelector} from "reselect";
+import {Redirect, Route, Switch, withRouter} from "react-router-dom";
 
 import BaseConstructor from "./base";
 
@@ -12,8 +12,9 @@ import QrCodes from "../QrCodes/modules";
 import Prizes from "../Prizes/modules";
 import Balances from "../Balances/modules";
 import Equipments from "../Equipments/modules";
-import Setting from "../Setting/modules";
+import Setting from "../Settings/modules";
 import Records from "../Records/modules";
+import Settings from "../Settings/modules";
 
 const modules = {
   Indexs,
@@ -23,7 +24,8 @@ const modules = {
   Balances,
   Equipments,
   Setting,
-  Records
+  Records,
+  Settings
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -46,7 +48,7 @@ const endPointComponent = (path, model, component, name = "") => {
           />
         );
       } else {
-        return <Route key={path} path={path} component={module} />;
+        return <Route key={path} path={path} component={module}/>;
       }
     }
   });
@@ -62,7 +64,7 @@ const endPointRedirect = (path, redirect) => {
           exact
           key={path}
           path={path}
-          render={props => <Redirect to={redirect} />}
+          render={props => <Redirect to={redirect}/>}
         />
       );
     }
@@ -81,7 +83,7 @@ const fullRouters = (obj, path = "", module = null, superRouter = null) => {
           exact
           key={path}
           path={path}
-          render={props => <Redirect to={superRouter.redirect} />}
+          render={props => <Redirect to={superRouter.redirect}/>}
         />
       );
     } else if (superRouter.component) {

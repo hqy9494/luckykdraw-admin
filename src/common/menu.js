@@ -45,7 +45,19 @@ const menu = [
         component: "coupon"
       }
     ]
-  }
+  },
+  {
+    id: "replenishmenter",
+    icon: "printer",
+    name: "补货员",
+    component: "replenishmenter"
+  },
+  {
+    id: "replenishmenterapply",
+    icon: "printer",
+    name: "补货员申请",
+    component: "replenishmenterapply"
+  },
 ];
 
 export default menu;

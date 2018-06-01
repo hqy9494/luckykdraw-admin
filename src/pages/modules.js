@@ -13,6 +13,8 @@ import Balance from "./Balances/Balance";
 import Equipment from "./Equipments/Equipment";
 //
 import Record from "./Records/Record";
+import Replenishmenter from "./Settings/Replenishmenter";
+import ReplenishmenterApply from "./Settings/ReplenishmenterApply";
 
 const modules = {
   Index,
@@ -23,7 +25,9 @@ const modules = {
   PrizeCoupon,
   Balance,
   Equipment,
-  Record
+  Record,
+  Replenishmenter,
+  ReplenishmenterApply
 };
 
 export default modules;

@@ -1,12 +1,11 @@
 export default {
   initialState: {
-    title: "员工管理",
-    subtitle: "",
+    title: "补货员申请",
     breadcrumb: true
   },
   component: [
     {
-      module: "StaffManager",
+      module: "ReplenishmenterApply",
       getProps: ["rts"]
     }
   ]
