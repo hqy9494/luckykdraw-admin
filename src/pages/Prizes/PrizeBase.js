@@ -1,9 +1,9 @@
 import React from "react";
-import {connect} from "react-redux";
-import {createStructuredSelector} from "reselect";
+import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
 import uuid from "uuid";
-import {Col, Grid, Row} from "react-bootstrap";
-import {Modal} from "antd";
+import { Col, Grid, Row } from "react-bootstrap";
+import { Modal } from "antd";
 import TableExpand from "../../components/TableExpand";
 import FormExpand from "../../components/FormExpand";
 
@@ -21,8 +21,7 @@ export class PrizeBase extends React.Component {
     this.getType();
   }
 
-  componentWillReceiveProps(nextProps) {
-  }
+  componentWillReceiveProps(nextProps) {}
 
   getType = () => {
     this.props.rts(
@@ -46,7 +45,7 @@ export class PrizeBase extends React.Component {
         this.uuid,
         "submitFix",
         () => {
-          this.setState({refreshTable: true, visible: false});
+          this.setState({ refreshTable: true, visible: false });
         }
       );
     } else {
@@ -54,19 +53,19 @@ export class PrizeBase extends React.Component {
         {
           method: "post",
           url: `/awards`,
-          data: {...values, type: "material"}
+          data: values
         },
         this.uuid,
         "submitNew",
         () => {
-          this.setState({refreshTable: true, visible: false});
+          this.setState({ refreshTable: true, visible: false });
         }
       );
     }
   };
 
   render() {
-    const {type} = this.props;
+    const { type } = this.props;
 
     let typeList = [];
 
@@ -89,7 +88,7 @@ export class PrizeBase extends React.Component {
         {
           title: "添加",
           onClick: () => {
-            this.setState({visible: true, curRow: null});
+            this.setState({ visible: true, curRow: null });
           }
         }
       ],
@@ -99,7 +98,7 @@ export class PrizeBase extends React.Component {
           title: "奖品图",
           dataIndex: "mainImage",
           key: "mainImage",
-          render: text => <img src={text} alt="商品图片" height="80"/>
+          render: text => <img src={text} alt="商品图片" height="80" />
         },
         {
           title: "名称",
@@ -145,7 +144,7 @@ export class PrizeBase extends React.Component {
               <a
                 href="javascript:;"
                 onClick={() => {
-                  this.setState({curRow: record, visible: true});
+                  this.setState({ curRow: record, visible: true });
                 }}
               >
                 编辑
@@ -164,16 +163,16 @@ export class PrizeBase extends React.Component {
               {...config}
               refresh={this.state.refreshTable}
               onRefreshEnd={() => {
-                this.setState({refreshTable: false});
+                this.setState({ refreshTable: false });
               }}
             />
           </Col>
         </Row>
         <Modal
           visible={this.state.visible}
-          title={(this.state.curRow && this.state.curRow.name) || '添加奖品'}
+          title={(this.state.curRow && this.state.curRow.name) || "添加奖品"}
           onCancel={() => {
-            this.setState({visible: false});
+            this.setState({ visible: false });
           }}
           footer={null}
         >
@@ -185,7 +184,7 @@ export class PrizeBase extends React.Component {
                 label: "名称",
                 params: {
                   initialValue: this.state.curRow && this.state.curRow.name,
-                  rules: [{required: true, message: "必填项"}]
+                  rules: [{ required: true, message: "必填项" }]
                 }
               },
               {
@@ -194,11 +193,12 @@ export class PrizeBase extends React.Component {
                 label: "图片",
                 params: {
                   initialValue: this.state.curRow &&
-                  this.state.curRow.mainImage && [
-                    this.state.curRow.mainImage
-                  ],
-                  rules: [{required: true, message: "必填项"}]
-                }
+                    this.state.curRow.mainImage && [
+                      this.state.curRow.mainImage
+                    ],
+                  rules: [{ required: true, message: "必填项" }]
+                },
+                upload: "/api/files/upload"
               },
               {
                 label: "类型",
@@ -207,7 +207,7 @@ export class PrizeBase extends React.Component {
                 options: typeList,
                 params: {
                   initialValue: this.state.curRow && this.state.curRow.type,
-                  rules: [{required: true, message: "必填项"}]
+                  rules: [{ required: true, message: "必填项" }]
                 }
               },
               {
@@ -216,7 +216,7 @@ export class PrizeBase extends React.Component {
                 label: "描述",
                 params: {
                   initialValue:
-                  this.state.curRow && this.state.curRow.description
+                    this.state.curRow && this.state.curRow.description
                 }
               },
               {
@@ -225,7 +225,7 @@ export class PrizeBase extends React.Component {
                 label: "面额",
                 params: {
                   initialValue: this.state.curRow && this.state.curRow.value,
-                  rules: [{required: true, message: "必填项"}]
+                  rules: [{ required: true, message: "必填项" }]
                 }
               },
               {
@@ -234,18 +234,18 @@ export class PrizeBase extends React.Component {
                 label: "库存",
                 params: {
                   initialValue:
-                  this.state.curRow && this.state.curRow.inventory,
-                  rules: [{required: true, message: "必填项"}]
+                    this.state.curRow && this.state.curRow.inventory,
+                  rules: [{ required: true, message: "必填项" }]
                 },
                 disabled:
-                this.state.curRow && this.state.curRow.type !== "material"
+                  this.state.curRow && this.state.curRow.type !== "material"
               }
             ]}
             onSubmit={values => {
               this.submitNew(values);
             }}
             onCancel={() => {
-              this.setState({visible: false});
+              this.setState({ visible: false });
             }}
           />
         </Modal>
