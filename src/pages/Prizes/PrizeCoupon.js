@@ -24,7 +24,39 @@ export class PrizeCoupon extends React.Component {
 
   submitNew = values => {
     if (this.state.curRow && this.state.curRow.id) {
+      this.props.rts(
+        {
+          method: "patch",
+          url: `/taobaocoupons/${this.state.curRow.id}`,
+          data: {
+            ...values,
+            startTime: values.startTime[0].toDate(),
+            endTime: values.startTime[1].toDate()
+          }
+        },
+        this.uuid,
+        "submitNew",
+        () => {
+          this.setState({ refreshTable: true, visible: false });
+        }
+      );
     } else {
+      this.props.rts(
+        {
+          method: "post",
+          url: `/taobaocoupons`,
+          data: {
+            ...values,
+            startTime: values.startTime[0].toDate(),
+            endTime: values.startTime[1].toDate()
+          }
+        },
+        this.uuid,
+        "submitNew",
+        () => {
+          this.setState({ refreshTable: true, visible: false });
+        }
+      );
     }
   };
 
@@ -33,7 +65,8 @@ export class PrizeCoupon extends React.Component {
       api: {
         rts: this.props.rts,
         uuid: this.uuid,
-        data: "/awards"
+        data: "/taobaocoupons",
+        total: "/taobaocoupons/count"
       },
       buttons: [
         {
@@ -47,47 +80,41 @@ export class PrizeCoupon extends React.Component {
       columns: [
         {
           title: "图片",
-          dataIndex: "mainImg",
-          key: "mainImg",
-          render: text => (
-            <img
-              src={text}
-              alt="商品图片"
-              title="点击放大"
-              height="80"
-              onClick={() => {
-                this.setState({ previewVisible: true, previewImage: text });
-              }}
-            />
-          )
+          dataIndex: "mainImage",
+          key: "mainImage",
+          render: text => <img src={text} alt="商品图片" height="80" />
         },
         {
           title: "标题",
-          dataIndex: "name",
-          key: "name",
-          render: (text, record) => (
-            <span title={record.description}>{text}</span>
-          )
-        },
-        {
-          title: "现价",
-          dataIndex: "a1",
-          key: "a1"
+          dataIndex: "title",
+          key: "title"
         },
         {
           title: "原价",
-          dataIndex: "a2",
-          key: "a3"
+          dataIndex: "price",
+          key: "price"
+        },
+        {
+          title: "优惠券",
+          dataIndex: "value",
+          key: "value"
         },
         {
           title: "淘口令",
-          dataIndex: "a4",
-          key: "a5"
+          dataIndex: "tkl",
+          key: "tkl"
         },
         {
-          title: "url",
-          dataIndex: "url",
-          key: "url"
+          title: "开始时间",
+          dataIndex: "startTime",
+          key: "startTime",
+          type: "day"
+        },
+        {
+          title: "结束时间",
+          dataIndex: "endTime",
+          key: "endTime",
+          type: "day"
         },
         {
           title: "操作",
@@ -133,62 +160,70 @@ export class PrizeCoupon extends React.Component {
             elements={[
               {
                 type: "text",
-                field: "name",
+                field: "title",
                 label: "标题",
                 params: {
-                  initialValue: this.state.curRow && this.state.curRow.name,
+                  initialValue: this.state.curRow && this.state.curRow.title,
                   rules: [{ required: true, message: "必填项" }]
                 }
               },
               {
-                type: "text",
-                field: "pictureUrl",
+                type: "picture",
+                field: "mainImage",
                 label: "图片",
                 params: {
-                  initialValue:
-                    this.state.curRow && this.state.curRow.pictureUrl,
+                  initialValue: this.state.curRow &&
+                    this.state.curRow.mainImage && [
+                      this.state.curRow.mainImage
+                    ],
                   rules: [{ required: true, message: "必填项" }]
-                }
+                },
+                upload: "/api/files/upload"
               },
               {
                 type: "number",
-                field: "a1",
+                field: "price",
                 label: "原价",
                 params: {
-                  initialValue: this.state.curRow && this.state.curRow.a1,
+                  initialValue: this.state.curRow && this.state.curRow.price,
                   rules: [{ required: true, message: "必填项" }]
                 }
               },
               {
                 type: "number",
-                field: "a2",
-                label: "现价",
+                field: "value",
+                label: "优惠券",
                 params: {
-                  initialValue: this.state.curRow && this.state.curRow.a2,
+                  initialValue: this.state.curRow && this.state.curRow.value,
                   rules: [{ required: true, message: "必填项" }]
                 }
               },
               {
                 type: "text",
-                field: "a3",
+                field: "tkl",
                 label: "淘口令",
                 params: {
-                  initialValue: this.state.curRow && this.state.curRow.a3,
+                  initialValue: this.state.curRow && this.state.curRow.tkl,
                   rules: [{ required: true, message: "必填项" }]
                 }
               },
               {
-                type: "text",
-                field: "url",
-                label: "url",
+                type: "dateRange",
+                field: "startTime",
+                label: "时效范围",
                 params: {
-                  initialValue: this.state.curRow && this.state.curRow.a4,
+                  initialValue: this.state.curRow &&
+                    this.state.curRow.startTime &&
+                    this.state.curRow.endTime && [
+                      moment(this.state.curRow.startTime),
+                      moment(this.state.curRow.endTime)
+                    ],
                   rules: [{ required: true, message: "必填项" }]
                 }
               }
-
             ]}
             onSubmit={values => {
+              // console.log(values);
               this.submitNew(values);
             }}
             onCancel={() => {

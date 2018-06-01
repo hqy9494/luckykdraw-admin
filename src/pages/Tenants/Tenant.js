@@ -17,9 +17,7 @@ export class Tenant extends React.Component {
     this.uuid = uuid.v1();
   }
 
-  componentWillMount() {
-    console.log(this.props);
-  }
+  componentWillMount() {}
 
   componentWillReceiveProps(nextProps) {}
 

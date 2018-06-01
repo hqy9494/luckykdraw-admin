@@ -18,16 +18,29 @@ export class PrizeBase extends React.Component {
     this.uuid = uuid.v1();
   }
 
-  componentWillMount() {}
+  componentWillMount() {
+    this.getType();
+  }
 
   componentWillReceiveProps(nextProps) {}
+
+  getType = () => {
+    this.props.rts(
+      {
+        method: "get",
+        url: `/awards/types`
+      },
+      this.uuid,
+      "type"
+    );
+  };
 
   submitNew = values => {
     if (this.state.curRow && this.state.curRow.id) {
       this.props.rts(
         {
           method: "patch",
-          url: `/awards/${id}`,
+          url: `/awards/${this.state.curRow.id}`,
           data: values
         },
         this.uuid,
@@ -53,6 +66,19 @@ export class PrizeBase extends React.Component {
   };
 
   render() {
+    const { type } = this.props;
+
+    let typeList = [];
+
+    if (type && type[this.uuid]) {
+      typeList = type[this.uuid].map(t => {
+        return {
+          title: t.title,
+          value: t.type
+        };
+      });
+    }
+
     const config = {
       api: {
         rts: this.props.rts,
@@ -78,6 +104,12 @@ export class PrizeBase extends React.Component {
           )
         },
         {
+          title: "图片审核",
+          dataIndex: "mainImage",
+          key: "mainImage",
+          render: text => <img src={text} alt="商品图片" height="80" />
+        },
+        {
           title: "库存",
           dataIndex: "isInventorySensitive",
           key: "isInventorySensitive",
@@ -88,10 +120,8 @@ export class PrizeBase extends React.Component {
           dataIndex: "type",
           key: "type",
           render: (text, record) => {
-            if (text === "material") {
-              return "实物";
-            } else {
-              return "虚拟";
+            if (typeList.length > 0) {
+              return typeList.filter(t => text === t.value)[0];
             }
           }
         },
@@ -164,6 +194,28 @@ export class PrizeBase extends React.Component {
                 }
               },
               {
+                type: "picture",
+                field: "mainImage",
+                label: "图片",
+                params: {
+                  initialValue: this.state.curRow &&
+                    this.state.curRow.mainImage && [
+                      this.state.curRow.mainImage
+                    ],
+                  rules: [{ required: true, message: "必填项" }]
+                }
+              },
+              {
+                label: "类型",
+                field: "type",
+                type: "select",
+                options: typeList,
+                params: {
+                  initialValue: this.state.curRow && this.state.curRow.type,
+                  rules: [{ required: true, message: "必填项" }]
+                }
+              },
+              {
                 type: "text",
                 field: "description",
                 label: "描述",
@@ -212,9 +264,11 @@ const mapDispatchToProps = dispatch => {
 };
 
 const PrizeBaseuuid = state => state.get("rts").get("uuid");
+const type = state => state.get("rts").get("type");
 
 const mapStateToProps = createStructuredSelector({
-  PrizeBaseuuid
+  PrizeBaseuuid,
+  type
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PrizeBase);

@@ -17,9 +17,25 @@ export default class TableExpand extends React.Component {
       total: 0
     };
     this.getAll = !props.api.total || props.getAll ? true : false;
+    this.tab = getParameterByName("tab");
     this.params = getParameterByName("q")
       ? JSON.parse(decodeURI(getParameterByName("q")))
       : {};
+
+    if (this.tab) {
+      if (this.tab === this.props.tab) {
+        this.params = getParameterByName("q")
+          ? JSON.parse(decodeURI(getParameterByName("q")))
+          : {};
+      } else {
+        this.params = {};
+      }
+    } else {
+      this.params = getParameterByName("q")
+        ? JSON.parse(decodeURI(getParameterByName("q")))
+        : {};
+    }
+
     this.columns = this.dealColumns(props.columns);
   }
 
@@ -28,7 +44,6 @@ export default class TableExpand extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-
     if (!this.props.refresh && nextProps.refresh === true) {
       this.getData(() => {
         this.props.onRefreshEnd && this.props.onRefreshEnd();
@@ -122,7 +137,7 @@ export default class TableExpand extends React.Component {
               {},
               this.searchsToWhere(this.params.searchs),
               api.where
-            ),
+            )
           }
         },
         api.uuid,
@@ -214,7 +229,10 @@ export default class TableExpand extends React.Component {
 
   jumpUrl = (newParams = {}) => {
     const params = Object.assign({}, this.params, newParams);
-    this.props.replace(this.props.path, `?q=${JSON.stringify(params)}`);
+    this.props.replace(
+      this.props.path,
+      `?${this.tab ? `tab=${this.tab}&` : ""}q=${JSON.stringify(params)}`
+    );
   };
 
   simplifySearchs = searchs => {};
@@ -223,6 +241,8 @@ export default class TableExpand extends React.Component {
     switch (type) {
       case "date":
         return moment(value).format("YYYY-MM-DD HH:mm");
+      case "day":
+        return moment(value).format("YYYY-MM-DD");
       case "fromNow":
         return moment(value).fromNow();
       case "penny":
