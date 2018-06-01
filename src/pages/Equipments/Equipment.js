@@ -81,7 +81,7 @@ export class Tenant extends React.Component {
       },
       buttons: [
         {
-          title: "新建",
+          title: "添加",
           onClick: () => {
             this.setState({ visible: true });
           }
@@ -100,11 +100,6 @@ export class Tenant extends React.Component {
           key: "serial"
         },
         {
-          title: "地址",
-          dataIndex: "location.address",
-          key: "location.address"
-        },
-        {
           title: "联系方式",
           dataIndex: "location",
           key: "location",
@@ -116,7 +111,12 @@ export class Tenant extends React.Component {
               ""})`
         },
         {
-          title: "所属兑奖中心",
+          title: "位置",
+          dataIndex: "location.address",
+          key: "location.address"
+        },
+        {
+          title: "兑奖中心",
           dataIndex: "tenant.name",
           key: "tenant.name"
         }
@@ -138,7 +138,7 @@ export class Tenant extends React.Component {
         </Row>
         <Modal
           visible={this.state.visible}
-          title="新建"
+          title="添加设备"
           onCancel={() => {
             this.setState({ visible: false });
           }}

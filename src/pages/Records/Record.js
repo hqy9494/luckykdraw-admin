@@ -1,10 +1,9 @@
 import React from "react";
-import { connect } from "react-redux";
-import { createStructuredSelector } from "reselect";
-import moment from "moment";
+import {connect} from "react-redux";
+import {createStructuredSelector} from "reselect";
 import uuid from "uuid";
-import { Grid, Row, Col } from "react-bootstrap";
-import { Divider, Popconfirm, Modal, Tabs } from "antd";
+import {Col, Grid, Row} from "react-bootstrap";
+import {Modal, Tabs} from "antd";
 import TableExpand from "../../components/TableExpand";
 import FormExpand from "../../components/FormExpand";
 
@@ -19,9 +18,11 @@ export class Record extends React.Component {
     this.uuid = uuid.v1();
   }
 
-  componentWillMount() {}
+  componentWillMount() {
+  }
 
-  componentWillReceiveProps(nextProps) {}
+  componentWillReceiveProps(nextProps) {
+  }
 
   submitNew = values => {
     if (this.state.curRow && this.state.curRow.id) {
@@ -34,7 +35,7 @@ export class Record extends React.Component {
         this.uuid,
         "submitNew",
         () => {
-          this.setState({ refreshTable1: true, visible: false });
+          this.setState({refreshTable1: true, visible: false});
         }
       );
     }
@@ -58,18 +59,23 @@ export class Record extends React.Component {
           key: "award.name"
         },
         {
-          title: "所属兑奖中心",
+          title: "奖品类型",
+          dataIndex: "awartTypeTitle",
+          key: "awartTypeTitle"
+        },
+        {
+          title: "兑奖中心",
           dataIndex: "tenant.name",
           key: "tenant.name"
         },
         {
-          title: "所属机器(名称/序列号)",
+          title: "设备名称/序列号",
           dataIndex: "box.name",
           key: "box.name",
           render: (text, record) => text || record.serial
         },
         {
-          title: "用户(昵称/全称)",
+          title: "中奖粉丝",
           dataIndex: "user.nickname",
           key: "user.nickname",
           render: (text, record) => text || record.fullname
@@ -90,7 +96,7 @@ export class Record extends React.Component {
               <a
                 href="javascript:;"
                 onClick={() => {
-                  this.setState({ curRow: record, visible: true });
+                  this.setState({curRow: record, visible: true});
                 }}
               >
                 发货
@@ -116,19 +122,25 @@ export class Record extends React.Component {
           dataIndex: "award.name",
           key: "award.name"
         },
+
         {
-          title: "所属兑奖中心",
+          title: "奖品类型",
+          dataIndex: "awartTypeTitle",
+          key: "awartTypeTitle"
+        },
+        {
+          title: "兑奖中心",
           dataIndex: "tenant.name",
           key: "tenant.name"
         },
         {
-          title: "所属机器(名称/序列号)",
+          title: "设备名称/序列号",
           dataIndex: "box.name",
           key: "box.name",
           render: (text, record) => text || record.serial
         },
         {
-          title: "用户(昵称/全称)",
+          title: "中奖粉丝",
           dataIndex: "user.nickname",
           key: "user.nickname",
           render: (text, record) => text || record.fullname
@@ -152,7 +164,7 @@ export class Record extends React.Component {
                   {...config1}
                   refresh={this.state.refreshTable1}
                   onRefreshEnd={() => {
-                    this.setState({ refreshTable1: false });
+                    this.setState({refreshTable1: false});
                   }}
                 />
               </Col>
@@ -161,7 +173,7 @@ export class Record extends React.Component {
               visible={this.state.visible}
               title="发货信息"
               onCancel={() => {
-                this.setState({ visible: false });
+                this.setState({visible: false});
               }}
               footer={null}
             >
@@ -194,7 +206,7 @@ export class Record extends React.Component {
                       }
                     ],
                     params: {
-                      rules: [{ required: true, message: "必填项" }]
+                      rules: [{required: true, message: "必填项"}]
                     }
                   },
                   {
@@ -202,7 +214,7 @@ export class Record extends React.Component {
                     field: "no",
                     label: "快递单号",
                     params: {
-                      rules: [{ required: true, message: "必填项" }]
+                      rules: [{required: true, message: "必填项"}]
                     }
                   }
                 ]}
@@ -210,7 +222,7 @@ export class Record extends React.Component {
                   this.submitNew(values);
                 }}
                 onCancel={() => {
-                  this.setState({ visible: false });
+                  this.setState({visible: false});
                 }}
               />
             </Modal>
@@ -222,7 +234,7 @@ export class Record extends React.Component {
                   {...config2}
                   refresh={this.state.refreshTable2}
                   onRefreshEnd={() => {
-                    this.setState({ refreshTable2: false });
+                    this.setState({refreshTable2: false});
                   }}
                 />
               </Col>

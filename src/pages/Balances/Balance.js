@@ -152,7 +152,7 @@ export class Tenant extends React.Component {
         </Row>
         <Modal
           visible={this.state.visible}
-          title="新建"
+          title=""
           onCancel={() => {
             this.setState({ visible: false });
           }}

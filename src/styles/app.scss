@@ -8,8 +8,6 @@
  * License: https://wrapbootstrap.com/help/licenses
  *
  */
-
-
 /* [Table of contents]
 
 1. Bootstrap reset
@@ -85,24 +83,18 @@
 12. Documentation
   12.1 docs
  */
-
 // Override bootstrap variables
 @import "app/variables";
-
 // Bootstrap
 @import "bootstrap/bootstrap/_mixins";
-
 // Global definition of media queries
 @import "app/media-queries";
 // Utilities
 @import "app/utils-definitions";
-
 // Bootstrap reset
 @import "app/bootstrap-reset";
-
 // Typography
 @import "app/typo";
-
 // Layout
 @import "app/layout";
 @import "app/layout-extra";
@@ -110,7 +102,6 @@
 @import "app/top-navbar";
 @import "app/sidebar";
 @import "app/offsidebar";
-
 // Components
 @import "app/breadcrumbs";
 @import "app/button-extra";
@@ -130,23 +121,19 @@
 @import "app/table-grid";
 @import "app/todo";
 @import "app/nestable";
-
 // Charts
 @import "app/chart-flot";
 @import "app/chart-easypie";
-
 // Form elements
 @import "app/form-elements";
 @import "app/form-validation";
 @import "app/form-tags";
 @import "app/form-wizard";
 @import "app/form-imgcrop";
-
 // Tables
 @import "app/datatable";
 @import "app/table-extras";
 @import "app/jqgrid";
-
 // Plugins
 @import "app/plugins";
 @import "app/slim-scroll";
@@ -158,21 +145,16 @@
 @import "app/vector-map";
 @import "app/portlets";
 @import "app/weather-icons";
-
 // Mailbox
 @import "app/mailbox";
-
 // Plans
 @import "app/plans";
-
 // Utilities
 @import "app/utils";
-
 // Print CSS
 @import "app/print";
-
 // Settings
 @import "app/settings";
-
 // Documentation
 @import "app/docs";
+

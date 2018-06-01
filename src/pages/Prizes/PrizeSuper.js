@@ -1,10 +1,9 @@
 import React from "react";
-import { connect } from "react-redux";
-import { createStructuredSelector } from "reselect";
-import moment from "moment";
+import {connect} from "react-redux";
+import {createStructuredSelector} from "reselect";
 import uuid from "uuid";
-import { Grid, Row, Col } from "react-bootstrap";
-import { Divider, Popconfirm, Modal } from "antd";
+import {Col, Grid, Row} from "react-bootstrap";
+import {Divider, Modal, Popconfirm} from "antd";
 import TableExpand from "../../components/TableExpand";
 import FormExpand from "../../components/FormExpand";
 
@@ -23,7 +22,8 @@ export class PrizeSuper extends React.Component {
     this.getBox();
   }
 
-  componentWillReceiveProps(nextProps) {}
+  componentWillReceiveProps(nextProps) {
+  }
 
   getAward = () => {
     this.props.rts(
@@ -56,7 +56,7 @@ export class PrizeSuper extends React.Component {
       this.uuid,
       "confirm1",
       () => {
-        this.setState({ refreshTable: true });
+        this.setState({refreshTable: true});
       }
     );
   };
@@ -70,7 +70,7 @@ export class PrizeSuper extends React.Component {
       this.uuid,
       "confirm2",
       () => {
-        this.setState({ refreshTable: true });
+        this.setState({refreshTable: true});
       }
     );
   };
@@ -85,13 +85,13 @@ export class PrizeSuper extends React.Component {
       this.uuid,
       "submitNew",
       () => {
-        this.setState({ visible: false, refreshTable: true });
+        this.setState({visible: false, refreshTable: true});
       }
     );
   };
 
   render() {
-    const { award, box } = this.props;
+    const {award, box} = this.props;
 
     let awardList = [],
       boxList = [];
@@ -122,9 +122,9 @@ export class PrizeSuper extends React.Component {
       },
       buttons: [
         {
-          title: "新建",
+          title: "添加",
           onClick: () => {
-            this.setState({ visible: true, curRow: null });
+            this.setState({visible: true, curRow: null});
           }
         }
       ],
@@ -136,18 +136,18 @@ export class PrizeSuper extends React.Component {
           key: "award.name"
         },
         {
-          title: "所属兑奖中心",
+          title: "兑奖中心",
           dataIndex: "tenant.name",
           key: "tenant.name"
         },
         {
-          title: "所属机器(名称/序列号)",
+          title: "设备名称/序列号",
           dataIndex: "box.name",
           key: "box.name",
           render: (text, record) => text || record.serial
         },
         {
-          title: "面额",
+          title: "产品价格",
           dataIndex: "award.value",
           key: "award.value"
         },
@@ -158,7 +158,7 @@ export class PrizeSuper extends React.Component {
           render: text => {
             switch (text) {
               case "planned":
-                return "新建未激活";
+                return "未激活";
               case "activated":
                 return "已激活";
               case "canceled":
@@ -188,7 +188,7 @@ export class PrizeSuper extends React.Component {
                     >
                       <a href="javascript:;">激活</a>
                     </Popconfirm>
-                    <Divider type="vertical" />
+                    <Divider type="vertical"/>
                     <Popconfirm
                       title="确定取消此大奖？"
                       onConfirm={() => {
@@ -230,16 +230,16 @@ export class PrizeSuper extends React.Component {
               {...config}
               refresh={this.state.refreshTable}
               onRefreshEnd={() => {
-                this.setState({ refreshTable: false });
+                this.setState({refreshTable: false});
               }}
             />
           </Col>
         </Row>
         <Modal
           visible={this.state.visible}
-          title="新建"
+          title="添加大奖"
           onCancel={() => {
-            this.setState({ visible: false });
+            this.setState({visible: false});
           }}
           footer={null}
         >
@@ -251,16 +251,16 @@ export class PrizeSuper extends React.Component {
                 type: "select",
                 options: awardList,
                 params: {
-                  rules: [{ required: true, message: "必填项" }]
+                  rules: [{required: true, message: "必填项"}]
                 }
               },
               {
-                label: "机器",
+                label: "设备",
                 field: "boxId",
                 type: "select",
                 options: boxList,
                 params: {
-                  rules: [{ required: true, message: "必填项" }]
+                  rules: [{required: true, message: "必填项"}]
                 }
               }
             ]}
@@ -268,7 +268,7 @@ export class PrizeSuper extends React.Component {
               this.submitNew(values);
             }}
             onCancel={() => {
-              this.setState({ visible: false });
+              this.setState({visible: false});
             }}
           />
         </Modal>

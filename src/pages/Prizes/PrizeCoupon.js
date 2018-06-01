@@ -1,10 +1,10 @@
 import React from "react";
-import { connect } from "react-redux";
-import { createStructuredSelector } from "reselect";
+import {connect} from "react-redux";
+import {createStructuredSelector} from "reselect";
 import moment from "moment";
 import uuid from "uuid";
-import { Grid, Row, Col } from "react-bootstrap";
-import { Divider, Popconfirm, Modal } from "antd";
+import {Col, Grid, Row} from "react-bootstrap";
+import {Modal} from "antd";
 import TableExpand from "../../components/TableExpand";
 import FormExpand from "../../components/FormExpand";
 
@@ -18,9 +18,11 @@ export class PrizeCoupon extends React.Component {
     this.uuid = uuid.v1();
   }
 
-  componentWillMount() {}
+  componentWillMount() {
+  }
 
-  componentWillReceiveProps(nextProps) {}
+  componentWillReceiveProps(nextProps) {
+  }
 
   submitNew = values => {
     if (this.state.curRow && this.state.curRow.id) {
@@ -37,7 +39,7 @@ export class PrizeCoupon extends React.Component {
         this.uuid,
         "submitNew",
         () => {
-          this.setState({ refreshTable: true, visible: false });
+          this.setState({refreshTable: true, visible: false});
         }
       );
     } else {
@@ -54,7 +56,7 @@ export class PrizeCoupon extends React.Component {
         this.uuid,
         "submitNew",
         () => {
-          this.setState({ refreshTable: true, visible: false });
+          this.setState({refreshTable: true, visible: false});
         }
       );
     }
@@ -70,22 +72,22 @@ export class PrizeCoupon extends React.Component {
       },
       buttons: [
         {
-          title: "新建",
+          title: "添加优惠券",
           onClick: () => {
-            this.setState({ visible: true, curRow: null });
+            this.setState({visible: true, curRow: null});
           }
         }
       ],
       search: [],
       columns: [
         {
-          title: "图片",
+          title: "产品图",
           dataIndex: "mainImage",
           key: "mainImage",
-          render: text => <img src={text} alt="商品图片" height="80" />
+          render: text => <img src={text} alt="商品图片" height="80"/>
         },
         {
-          title: "标题",
+          title: "产品名称",
           dataIndex: "title",
           key: "title"
         },
@@ -95,7 +97,7 @@ export class PrizeCoupon extends React.Component {
           key: "price"
         },
         {
-          title: "优惠券",
+          title: "优惠券金额",
           dataIndex: "value",
           key: "value"
         },
@@ -124,7 +126,7 @@ export class PrizeCoupon extends React.Component {
               <a
                 href="javascript:;"
                 onClick={() => {
-                  this.setState({ curRow: record, visible: true });
+                  this.setState({curRow: record, visible: true});
                 }}
               >
                 编辑
@@ -143,16 +145,16 @@ export class PrizeCoupon extends React.Component {
               {...config}
               refresh={this.state.refreshTable}
               onRefreshEnd={() => {
-                this.setState({ refreshTable: false });
+                this.setState({refreshTable: false});
               }}
             />
           </Col>
         </Row>
         <Modal
           visible={this.state.visible}
-          title="新建"
+          title={(this.state.curRow && this.state.curRow.title) || '添加优惠券'}
           onCancel={() => {
-            this.setState({ visible: false });
+            this.setState({visible: false});
           }}
           footer={null}
         >
@@ -164,7 +166,7 @@ export class PrizeCoupon extends React.Component {
                 label: "标题",
                 params: {
                   initialValue: this.state.curRow && this.state.curRow.title,
-                  rules: [{ required: true, message: "必填项" }]
+                  rules: [{required: true, message: "必填项"}]
                 }
               },
               {
@@ -173,10 +175,10 @@ export class PrizeCoupon extends React.Component {
                 label: "图片",
                 params: {
                   initialValue: this.state.curRow &&
-                    this.state.curRow.mainImage && [
-                      this.state.curRow.mainImage
-                    ],
-                  rules: [{ required: true, message: "必填项" }]
+                  this.state.curRow.mainImage && [
+                    this.state.curRow.mainImage
+                  ],
+                  rules: [{required: true, message: "必填项"}]
                 },
                 upload: "/api/files/upload"
               },
@@ -186,7 +188,7 @@ export class PrizeCoupon extends React.Component {
                 label: "原价",
                 params: {
                   initialValue: this.state.curRow && this.state.curRow.price,
-                  rules: [{ required: true, message: "必填项" }]
+                  rules: [{required: true, message: "必填项"}]
                 }
               },
               {
@@ -195,7 +197,7 @@ export class PrizeCoupon extends React.Component {
                 label: "优惠券",
                 params: {
                   initialValue: this.state.curRow && this.state.curRow.value,
-                  rules: [{ required: true, message: "必填项" }]
+                  rules: [{required: true, message: "必填项"}]
                 }
               },
               {
@@ -204,7 +206,7 @@ export class PrizeCoupon extends React.Component {
                 label: "淘口令",
                 params: {
                   initialValue: this.state.curRow && this.state.curRow.tkl,
-                  rules: [{ required: true, message: "必填项" }]
+                  rules: [{required: true, message: "必填项"}]
                 }
               },
               {
@@ -213,12 +215,12 @@ export class PrizeCoupon extends React.Component {
                 label: "时效范围",
                 params: {
                   initialValue: this.state.curRow &&
-                    this.state.curRow.startTime &&
-                    this.state.curRow.endTime && [
-                      moment(this.state.curRow.startTime),
-                      moment(this.state.curRow.endTime)
-                    ],
-                  rules: [{ required: true, message: "必填项" }]
+                  this.state.curRow.startTime &&
+                  this.state.curRow.endTime && [
+                    moment(this.state.curRow.startTime),
+                    moment(this.state.curRow.endTime)
+                  ],
+                  rules: [{required: true, message: "必填项"}]
                 }
               }
             ]}
@@ -227,7 +229,7 @@ export class PrizeCoupon extends React.Component {
               this.submitNew(values);
             }}
             onCancel={() => {
-              this.setState({ visible: false });
+              this.setState({visible: false});
             }}
           />
         </Modal>

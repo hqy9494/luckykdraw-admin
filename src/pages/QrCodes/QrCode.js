@@ -1,11 +1,10 @@
 import React from "react";
-import { connect } from "react-redux";
-import { createStructuredSelector } from "reselect";
-import moment from "moment";
+import {connect} from "react-redux";
+import {createStructuredSelector} from "reselect";
 import uuid from "uuid";
 import QRCode from "qrcode.react";
-import { Grid, Row, Col } from "react-bootstrap";
-import { Divider, Popconfirm, Modal } from "antd";
+import {Col, Grid, Row} from "react-bootstrap";
+import {Modal} from "antd";
 import TableExpand from "../../components/TableExpand";
 import FormExpand from "../../components/FormExpand";
 
@@ -14,14 +13,17 @@ export class Tenant extends React.Component {
     super(props);
     this.state = {
       visible: false,
-      refreshTable: false
+      refreshTable: false,
+      qrCode: {}
     };
     this.uuid = uuid.v1();
   }
 
-  componentWillMount() {}
+  componentWillMount() {
+  }
 
-  componentWillReceiveProps(nextProps) {}
+  componentWillReceiveProps(nextProps) {
+  }
 
   submitNew = values => {
     this.props.rts(
@@ -33,7 +35,7 @@ export class Tenant extends React.Component {
       this.uuid,
       "submitNew",
       () => {
-        this.setState({ refreshTable: true, visible: false });
+        this.setState({refreshTable: true, visible: false});
       }
     );
   };
@@ -50,7 +52,7 @@ export class Tenant extends React.Component {
         {
           title: "生产",
           onClick: () => {
-            this.setState({ visible: true });
+            this.setState({visible: true});
           }
         }
       ],
@@ -63,34 +65,22 @@ export class Tenant extends React.Component {
       ],
       columns: [
         {
-          title: "二维码",
-          dataIndex: "urlImg",
-          key: "urlImg",
-          render: (text, record) => <QRCode value={record.url} size={80} />
-        },
-        {
-          title: "批次号",
+          title: "批次",
           dataIndex: "batchNo",
           key: "batchNo"
         },
         {
-          title: "code",
+          title: "内容",
           dataIndex: "code",
           key: "code"
         },
         {
-          title: "激活状态",
-          dataIndex: "activated",
-          key: "activated",
-          render: text => (text ? "已激活" : "未激活")
-        },
-        {
-          title: "所属兑奖中心",
+          title: "兑奖中心",
           dataIndex: "tenant.name",
           key: "tenant.name"
         },
         {
-          title: "所属机器名称/序列号",
+          title: "设备名称/序列号",
           dataIndex: "box",
           key: "box",
           render: (text, record) => {
@@ -105,16 +95,45 @@ export class Tenant extends React.Component {
           key: "times"
         },
         {
-          title: "是否已中奖",
+          title: "是否激活",
+          dataIndex: "activated",
+          key: "activated",
+          render: text => (text ? "已激活" : "未激活")
+        },
+        {
+          title: "是否中奖",
           dataIndex: "awardId",
           key: "awardId",
           render: text => (text ? "是" : "否")
         },
         {
-          title: "奖品",
+          title: "奖品名称",
           dataIndex: "award.name",
-          key: "award.name"
-        }
+          key: "award.name",
+          render: (text, record) => {
+            if (record.activated) {
+              return (record.award && record.award.name) || '无奖品'
+            }
+          }
+        },
+        {
+          title: "显示二维码",
+          dataIndex: "urlImg",
+          key: "urlImg",
+          // render: (text, record) => <QRCode value={record.url} size={80}/>
+          render: (text, record) => {
+            return <span>
+              <a
+                href="javascript:;"
+                onClick={() => {
+                  this.setState({qrCode: record, showQrCode: true});
+                }}
+              >
+                显示
+              </a>
+            </span>
+          }
+        },
       ]
     };
 
@@ -128,16 +147,16 @@ export class Tenant extends React.Component {
               replace={this.props.replace}
               refresh={this.state.refreshTable}
               onRefreshEnd={() => {
-                this.setState({ refreshTable: false });
+                this.setState({refreshTable: false});
               }}
             />
           </Col>
         </Row>
         <Modal
           visible={this.state.visible}
-          title="新建"
+          title="生成二维码"
           onCancel={() => {
-            this.setState({ visible: false });
+            this.setState({visible: false});
           }}
           footer={null}
         >
@@ -148,7 +167,7 @@ export class Tenant extends React.Component {
                 field: "amount",
                 label: "数量",
                 params: {
-                  rules: [{ required: true, message: "必填项" }]
+                  rules: [{required: true, message: "必填项"}]
                 }
               }
             ]}
@@ -156,9 +175,22 @@ export class Tenant extends React.Component {
               this.submitNew(values);
             }}
             onCancel={() => {
-              this.setState({ visible: false });
+              this.setState({visible: false});
             }}
           />
+        </Modal>
+
+        <Modal
+          visible={this.state.showQrCode}
+          title={this.state.qrCode.batchNo + '-' + this.state.qrCode.code}
+          onCancel={() => {
+            this.setState({showQrCode: false});
+          }}
+          footer={null}
+        >
+          <div style={{'text-align': 'center'}}>
+            <QRCode value={this.state.qrCode.url} size={120}/>
+          </div>
         </Modal>
       </Grid>
     );

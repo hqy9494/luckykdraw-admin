@@ -45,7 +45,7 @@ export class Tenant extends React.Component {
       },
       buttons: [
         {
-          title: "新建",
+          title: "添加",
           onClick: () => {
             this.setState({ visible: true });
           }
@@ -63,7 +63,7 @@ export class Tenant extends React.Component {
           dataIndex: "id",
           key: "id",
           render: function(id) {
-            return `${location.href.split("#")[0]}wx/bind?tenantId=${id}`;
+            return `${location.hostname}/wx/bind?tenantId=${id}`;
           }
         },
         {
@@ -96,7 +96,7 @@ export class Tenant extends React.Component {
         </Row>
         <Modal
           visible={this.state.visible}
-          title="新建"
+          title="添加兑奖中心"
           onCancel={() => {
             this.setState({ visible: false });
           }}
