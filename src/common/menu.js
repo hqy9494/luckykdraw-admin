@@ -14,23 +14,18 @@ const menu = [
   {
     id: "qrCodes",
     icon: "qrcode",
-    name: "二维码",
+    name: "制码",
     component: "qrCodes",
     children: [
       {
         id: "qrCode",
-        name: "生成",
+        name: "二维码生成",
         component: "qrCode"
       },
       {
         id: "batchNo",
-        name: "批次",
+        name: "二维码批次",
         component: "batchNo"
-      },
-      {
-        id: "template",
-        name: "模板",
-        component: "template"
       }
     ]
   },
@@ -60,6 +55,11 @@ const menu = [
         id: "coupon",
         name: "优惠券",
         component: "coupon"
+      },
+      {
+        id: "template",
+        name: "奖品模板",
+        component: "template"
       }
     ]
   },
@@ -74,7 +74,7 @@ const menu = [
     icon: "printer",
     name: "补货员申请",
     component: "replenishmenterapply"
-  },
+  }
 ];
 
 export default menu;

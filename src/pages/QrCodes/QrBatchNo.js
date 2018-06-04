@@ -4,8 +4,9 @@ import { createStructuredSelector } from "reselect";
 import uuid from "uuid";
 import QRCode from "qrcode.react";
 import { Col, Grid, Row } from "react-bootstrap";
-import { Progress } from "antd";
+import { Progress, Modal } from "antd";
 import TableExpand from "../../components/TableExpand";
+import FormExpand from "../../components/FormExpand";
 import Config from "../../config";
 
 export class QrBatchNo extends React.Component {
@@ -21,6 +22,21 @@ export class QrBatchNo extends React.Component {
 
   componentWillReceiveProps(nextProps) {}
 
+  submitNew = values => {
+    this.props.rts(
+      {
+        method: "post",
+        url: `/qrbatchs/generate`,
+        data: values
+      },
+      this.uuid,
+      "submitNew",
+      () => {
+        this.setState({refreshTable: true, visible: false});
+      }
+    );
+  };
+
   render() {
     const config = {
       api: {
@@ -29,7 +45,14 @@ export class QrBatchNo extends React.Component {
         data: "/qrbatchs",
         total: "/qrbatchs/count"
       },
-      buttons: [],
+      buttons: [
+        {
+          title: "生产",
+          onClick: () => {
+            this.setState({ visible: true });
+          }
+        }
+      ],
       search: [],
       columns: [
         {
@@ -118,6 +141,33 @@ export class QrBatchNo extends React.Component {
             <TableExpand {...config} />
           </Col>
         </Row>
+        <Modal
+          visible={this.state.visible}
+          title="生成二维码"
+          onCancel={() => {
+            this.setState({ visible: false });
+          }}
+          footer={null}
+        >
+          <FormExpand
+            elements={[
+              {
+                type: "number",
+                field: "amount",
+                label: "数量",
+                params: {
+                  rules: [{ required: true, message: "必填项" }]
+                }
+              }
+            ]}
+            onSubmit={values => {
+              this.submitNew(values);
+            }}
+            onCancel={() => {
+              this.setState({ visible: false });
+            }}
+          />
+        </Modal>
       </Grid>
     );
   }
