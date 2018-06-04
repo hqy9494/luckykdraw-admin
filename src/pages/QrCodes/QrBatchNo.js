@@ -6,6 +6,7 @@ import QRCode from "qrcode.react";
 import { Col, Grid, Row } from "react-bootstrap";
 import { Progress } from "antd";
 import TableExpand from "../../components/TableExpand";
+import Config from "../../config";
 
 export class QrBatchNo extends React.Component {
   constructor(props) {
@@ -61,10 +62,13 @@ export class QrBatchNo extends React.Component {
         },
         {
           title: "进度",
-          dataIndex: "progress",
-          key: "progress",
+          dataIndex: "generated",
+          key: "generated",
           render: (text, record) => (
-            <Progress percent={text || 0} size="small" />
+            <Progress
+              percent={Math.round(record.generated / record.amount * 100)}
+              size="small"
+            />
           )
         },
         {
@@ -81,7 +85,20 @@ export class QrBatchNo extends React.Component {
           key: "handle",
           render: (text, record) => (
             <span>
-              <a href="javascript:;">下载</a>
+              {record.fileGenerated ? (
+                <a
+                  href="javascript:;"
+                  onClick={() => {
+                    window.open(
+                      `${Config.apiUrl}/api/qrbatchs/${record.id}/download`
+                    );
+                  }}
+                >
+                  下载
+                </a>
+              ) : (
+                ``
+              )}
             </span>
           )
         }
