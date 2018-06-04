@@ -12,10 +12,27 @@ const menu = [
     component: "record"
   },
   {
-    id: "qrCode",
+    id: "qrCodes",
     icon: "qrcode",
     name: "二维码",
-    component: "qrCode"
+    component: "qrCodes",
+    children: [
+      {
+        id: "qrCode",
+        name: "生成",
+        component: "qrCode"
+      },
+      {
+        id: "batchNo",
+        name: "批次",
+        component: "batchNo"
+      },
+      {
+        id: "template",
+        name: "模板",
+        component: "template"
+      }
+    ]
   },
   {
     id: "equipment",

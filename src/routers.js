@@ -29,10 +29,32 @@ export default {
       },
       //二维码
       qrCode: {
-        path: "qrCode",
+        path: "qrCodes/qrCode",
         module: "QrCodes",
         component: "QrCode",
         title: "二维码"
+      },
+      //二维码批次
+      batchNo: {
+        path: "qrCodes/batchNo",
+        module: "QrCodes",
+        component: "QrBatchNo",
+        title: "二维码批次"
+      },
+      //二维码模板
+      template: {
+        path: "qrCodes/template",
+        module: "QrCodes",
+        component: "QrTemplate",
+        title: "二维码模板",
+        subs: {
+          templateDetail: {
+            path: "/detail/:id",
+            module: "QrCodes",
+            component: "QrTemplateDetail",
+            title: "二维码模板详情"
+          }
+        }
       },
       //奖品
       prizeBase: {
