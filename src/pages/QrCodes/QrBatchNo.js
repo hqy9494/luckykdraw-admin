@@ -32,7 +32,7 @@ export class QrBatchNo extends React.Component {
       this.uuid,
       "submitNew",
       () => {
-        this.setState({refreshTable: true, visible: false});
+        this.setState({ refreshTable: true, visible: false });
       }
     );
   };
@@ -56,11 +56,6 @@ export class QrBatchNo extends React.Component {
       search: [],
       columns: [
         {
-          title: "名称",
-          dataIndex: "name",
-          key: "name"
-        },
-        {
           title: "批次数量",
           dataIndex: "amount",
           key: "amount"
@@ -69,19 +64,21 @@ export class QrBatchNo extends React.Component {
           title: "批次编号",
           dataIndex: "batchNos",
           key: "batchNos",
-          width: 300,
-          render: (text = [], record) => (
-            <div
-              style={{
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-                width: "300px"
-              }}
-            >
-              {text.join(",")}
-            </div>
-          )
+          // width: 300,
+          // render: (text = [], record) => (
+          //   <div
+          //     style={{
+          //       overflow: "hidden",
+          //       textOverflow: "ellipsis",
+          //       whiteSpace: "nowrap",
+          //       width: "300px"
+          //     }}
+          //   >
+          //     {text.join(",")}
+          //   </div>
+          // )
+          render: (text = [], record) =>
+            text.length > 1 ? `${text[0]} ~ ${text[text.length - 1]}` : text[0]
         },
         {
           title: "进度",
