@@ -60,6 +60,11 @@ const menu = [
         id: "template",
         name: "奖品模板",
         component: "template"
+      },
+      {
+        id: "specification",
+        name: "奖品规格",
+        component: "specification"
       }
     ]
   },
