@@ -101,12 +101,6 @@ export class Tenant extends React.Component {
           render: text => (text ? "已激活" : "未激活")
         },
         {
-          title: "是否中奖",
-          dataIndex: "awardId",
-          key: "awardId",
-          render: text => (text ? "是" : "否")
-        },
-        {
           title: "奖品名称",
           dataIndex: "award.name",
           key: "award.name",

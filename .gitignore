@@ -68,3 +68,4 @@ report.html
 .idea
 yarn.lock
 package-lock.json
+dump.rdb

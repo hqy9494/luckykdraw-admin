@@ -6,12 +6,15 @@ import {Col, Grid, Row} from "react-bootstrap";
 import {Divider, Modal, Popconfirm} from "antd";
 import TableExpand from "../../components/TableExpand";
 import FormExpand from "../../components/FormExpand";
+import QRCode from "qrcode.react";
 
 export class PrizeSuper extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       visible: false,
+      showQrCode: false,
+      record: {},
       refreshTable: false
     };
     this.uuid = uuid.v1();
@@ -29,7 +32,10 @@ export class PrizeSuper extends React.Component {
     this.props.rts(
       {
         method: "get",
-        url: `/awards`
+        url: `/awards`,
+        params: {
+          filter: {where: {type: 'jack_pot_award'}}
+        }
       },
       this.uuid,
       "award"
@@ -199,10 +205,20 @@ export class PrizeSuper extends React.Component {
                     >
                       <a href="javascript:;">取消</a>
                     </Popconfirm>
+                     <Divider type="vertical"/>
+              <a
+                href="javascript:;"
+                onClick={() => {
+                  this.setState({record, showQrCode: true});
+                }}
+              >
+                显示
+              </a>
                   </span>
                 );
               case "activated":
                 return (
+                  <span>
                   <Popconfirm
                     title="确定取消此大奖？"
                     onConfirm={() => {
@@ -213,6 +229,16 @@ export class PrizeSuper extends React.Component {
                   >
                     <a href="javascript:;">取消</a>
                   </Popconfirm>
+                     <Divider type="vertical"/>
+                                  <a
+                                    href="javascript:;"
+                                    onClick={() => {
+                                      this.setState({record, showQrCode: true});
+                                    }}
+                                  >
+                显示
+              </a>
+                  </span>
                 );
               default:
                 break;
@@ -271,6 +297,19 @@ export class PrizeSuper extends React.Component {
               this.setState({visible: false});
             }}
           />
+        </Modal>
+
+        <Modal
+          visible={this.state.showQrCode}
+          title={this.state.record.award && this.state.record.award.name}
+          onCancel={() => {
+            this.setState({showQrCode: false});
+          }}
+          footer={null}
+        >
+          <div style={{'text-align': 'center'}}>
+            <QRCode value={this.state.record.qrCode && this.state.record.qrCode.url} size={120}/>
+          </div>
         </Modal>
       </Grid>
     );

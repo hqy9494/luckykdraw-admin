@@ -185,24 +185,24 @@ export class Record extends React.Component {
                     type: "select",
                     options: [
                       {
-                        title: "顺丰",
-                        value: "sf"
+                        title: "顺丰快递",
+                        value: "shunfeng"
                       },
                       {
-                        title: "圆通",
-                        value: "yt"
+                        title: "圆通快递",
+                        value: "yuantong"
                       },
                       {
-                        title: "EMS",
+                        title: "EMS快递",
                         value: "ems"
                       },
                       {
-                        title: "中通",
-                        value: "zt"
+                        title: "中通快递",
+                        value: "zhongtong"
                       },
                       {
-                        title: "韵达",
-                        value: "yd"
+                        title: "韵达快递",
+                        value: "yunda"
                       }
                     ],
                     params: {
