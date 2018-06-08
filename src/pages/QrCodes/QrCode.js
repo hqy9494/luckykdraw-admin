@@ -61,6 +61,15 @@ export class Tenant extends React.Component {
           type: "field",
           field: "batchNo",
           title: "批次号"
+        },
+        {
+          type: "option",
+          title: "激活状态",
+          field: "activated",
+          options: [
+            {title: "已激活", value: true},
+            {title: "未激活", value: false},
+          ]
         }
       ],
       columns: [

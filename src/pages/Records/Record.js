@@ -50,7 +50,12 @@ export class Record extends React.Component {
         data: "/awardrecords/search/fahuo",
         total: "/awardrecords/count/fahuo"
       },
-      buttons: [],
+      buttons: [{
+        title: "导出待发货",
+        onClick: () => {
+          window.open();
+        }
+      }],
       search: [],
       columns: [
         {
@@ -79,6 +84,16 @@ export class Record extends React.Component {
           dataIndex: "user.nickname",
           key: "user.nickname",
           render: (text, record) => text || record.fullname
+        },
+        {
+          title: "收货人名称",
+          dataIndex: "userFullname",
+          key: "userFullname"
+        },
+        {
+          title: "收货人电话",
+          dataIndex: "userContactMobile",
+          key: "userContactMobile"
         },
         {
           title: "时间",
