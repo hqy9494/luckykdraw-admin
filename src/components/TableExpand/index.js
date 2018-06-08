@@ -81,10 +81,9 @@ export default class TableExpand extends React.Component {
                     this.searchsToWhere(this.params.searchs),
                     api.where
                   ),
-                  limit: pageSize,
-                  skip: this.params.skip || 0,
                   order: this.params.order || "createdAt DESC"
                 },
+                
                 api.include && { include: api.include }
               )
             }
