@@ -46,6 +46,7 @@ export class PrizeBase extends React.Component {
         "submitFix",
         () => {
           this.setState({ refreshTable: true, visible: false });
+          window.location.reload();
         }
       );
     } else {
@@ -59,6 +60,7 @@ export class PrizeBase extends React.Component {
         "submitNew",
         () => {
           this.setState({ refreshTable: true, visible: false });
+          window.location.reload();
         }
       );
     }
@@ -173,6 +175,7 @@ export class PrizeBase extends React.Component {
           title={(this.state.curRow && this.state.curRow.name) || "添加奖品"}
           onCancel={() => {
             this.setState({ visible: false });
+            window.location.reload();
           }}
           footer={null}
         >
@@ -246,6 +249,7 @@ export class PrizeBase extends React.Component {
             }}
             onCancel={() => {
               this.setState({ visible: false });
+              window.location.reload();
             }}
           />
         </Modal>

@@ -40,6 +40,7 @@ export class PrizeCoupon extends React.Component {
         "submitNew",
         () => {
           this.setState({refreshTable: true, visible: false});
+          window.location.reload();
         }
       );
     } else {
@@ -57,6 +58,7 @@ export class PrizeCoupon extends React.Component {
         "submitNew",
         () => {
           this.setState({refreshTable: true, visible: false});
+          window.location.reload();
         }
       );
     }
@@ -155,6 +157,7 @@ export class PrizeCoupon extends React.Component {
           title={(this.state.curRow && this.state.curRow.title) || '添加优惠券'}
           onCancel={() => {
             this.setState({visible: false});
+            window.location.reload();
           }}
           footer={null}
         >
@@ -230,6 +233,7 @@ export class PrizeCoupon extends React.Component {
             }}
             onCancel={() => {
               this.setState({visible: false});
+              window.location.reload();
             }}
           />
         </Modal>
