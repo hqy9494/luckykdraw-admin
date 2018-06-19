@@ -56,7 +56,48 @@ export class Record extends React.Component {
           window.open();
         }
       }],
-      search: [],
+      search: [
+        {
+          type: "relevance",
+          field: "tenantId",
+          model: {
+            name: "tenant",
+            api: "/tenants",
+            field: "name"
+          },
+          title: "兑奖中心"
+        },
+        {
+          type: "relevance",
+          field: "boxId",
+          model: {
+            name: "box",
+            api: "/boxes",
+            field: "name"
+          },
+          title: "设备名称"
+        },
+        {
+          type: "relevance",
+          field: "awardId",
+          model: {
+            name: "award",
+            api: "/awards",
+            field: "name"
+          },
+          title: "奖品名称"
+        },
+        {
+          type: "field",
+          field: "userFullname",
+          title: "收货人名称"
+        },
+        {
+          type: "field",
+          field: "userContactMobile",
+          title: "收货人电话"
+        }
+      ],
       columns: [
         {
           title: "奖品名称",
@@ -130,7 +171,48 @@ export class Record extends React.Component {
         total: "/awardrecords/count/virtual"
       },
       buttons: [],
-      search: [],
+      search: [
+        {
+          type: "relevance",
+          field: "tenantId",
+          model: {
+            name: "tenant",
+            api: "/tenants",
+            field: "name"
+          },
+          title: "兑奖中心"
+        },
+        {
+          type: "relevance",
+          field: "boxId",
+          model: {
+            name: "box",
+            api: "/boxes",
+            field: "name"
+          },
+          title: "设备名称"
+        },
+        {
+          type: "relevance",
+          field: "awardId",
+          model: {
+            name: "award",
+            api: "/awards",
+            field: "name"
+          },
+          title: "奖品名称"
+        },
+        {
+          type: "field",
+          field: "userFullname",
+          title: "收货人名称"
+        },
+        {
+          type: "field",
+          field: "userContactMobile",
+          title: "收货人电话"
+        }
+      ],
       columns: [
         {
           title: "奖品名称",
@@ -177,6 +259,8 @@ export class Record extends React.Component {
               <Col lg={12}>
                 <TableExpand
                   {...config1}
+                  path={`${this.props.match.path}`}
+                  replace={this.props.replace}
                   refresh={this.state.refreshTable1}
                   onRefreshEnd={() => {
                     this.setState({refreshTable1: false});
@@ -247,6 +331,8 @@ export class Record extends React.Component {
               <Col lg={12}>
                 <TableExpand
                   {...config2}
+                  path={`${this.props.match.path}`}
+                  replace={this.props.replace}
                   refresh={this.state.refreshTable2}
                   onRefreshEnd={() => {
                     this.setState({refreshTable2: false});

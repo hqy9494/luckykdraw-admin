@@ -134,7 +134,49 @@ export class PrizeSuper extends React.Component {
           }
         }
       ],
-      search: [],
+      search: [
+        {
+          type: "relevance",
+          field: "tenantId",
+          model: {
+            name: "tenant",
+            api: "/tenants",
+            field: "name"
+          },
+          title: "兑奖中心"
+        },
+        {
+          type: "relevance",
+          field: "boxId",
+          model: {
+            name: "box",
+            api: "/boxes",
+            field: "name"
+          },
+          title: "设备名称"
+        },
+        {
+          type: "relevance",
+          field: "awardId",
+          model: {
+            name: "award",
+            api: "/awards",
+            field: "name"
+          },
+          title: "奖品名称"
+        },
+        {
+          type: "option",
+          title: "状态",
+          field: "state",
+          options: [
+            {title: "未激活", value: "planned"},
+            {title: "已激活", value: "activated"},
+            {title: "已取消", value: "canceled"},
+            {title: "已出奖", value: "awarded"}
+          ]
+        }
+      ],
       columns: [
         {
           title: "名称",
@@ -254,6 +296,8 @@ export class PrizeSuper extends React.Component {
           <Col lg={12}>
             <TableExpand
               {...config}
+              path={`${this.props.match.path}`}
+              replace={this.props.replace}
               refresh={this.state.refreshTable}
               onRefreshEnd={() => {
                 this.setState({refreshTable: false});

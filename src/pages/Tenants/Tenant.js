@@ -54,7 +54,13 @@ export class Tenant extends React.Component {
           }
         }
       ],
-      search: [],
+      search: [
+        {
+          type: "field",
+          field: "name",
+          title: "名称"
+        }
+      ],
       columns: [
         {
           title: "名称",
@@ -90,6 +96,8 @@ export class Tenant extends React.Component {
           <Col lg={12}>
             <TableExpand
               {...config}
+              path={`${this.props.match.path}`}
+              replace={this.props.replace}
               refresh={this.state.refreshTable}
               onRefreshEnd={() => {
                 this.setState({refreshTable: false});
