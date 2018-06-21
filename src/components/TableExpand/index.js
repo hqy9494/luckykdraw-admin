@@ -145,7 +145,7 @@ export default class TableExpand extends React.Component {
         api.uuid,
         "total",
         total => {
-          this.updateState({ total: total.count || 0 });
+          this.updateState({ total: total.count|| total || 0 });
         }
       );
     }

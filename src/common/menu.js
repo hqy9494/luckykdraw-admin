@@ -79,6 +79,12 @@ const menu = [
     icon: "printer",
     name: "补货员申请",
     component: "replenishmenterapply"
+  },
+  {
+    id: "Evaluate",
+    icon: "message",
+    name: "晒单管理",
+    component: "Evaluate"
   }
 ];
 
