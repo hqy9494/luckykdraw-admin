@@ -146,6 +146,8 @@ export class PrizeCoupon extends React.Component {
             <TableExpand
               {...config}
               refresh={this.state.refreshTable}
+              path={`${this.props.match.path}`}
+              replace={this.props.replace}
               onRefreshEnd={() => {
                 this.setState({refreshTable: false});
               }}
@@ -225,7 +227,16 @@ export class PrizeCoupon extends React.Component {
                   ],
                   rules: [{required: true, message: "必填项"}]
                 }
-              }
+              },
+              {
+                type: "text",
+                field: "description",
+                label: "描述",
+                params: {
+                  initialValue: this.state.curRow && this.state.curRow.description,
+                  rules: [{required: true, message: "必填项"}]
+                }
+              },
             ]}
             onSubmit={values => {
               // console.log(values);
