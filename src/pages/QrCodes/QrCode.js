@@ -63,6 +63,36 @@ export class Tenant extends React.Component {
           title: "批次号"
         },
         {
+          type: "relevance",
+          field: "tenantId",
+          model: {
+            name: "tenant",
+            api: "/tenants",
+            field: "name"
+          },
+          title: "兑奖中心"
+        },
+        {
+          type: "relevance",
+          field: "boxId",
+          model: {
+            name: "box",
+            api: "/boxes",
+            field: "name"
+          },
+          title: "设备名称"
+        },
+        {
+          type: "relevance",
+          field: "awardId",
+          model: {
+            name: "award",
+            api: "/awards",
+            field: "name"
+          },
+          title: "奖品名称"
+        },
+        {
           type: "option",
           title: "激活状态",
           field: "activated",

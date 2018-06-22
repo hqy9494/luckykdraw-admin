@@ -105,6 +105,12 @@ export default {
         module: 'Settings',
         component: 'ReplenishmenterApply',
         title: '补货员申请'
+      },
+      evaluate: {
+        path: 'evaluate',
+        module: 'Settings',
+        component: 'Evaluate',
+        title: '晒单管理'
       }
     }
   }

@@ -94,7 +94,18 @@ export class PrizeBase extends React.Component {
           }
         }
       ],
-      search: [],
+      search: [
+        {
+          type: "field",
+          field: "name",
+          title: "名称"
+        },
+        {
+          type: "number",
+          field: "value",
+          title: "价格"
+        }
+      ],
       columns: [
         {
           title: "奖品图",
@@ -163,6 +174,8 @@ export class PrizeBase extends React.Component {
           <Col lg={12}>
             <TableExpand
               {...config}
+              path={`${this.props.match.path}`}
+              replace={this.props.replace}
               refresh={this.state.refreshTable}
               onRefreshEnd={() => {
                 this.setState({ refreshTable: false });

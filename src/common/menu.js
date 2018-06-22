@@ -61,11 +61,11 @@ const menu = [
         name: "奖品模板",
         component: "template"
       },
-      {
-        id: "specification",
-        name: "奖品规格",
-        component: "specification"
-      }
+      // {
+      //   id: "specification",
+      //   name: "奖品规格",
+      //   component: "specification"
+      // }
     ]
   },
   {
@@ -79,6 +79,12 @@ const menu = [
     icon: "printer",
     name: "补货员申请",
     component: "replenishmenterapply"
+  },
+  {
+    id: "Evaluate",
+    icon: "message",
+    name: "晒单管理",
+    component: "Evaluate"
   }
 ];
 

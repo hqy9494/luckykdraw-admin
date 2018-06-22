@@ -80,7 +80,33 @@ export class PrizeCoupon extends React.Component {
           }
         }
       ],
-      search: [],
+      search: [
+        {
+          type: "field",
+          field: "title",
+          title: "名称"
+        },
+        {
+          type: "field",
+          field: "price",
+          title: "原价"
+        },
+        {
+          type: "field",
+          field: "value",
+          title: "优惠券金额"
+        },
+        // {
+        //   type: "date",
+        //   field: "startTime",
+        //   title: "开始时间"
+        // },
+        // {
+        //   type: "date",
+        //   field: "endTime",
+        //   title: "结束时间"
+        // },
+      ],
       columns: [
         {
           title: "产品图",
@@ -145,6 +171,8 @@ export class PrizeCoupon extends React.Component {
           <Col lg={12}>
             <TableExpand
               {...config}
+              path={`${this.props.match.path}`}
+              replace={this.props.replace}
               refresh={this.state.refreshTable}
               path={`${this.props.match.path}`}
               replace={this.props.replace}

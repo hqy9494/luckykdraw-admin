@@ -4,6 +4,8 @@ import classNames from "classnames";
 import moment from "../../components/Moment";
 import { Calendar, DateRange } from "react-date-range";
 import * as rdrLocales from "react-date-range/dist/locale";
+import axios from "axios";
+import config from "../../config";
 
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
@@ -45,6 +47,10 @@ export default class SearchExpand extends React.Component {
         };
       } else if (s.type === "number") {
         searchState[s.field] = {};
+      } else if (s.type === "relevance") {
+        searchState[s.field] = {
+          data: []
+        };
       }
     });
     return { searchState };
@@ -100,7 +106,7 @@ export default class SearchExpand extends React.Component {
         }
       });
     }
-    // console.log(newSearchs);
+    console.log(newSearchs);
     this.setState({ searchs: newSearchs, searchText: null });
     this.props.onSearchChange && this.props.onSearchChange(newSearchs);
   };
@@ -141,22 +147,60 @@ export default class SearchExpand extends React.Component {
             <div
               className="o-dropdown-option"
               onClick={() => {
+                let openField = this.state.openField === search.field?"":search.field;
                 this.setState({
-                  openField:
-                    this.state.openField === search.field ? "" : search.field
+                  openField
+                },()=>{
+                  if( openField && search.model && search.model.field && search.model.api ){
+                    axios({
+                      method: "get",
+                      url: `${config.apiUrl}/api${search.model.api}`,
+                      headers: { Authorization: localStorage.token },
+                      params: {
+                        filter:{
+                          where: {
+                            [search.model.field]: { like: `%${this.state.searchText}%` }
+                          },
+                          limit: 5
+                        }
+                      }
+                    }).then(res => {
+                      this.setState({searchState:{...this.state.searchState,[search.field]:{data:res.data.map((rd)=>{
+                        return {
+                          title: rd[search.model.field],
+                          value: rd.id
+                        }
+                      })}}})
+                    }).catch(err => {});
+                  }
                 });
               }}
             >
               <Icon type="right" />
-              <span>搜索 角色为：{this.state.searchText}</span>
+              <span>搜索 {search.title}为：{this.state.searchText}</span>
             </div>
-            <ul className="o-dropdown-child-menu">
-              <li>
-                <span className="o-dropdown-option">管理员</span>
-              </li>
-              <li>
-                <span className="o-dropdown-option">运营人员</span>
-              </li>
+            <ul className="o-dropdown-child-menu"
+              style={
+                this.state.openField === search.field
+                  ? { display: "block" }
+                  : { display: "none" }
+              }
+            >
+              {this.state.searchState[search.field].data.length>0?this.state.searchState[search.field].data.map(so => (
+                <li
+                  key={so.value}
+                  onClick={() => {
+                    this.addSearch(
+                      { value: so.value, title: so.title },
+                      search.type,
+                      search.field,
+                      search.title
+                    );
+                  }}
+                >
+                  <span className="o-dropdown-option">{so.title}</span>
+                </li>
+              )):<li><span className="o-dropdown-option">结果为空</span></li>}
             </ul>
           </li>
         );
@@ -173,7 +217,7 @@ export default class SearchExpand extends React.Component {
               }}
             >
               <Icon type="right" />
-              <span>搜索 金额 范围</span>
+              <span>搜索 {search.title} 范围</span>
             </div>
             <ul
               className="o-dropdown-child-menu"
@@ -542,6 +586,11 @@ export default class SearchExpand extends React.Component {
         );
         break;
       case "relevance":
+        valueJsx = (
+          <div className="o_facet_values">
+            <span>{label.values.title}</span>
+          </div>
+        );
         break;
       case "number":
         valueJsx = (

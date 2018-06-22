@@ -11,11 +11,7 @@ import { getParameterByName } from "../../utils/utils";
 export default class TableExpand extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      pageSize: 10,
-      data: [],
-      total: 0
-    };
+
     this.getAll = !props.api.total || props.getAll ? true : false;
     this.tab = getParameterByName("tab");
     this.params = getParameterByName("q")
@@ -35,6 +31,13 @@ export default class TableExpand extends React.Component {
         ? JSON.parse(decodeURI(getParameterByName("q")))
         : {};
     }
+    
+    this.state = {
+      pageSize: 10,
+      data: [],
+      total: 0,
+      searchs: this.params.s?this.complicatedSearchs(this.params.s):[]
+    };
 
     this.columns = this.dealColumns(props.columns);
   }
@@ -78,7 +81,7 @@ export default class TableExpand extends React.Component {
                 {
                   where: Object.assign(
                     {},
-                    this.searchsToWhere(this.params.searchs),
+                    this.searchsToWhere(this.params.s),
                     api.where
                   ),
                   order: this.params.order || "createdAt DESC"
@@ -106,7 +109,7 @@ export default class TableExpand extends React.Component {
                 {
                   where: Object.assign(
                     {},
-                    this.searchsToWhere(this.params.searchs),
+                    this.searchsToWhere(this.params.s),
                     api.where
                   ),
                   limit: pageSize,
@@ -134,7 +137,7 @@ export default class TableExpand extends React.Component {
           params: {
             where: Object.assign(
               {},
-              this.searchsToWhere(this.params.searchs),
+              this.searchsToWhere(this.params.s),
               api.where
             )
           }
@@ -142,36 +145,38 @@ export default class TableExpand extends React.Component {
         api.uuid,
         "total",
         total => {
-          this.updateState({ total: total.count || 0 });
+          this.updateState({ total: total.count|| total || 0 });
         }
       );
     }
   };
 
   searchsToWhere = (searchs = []) => {
+    const { search } = this.props;
     let where = {};
 
     searchs.map(s => {
-      if (s.type === "field") {
-        where[s.field] = { like: `%${s.values}%` };
-      } else if (s.type === "relevance") {
-        where[s.field] = s.values;
-      } else if (s.type === "option") {
-        where[s.field] = s.values.value;
-      } else if (s.type === "number") {
-        if (s.values && s.values.constructor === Array) {
-          where[s.field] = Object.assign(
+      let curSearch = search.find((ss)=> s.f === ss.field);
+      if (curSearch.type === "field") {
+        where[s.f] = { like: `%${s.v}%` };
+      }else if (curSearch.type === "relevance") {
+        where[s.f] = s.v.value;
+      }else if (curSearch.type === "option") {
+        where[s.f] = s.v;
+      } else if (curSearch.type === "number") {
+        if (s.v && s.v.constructor === Array) {
+          where[s.f] = Object.assign(
             {},
-            s.values[0] && { gt: s.values[0] },
-            s.values[1] && { lt: s.values[1] }
+            s.v[0] && { gt: s.v[0] },
+            s.v[1] && { lt: s.v[1] }
           );
         }
-      } else if (s.type === "date") {
-        if (s.values && s.values.constructor === Object) {
-          where[s.field] = Object.assign(
+      } else if (curSearch.type === "date") {
+        if (s.v && s.v.constructor === Object) {
+          where[s.f] = Object.assign(
             {},
-            s.values.startDate && { gt: s.values.startDate },
-            s.values.endDate && { lt: s.values.endDate }
+            s.v.s && { gt: moment(s.v.s).startOf('day').toDate() },
+            s.v.e && { lt: moment(s.v.e).startOf('day').toDate() }
           );
         }
       }
@@ -234,7 +239,62 @@ export default class TableExpand extends React.Component {
     );
   };
 
-  simplifySearchs = searchs => {};
+  simplifySearchs = searchs => {
+    return searchs.map((s)=>{
+      if(s.type === "field" || s.type === "number" || s.type === "relevance" ){
+        return {
+          f: s.field,
+          v: s.values
+        }
+      }else if(s.type === "option"){
+        return {
+          f: s.field,
+          v: s.values.value
+        }
+      }else if(s.type === "date"){
+        return {
+          f: s.field,
+          v: {
+            s: moment(s.values.startDate).format("YYYY-MM-DD"),
+            e: moment(s.values.endDate).format("YYYY-MM-DD")
+          }
+        }
+      }
+    });
+  };
+
+  complicatedSearchs = (searchs=[]) => {
+    const { search } = this.props;
+    return searchs.map((s)=>{
+      let curSearch = search.find((ss)=> s.f === ss.field);
+      
+      if(curSearch.type === "field" || curSearch.type === "number" || curSearch.type === "relevance"){
+        return {
+          type: curSearch.type,
+          field: curSearch.field,
+          title: curSearch.title,
+          values: s.v
+        }
+      }else if(curSearch.type === "option"){
+        return {
+          type: curSearch.type,
+          field: curSearch.field,
+          title: curSearch.title,
+          values: curSearch.options.find((o)=> s.f === o.value)
+        }
+      }else if(curSearch.type === "date"){
+        return {
+          type: curSearch.type,
+          field: curSearch.field,
+          title: curSearch.title,
+          values: {
+            startDate: moment(s.v.s).toDate(),
+            endDate: moment(s.v.e).toDate()
+          }
+        }
+      }
+    });
+  }
 
   formatValue = (type, value) => {
     switch (type) {
@@ -266,7 +326,7 @@ export default class TableExpand extends React.Component {
       pagination.current = Math.ceil(skip / pageSize + 1);
       pagination.onChange = this.onChange;
     }
-
+    
     return (
       <Panel>
         <Row>
@@ -277,10 +337,12 @@ export default class TableExpand extends React.Component {
                 {search &&
                   search.length > 0 && (
                     <SearchExpand
-                      defaultSearchs={this.params.searchs || []}
+                      defaultSearchs={this.state.searchs || []}
                       search={search}
                       onSearchChange={searchs => {
-                        this.jumpUrl({ searchs });
+                        // console.log(searchs);
+                        console.log(this.simplifySearchs(searchs));
+                        this.jumpUrl({ s: this.simplifySearchs(searchs) });
                       }}
                     />
                   )}

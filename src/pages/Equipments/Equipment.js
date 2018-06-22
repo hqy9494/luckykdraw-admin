@@ -87,7 +87,23 @@ export class Tenant extends React.Component {
           }
         }
       ],
-      search: [],
+      search: [
+        {
+          type: "field",
+          field: "name",
+          title: "名称"
+        },
+        {
+          type: "relevance",
+          field: "tenantId",
+          model: {
+            name: "tenant",
+            api: "/tenants",
+            field: "name"
+          },
+          title: "兑奖中心"
+        }
+      ],
       columns: [
         {
           title: "名称",

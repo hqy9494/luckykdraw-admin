@@ -19,6 +19,8 @@ import Equipment from './Equipments/Equipment';
 import Record from './Records/Record';
 import Replenishmenter from './Settings/Replenishmenter';
 import ReplenishmenterApply from './Settings/ReplenishmenterApply';
+import Evaluate from './Settings/Evaluate';
+
 
 const modules = {
   Index,
@@ -35,7 +37,8 @@ const modules = {
   Equipment,
   Record,
   Replenishmenter,
-  ReplenishmenterApply
+  ReplenishmenterApply,
+  Evaluate
 };
 
 export default modules;
