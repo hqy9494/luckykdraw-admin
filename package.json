@@ -13,6 +13,7 @@
     "hot:prod": "npm run clean && webpack --env=prod --watch",
     "prepare": "npm run clean && node config && webpack --env=prod",
     "build": "npm run clean && node config && webpack --env=prod",
+    "build:dev": "npm run clean && node config && webpack --env=dev",
     "build:test": "npm run clean && node config && webpack --env=test",
     "start": "cross-env NODE_ENV=development node server",
     "start:test": "cross-env NODE_ENV=test node server",
