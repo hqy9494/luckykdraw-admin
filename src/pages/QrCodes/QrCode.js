@@ -20,10 +20,22 @@ export class Tenant extends React.Component {
   }
 
   componentWillMount() {
+    this.getSpecification();
   }
 
   componentWillReceiveProps(nextProps) {
   }
+
+  getSpecification = () => {
+    this.props.rts(
+      {
+        method: "get",
+        url: `/specifications`
+      },
+      this.uuid,
+      "specification"
+    );
+  };
 
   submitNew = values => {
     this.props.rts(
@@ -41,6 +53,20 @@ export class Tenant extends React.Component {
   };
 
   render() {
+
+    const { specification } = this.props;
+
+    let specificationList = [];
+
+    if (specification && specification[this.uuid]) {
+      specificationList = specification[this.uuid].map(t => {
+        return {
+          title: t.name,
+          value: t.id
+        };
+      });
+    }
+
     const config = {
       api: {
         rts: this.props.rts,
@@ -196,9 +222,18 @@ export class Tenant extends React.Component {
           <FormExpand
             elements={[
               {
+                label: "规格",
+                field: "specificationId",
+                type: "select",
+                options: specificationList,
+                params: {
+                  rules: [{ required: true, message: "必填项" }]
+                }
+              },
+              {
                 type: "number",
                 field: "amount",
-                label: "数量",
+                label: "批次数量",
                 params: {
                   rules: [{required: true, message: "必填项"}]
                 }
@@ -235,9 +270,11 @@ const mapDispatchToProps = dispatch => {
 };
 
 const Tenantuuid = state => state.get("rts").get("uuid");
+const specification = state => state.get("rts").get("specification");
 
 const mapStateToProps = createStructuredSelector({
-  Tenantuuid
+  Tenantuuid,
+  specification
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Tenant);

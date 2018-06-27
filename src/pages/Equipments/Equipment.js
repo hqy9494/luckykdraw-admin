@@ -19,6 +19,7 @@ export class Tenant extends React.Component {
 
   componentWillMount() {
     this.getTenant();
+    this.getSpecification();
   }
 
   componentWillReceiveProps(nextProps) {}
@@ -31,6 +32,17 @@ export class Tenant extends React.Component {
       },
       this.uuid,
       "tenant"
+    );
+  };
+  
+  getSpecification = () => {
+    this.props.rts(
+      {
+        method: "get",
+        url: `/specifications`
+      },
+      this.uuid,
+      "specification"
     );
   };
 
@@ -49,7 +61,8 @@ export class Tenant extends React.Component {
             contactMobile: values.contactMobile,
             contact: values.contact,
             regionId: "ByWbXglYJ7"
-          }
+          },
+          specificationId: values.specificationId
         }
       },
       this.uuid,
@@ -66,6 +79,19 @@ export class Tenant extends React.Component {
 
     if (tenant && tenant[this.uuid]) {
       tenantList = tenant[this.uuid].map(t => {
+        return {
+          title: t.name,
+          value: t.id
+        };
+      });
+    }
+
+    const { specification } = this.props;
+
+    let specificationList = [];
+
+    if (specification && specification[this.uuid]) {
+      specificationList = specification[this.uuid].map(t => {
         return {
           title: t.name,
           value: t.id
@@ -135,6 +161,26 @@ export class Tenant extends React.Component {
           title: "兑奖中心",
           dataIndex: "tenant.name",
           key: "tenant.name"
+        },
+        {
+          title: "二维码规格",
+          dataIndex: "specification.name",
+          key: "specification.name"
+        },
+        {
+          title: "操作",
+          key: "handle",
+          render: (text, record) => (
+            <span>
+              <a
+                  href="javascript:;"
+                  onClick={() => {
+                  }}
+                >
+                  中奖模板
+                </a>
+            </span>
+          )
         }
       ]
     };
@@ -167,6 +213,15 @@ export class Tenant extends React.Component {
                 field: "tenantId",
                 type: "select",
                 options: tenantList,
+                params: {
+                  rules: [{ required: true, message: "必填项" }]
+                }
+              },
+              {
+                label: "规格",
+                field: "specificationId",
+                type: "select",
+                options: specificationList,
                 params: {
                   rules: [{ required: true, message: "必填项" }]
                 }
@@ -239,10 +294,12 @@ const mapDispatchToProps = dispatch => {
 
 const Tenantuuid = state => state.get("rts").get("uuid");
 const tenant = state => state.get("rts").get("tenant");
+const specification = state => state.get("rts").get("specification");
 
 const mapStateToProps = createStructuredSelector({
   Tenantuuid,
-  tenant
+  tenant,
+  specification
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Tenant);

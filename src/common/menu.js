@@ -61,11 +61,11 @@ const menu = [
         name: "奖品模板",
         component: "template"
       },
-      // {
-      //   id: "specification",
-      //   name: "奖品规格",
-      //   component: "specification"
-      // }
+      {
+        id: "specification",
+        name: "奖品规格",
+        component: "specification"
+      }
     ]
   },
   {
