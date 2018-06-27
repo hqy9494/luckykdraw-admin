@@ -92,7 +92,15 @@ export default {
         path: 'equipment',
         module: 'Equipments',
         component: 'Equipment',
-        title: '设备'
+        title: '设备',
+        subs: {
+          equipmentDetail: {
+            path: '/detail/:id',
+            module: 'Equipments',
+            component: 'EquipmentDetail',
+            title: '设备中奖模板'
+          }
+        }
       },
       Replenishmenter: {
         path: 'replenishmenter',

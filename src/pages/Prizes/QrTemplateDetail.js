@@ -18,7 +18,7 @@ export class QrTemplateDetail extends React.Component {
 
   componentWillMount() {
     if (this.props.match.params.id && this.props.match.params.id !== "add") {
-      this.getOne(this.props.match.params.id);
+      this.getOne(this.props.match.params.id, this.props.params.type);
     }
     this.getAwards();
   }
@@ -36,12 +36,12 @@ export class QrTemplateDetail extends React.Component {
     );
   };
 
-  getOne = id => {
+  getOne = (id, type) => {
     id &&
       this.props.rts(
         {
           method: "get",
-          url: `/awardtemplates/${id}/award`
+          url: type==="box"?`/awardtemplates/award/${id}`:`/awardtemplates/${id}/award`
         },
         this.uuid,
         "pageInfo",
@@ -77,7 +77,7 @@ export class QrTemplateDetail extends React.Component {
           this.props.rts(
             {
               method: "put",
-              url: `/awardtemplates/${this.props.match.params.id}/award`,
+              url: this.props.params.type==="box"?`/awardtemplates/award/${this.props.match.params.id}`:`/awardtemplates/${this.props.match.params.id}/award`,
               data: { awards }
             },
             this.uuid,

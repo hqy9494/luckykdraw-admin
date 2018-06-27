@@ -1,7 +1,9 @@
 import Equipment from "./Equipment";
+import EquipmentDetail from "./EquipmentDetail";
 
 const Equipments = {
-  Equipment
+  Equipment,
+  EquipmentDetail
 };
 
 export default Equipments;

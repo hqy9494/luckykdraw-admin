@@ -175,6 +175,11 @@ export class Tenant extends React.Component {
               <a
                   href="javascript:;"
                   onClick={() => {
+                    this.props.to(
+                      `${this.props.match.path}/detail/${record.id}?name=${
+                        record.name
+                      }&type=box`
+                    );
                   }}
                 >
                   中奖模板
