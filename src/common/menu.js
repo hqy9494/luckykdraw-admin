@@ -65,6 +65,11 @@ const menu = [
         id: "specification",
         name: "奖品规格",
         component: "specification"
+      },
+      {
+        id: "clue",
+        name: "线索",
+        component: "clue"
       }
     ]
   },

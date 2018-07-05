@@ -11,6 +11,7 @@ import PrizeCoupon from './Prizes/PrizeCoupon';
 import QrTemplate from './Prizes/QrTemplate';
 import QrTemplateDetail from './Prizes/QrTemplateDetail';
 import Specification from './Prizes/Specification';
+import Clue from './Prizes/Clue';
 //
 import Balance from './Balances/Balance';
 //
@@ -30,6 +31,7 @@ const modules = {
   QrTemplate,
   QrTemplateDetail,
   Specification,
+  Clue,
   PrizeSuper,
   PrizeBase,
   PrizeCoupon,

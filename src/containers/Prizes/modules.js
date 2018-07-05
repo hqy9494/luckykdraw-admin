@@ -4,6 +4,7 @@ import PrizeCoupon from './PrizeCoupon';
 import QrTemplate from './QrTemplate';
 import QrTemplateDetail from './QrTemplateDetail';
 import Specification from './Specification';
+import Clue from './Clue';
 
 const Prizes = {
   PrizeSuper,
@@ -11,7 +12,8 @@ const Prizes = {
   PrizeCoupon,
   QrTemplate,
   QrTemplateDetail,
-  Specification
+  Specification,
+  Clue
 };
 
 export default Prizes;

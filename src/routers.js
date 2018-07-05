@@ -4,7 +4,7 @@ export default {
   home: {
     module: '',
     path: '/',
-    redirect: '/tenant',
+    redirect: '/dashboard',
     subs: {
       // 主页
       dashboard: {
@@ -59,6 +59,12 @@ export default {
         module: 'Prizes',
         component: 'PrizeCoupon',
         title: '优惠券'
+      },
+      clue: {
+        path: 'prizes/clue',
+        module: 'Prizes',
+        component: 'Clue',
+        title: '线索'
       },
       template: {
         path: 'prizes/template',
