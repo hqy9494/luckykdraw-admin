@@ -1,4 +1,4 @@
-import Index from './Indexs/Index';
+import Index from './Indexs/Index.jsx';
 //
 import Tenant from './Tenants/Tenant';
 //
