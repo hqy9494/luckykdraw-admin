@@ -128,8 +128,8 @@ export class PrizeShiwu extends React.Component {
         },
         {
           title: "库存",
-          dataIndex: "isInventorySensitive",
-          key: "isInventorySensitive",
+          dataIndex: "inventory",
+          key: "inventory",
           render: (text, record) => (text ? record.inventory : "无限")
         },
         {
