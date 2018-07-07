@@ -7,6 +7,7 @@ import QrBatchNo from './QrCodes/QrBatchNo';
 //
 import PrizeSuper from './Prizes/PrizeSuper';
 import PrizeBase from './Prizes/PrizeBase';
+import PrizeShiwu from './Prizes/PrizeShiwu';
 import PrizeCoupon from './Prizes/PrizeCoupon';
 import QrTemplate from './Prizes/QrTemplate';
 import QrTemplateDetail from './Prizes/QrTemplateDetail';
@@ -34,6 +35,7 @@ const modules = {
   Clue,
   PrizeSuper,
   PrizeBase,
+  PrizeShiwu,
   PrizeCoupon,
   Balance,
   Equipment,

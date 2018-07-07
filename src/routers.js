@@ -48,6 +48,12 @@ export default {
         component: 'PrizeBase',
         title: '奖品管理'
       },
+      PrizeShiwu: {
+        path: 'prizes/shiwu',
+        module: 'Prizes',
+        component: 'PrizeShiwu',
+        title: '实物奖品'
+      },
       prizeSuper: {
         path: 'prizes/super',
         module: 'Prizes',

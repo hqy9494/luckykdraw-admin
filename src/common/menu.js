@@ -47,6 +47,11 @@ const menu = [
         component: "base"
       },
       {
+        id: "shiwu",
+        name: "实物奖品",
+        component: "shiwu"
+      },
+      {
         id: "super",
         name: "超级大奖",
         component: "super"
