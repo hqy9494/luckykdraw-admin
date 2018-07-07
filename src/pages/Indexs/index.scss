@@ -70,6 +70,7 @@
     font-size: 30px;
     font-weight: bold;
     line-height: 1;
+    text-align: right;
   }
 }
 
@@ -235,10 +236,36 @@
     display: flex;
     justify-content: space-between;
     .index-i5-value1 {
+      position: relative;
       padding-left: 10px;
+      &::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        left: 0;
+        width: 5px;
+        height: 12px;
+        background-image: url(../../assets/img/index/icon2.1.png);
+        background-repeat: no-repeat;
+        background-size: 100%;
+      }
     }
     .index-i5-value2 {
+      position: relative;
       padding-left: 10px;
+      &::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        left: 0;
+        width: 5px;
+        height: 12px;
+        background-image: url(../../assets/img/index/icon2.2.png);
+        background-repeat: no-repeat;
+        background-size: 100%;
+      }
     }
   }
 }
