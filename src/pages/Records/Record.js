@@ -219,7 +219,11 @@ export class Record extends React.Component {
           dataIndex: "award.name",
           key: "award.name"
         },
-
+        {
+          title: "奖品金额",
+          dataIndex: "value",
+          key: "value"
+        },
         {
           title: "奖品类型",
           dataIndex: "awartTypeTitle",
