@@ -126,17 +126,17 @@ export class PrizeBase extends React.Component {
           dataIndex: "typeTitle",
           key: "typeTitle"
         },
-        {
-          title: "价格",
-          dataIndex: "value",
-          key: "value"
-        },
-        {
-          title: "库存",
-          dataIndex: "isInventorySensitive",
-          key: "isInventorySensitive",
-          render: (text, record) => (text ? record.inventory : "无限")
-        },
+        // {
+        //   title: "价格",
+        //   dataIndex: "value",
+        //   key: "value"
+        // },
+        // {
+        //   title: "库存",
+        //   dataIndex: "isInventorySensitive",
+        //   key: "isInventorySensitive",
+        //   render: (text, record) => (text ? record.inventory : "无限")
+        // },
         {
           title: "状态",
           dataIndex: "status",
@@ -235,27 +235,27 @@ export class PrizeBase extends React.Component {
                     this.state.curRow && this.state.curRow.description
                 }
               },
-              {
-                type: "number",
-                field: "value",
-                label: "面额",
-                params: {
-                  initialValue: this.state.curRow && this.state.curRow.value,
-                  rules: [{ required: true, message: "必填项" }]
-                }
-              },
-              {
-                type: "number",
-                field: "inventory",
-                label: "库存",
-                params: {
-                  initialValue:
-                    this.state.curRow && this.state.curRow.inventory,
-                  rules: [{ required: true, message: "必填项" }]
-                },
-                disabled:
-                  this.state.curRow && this.state.curRow.type !== "material"
-              }
+              // {
+              //   type: "number",
+              //   field: "value",
+              //   label: "面额",
+              //   params: {
+              //     initialValue: this.state.curRow && this.state.curRow.value,
+              //     rules: [{ required: true, message: "必填项" }]
+              //   }
+              // },
+              // {
+              //   type: "number",
+              //   field: "inventory",
+              //   label: "库存",
+              //   params: {
+              //     initialValue:
+              //       this.state.curRow && this.state.curRow.inventory,
+              //     rules: [{ required: true, message: "必填项" }]
+              //   },
+              //   disabled:
+              //     this.state.curRow && this.state.curRow.type !== "material"
+              // }
             ]}
             onSubmit={values => {
               this.submitNew(values);

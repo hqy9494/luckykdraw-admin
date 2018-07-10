@@ -129,8 +129,7 @@ export class PrizeShiwu extends React.Component {
         {
           title: "库存",
           dataIndex: "inventory",
-          key: "inventory",
-          render: (text, record) => (text ? record.inventory : "无限")
+          key: "inventory"
         },
         {
           title: "操作",
@@ -216,9 +215,7 @@ export class PrizeShiwu extends React.Component {
                   initialValue:
                     this.state.curRow && this.state.curRow.inventory,
                   rules: [{ required: true, message: "必填项" }]
-                },
-                disabled:
-                  this.state.curRow && this.state.curRow.type !== "material"
+                }
               }
             ]}
             onSubmit={values => {
