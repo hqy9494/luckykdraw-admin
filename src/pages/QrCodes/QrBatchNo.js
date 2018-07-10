@@ -18,9 +18,22 @@ export class QrBatchNo extends React.Component {
     this.uuid = uuid.v1();
   }
 
-  componentWillMount() {}
+  componentWillMount() {
+    this.getSpecifications();
+  }
 
   componentWillReceiveProps(nextProps) {}
+
+  getSpecifications = () => {
+    this.props.rts(
+      {
+        method: "get",
+        url: `/specifications`
+      },
+      this.uuid,
+      "specifications"
+    );
+  };
 
   submitNew = values => {
     this.props.rts(
@@ -38,6 +51,19 @@ export class QrBatchNo extends React.Component {
   };
 
   render() {
+    const { specifications } = this.props;
+
+    let specificationsList = [];
+
+    if (specifications && specifications[this.uuid]) {
+      specificationsList = specifications[this.uuid].map(t => {
+        return {
+          title: t.name,
+          value: t.id
+        };
+      });
+    }
+
     const config = {
       api: {
         rts: this.props.rts,
@@ -155,7 +181,16 @@ export class QrBatchNo extends React.Component {
                 params: {
                   rules: [{ required: true, message: "必填项" }]
                 }
-              }
+              },
+              {
+                type: "select",
+                field: "specificationId",
+                label: "规格",
+                options: specificationsList||[],
+                params: {
+                  rules: [{ required: true, message: "必填项" }]
+                }
+              },
             ]}
             onSubmit={values => {
               this.submitNew(values);
@@ -175,9 +210,11 @@ const mapDispatchToProps = dispatch => {
 };
 
 const QrBatchNouuid = state => state.get("rts").get("uuid");
+const specifications = state => state.get("rts").get("specifications");
 
 const mapStateToProps = createStructuredSelector({
-  QrBatchNouuid
+  QrBatchNouuid,
+  specifications
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(QrBatchNo);
