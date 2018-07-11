@@ -1,12 +1,12 @@
 export default {
     initialState: {
-      title: "批次生成状态",
+      title: "批次使用状态",
       subtitle: "",
       breadcrumb: true
     },
     component: [
       {
-        module: "QrBatchNo",
+        module: "QrBatchNoUse",
         getProps: ["rts"]
       }
     ]

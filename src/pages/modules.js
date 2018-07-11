@@ -4,6 +4,7 @@ import Tenant from './Tenants/Tenant';
 //
 import QrCode from './QrCodes/QrCode';
 import QrBatchNo from './QrCodes/QrBatchNo';
+import QrBatchNoUse from './QrCodes/QrBatchNoUse.jsx';
 //
 import PrizeSuper from './Prizes/PrizeSuper';
 import PrizeBase from './Prizes/PrizeBase';
@@ -16,10 +17,10 @@ import Clue from './Prizes/Clue';
 //
 import Balance from './Balances/Balance';
 //
-import Equipment from './Equipments/Equipment';
+import Equipment from './Equipments/Equipment.jsx';
 //
 import Record from './Records/Record';
-import Replenishmenter from './Settings/Replenishmenter';
+import Replenishmenter from './Settings/Replenishmenter.jsx';
 import ReplenishmenterApply from './Settings/ReplenishmenterApply';
 import Evaluate from './Settings/Evaluate';
 
@@ -29,6 +30,7 @@ const modules = {
   Tenant,
   QrCode,
   QrBatchNo,
+  QrBatchNoUse,
   QrTemplate,
   QrTemplateDetail,
   Specification,

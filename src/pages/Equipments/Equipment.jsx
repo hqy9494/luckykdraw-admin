@@ -47,7 +47,10 @@ export class Tenant extends React.Component {
   };
 
   submitNew = values => {
-    this.props.rts(
+    if (this.state.curRow && this.state.curRow.id) {
+
+    }else{
+      this.props.rts(
       {
         method: "post",
         url: `/boxes`,
@@ -71,6 +74,8 @@ export class Tenant extends React.Component {
         this.setState({ refreshTable: true, visible: false });
       }
     );
+    }
+    
   };
 
   render() {
@@ -109,7 +114,7 @@ export class Tenant extends React.Component {
         {
           title: "添加",
           onClick: () => {
-            this.setState({ visible: true });
+            this.setState({ visible: true, curRow: null });
           }
         }
       ],
@@ -175,6 +180,15 @@ export class Tenant extends React.Component {
               <a
                   href="javascript:;"
                   onClick={() => {
+                    this.setState({ curRow: record, visible: true });
+                  }}
+                >
+                  编辑
+                </a>
+              <Divider type="vertical" />
+              <a
+                  href="javascript:;"
+                  onClick={() => {
                     this.props.to(
                       `${this.props.match.path}/detail/${record.id}?name=${
                         record.name
@@ -205,7 +219,7 @@ export class Tenant extends React.Component {
         </Row>
         <Modal
           visible={this.state.visible}
-          title="添加设备"
+          title={(this.state.curRow && this.state.curRow.name) || "添加机器"}
           onCancel={() => {
             this.setState({ visible: false });
           }}
@@ -219,6 +233,7 @@ export class Tenant extends React.Component {
                 type: "select",
                 options: tenantList,
                 params: {
+                  initialValue: this.state.curRow && this.state.curRow.tenantId,
                   rules: [{ required: true, message: "必填项" }]
                 }
               },
@@ -228,6 +243,7 @@ export class Tenant extends React.Component {
                 type: "select",
                 options: specificationList,
                 params: {
+                  initialValue: this.state.curRow && this.state.curRow.specificationId,
                   rules: [{ required: true, message: "必填项" }]
                 }
               },
@@ -236,6 +252,7 @@ export class Tenant extends React.Component {
                 field: "name",
                 label: "设备名称",
                 params: {
+                  initialValue: this.state.curRow && this.state.curRow.name,
                   rules: [{ required: true, message: "必填项" }]
                 }
               },
@@ -244,6 +261,7 @@ export class Tenant extends React.Component {
                 field: "serial",
                 label: "序列号",
                 params: {
+                  initialValue: this.state.curRow && this.state.curRow.serial,
                   rules: [{ required: true, message: "必填项" }]
                 }
               },
@@ -252,6 +270,7 @@ export class Tenant extends React.Component {
                 field: "locationName",
                 label: "位置名称",
                 params: {
+                  initialValue: this.state.curRow && this.state.curRow.locationName,
                   rules: [{ required: true, message: "必填项" }]
                 }
               },
@@ -260,6 +279,7 @@ export class Tenant extends React.Component {
                 field: "address",
                 label: "详细地址",
                 params: {
+                  initialValue: this.state.curRow && this.state.curRow.address,
                   rules: [{ required: true, message: "必填项" }]
                 }
               },
@@ -268,6 +288,7 @@ export class Tenant extends React.Component {
                 field: "contactMobile",
                 label: "联系电话",
                 params: {
+                  initialValue: this.state.curRow && this.state.curRow.contactMobile,
                   rules: [{ required: true, message: "必填项" }]
                 }
               },
@@ -276,6 +297,7 @@ export class Tenant extends React.Component {
                 field: "contact",
                 label: "联系人",
                 params: {
+                  initialValue: this.state.curRow && this.state.curRow.contact,
                   rules: [{ required: true, message: "必填项" }]
                 }
               }

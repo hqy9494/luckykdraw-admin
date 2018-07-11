@@ -1,5 +1,4 @@
-const menu = [
-  {
+const menu = [{
     id: "tenant",
     icon: "shop",
     name: "兑奖中心",
@@ -16,17 +15,21 @@ const menu = [
     icon: "qrcode",
     name: "制码",
     component: "qrCodes",
-    children: [
-      {
+    children: [{
         id: "qrCode",
         name: "二维码生成",
         component: "qrCode"
       },
       {
         id: "batchNo",
-        name: "二维码批次",
+        name: "批次生成状态",
         component: "batchNo"
-      }
+      },
+      // {
+      //   id: "batchNoUse",
+      //   name: "批次使用状态",
+      //   component: "batchNoUse"
+      // }
     ]
   },
   {
@@ -40,8 +43,7 @@ const menu = [
     icon: "gift",
     name: "奖品",
     component: "prizes",
-    children: [
-      {
+    children: [{
         id: "base",
         name: "奖品管理",
         component: "base"
@@ -79,21 +81,27 @@ const menu = [
     ]
   },
   {
-    id: "replenishmenter",
+    id: "replenishment",
     icon: "printer",
-    name: "补货员",
-    component: "replenishmenter"
+    name: "补货",
+    component: "replenishment",
+    children: [{
+        id: "staff",
+        name: "补货员管理",
+        component: "staff"
+      },
+      {
+        id: "apply",
+        name: "申请管理",
+        component: "apply"
+      },
+    ]
   },
-  {
-    id: "replenishmenterapply",
-    icon: "printer",
-    name: "补货员申请",
-    component: "replenishmenterapply"
-  },
+
   {
     id: "Evaluate",
     icon: "message",
-    name: "晒单管理",
+    name: "晒单",
     component: "Evaluate"
   }
 ];
