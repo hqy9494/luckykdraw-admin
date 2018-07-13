@@ -84,7 +84,7 @@ export default class TableExpand extends React.Component {
                     this.searchsToWhere(this.params.s),
                     api.where
                   ),
-                  order: this.params.order || "createdAt DESC"
+                  order: this.params.order|| api.order || "createdAt DESC"
                 },
                 
                 api.include && { include: api.include }
@@ -114,7 +114,7 @@ export default class TableExpand extends React.Component {
                   ),
                   limit: pageSize,
                   skip: this.params.skip || 0,
-                  order: this.params.order || "createdAt DESC"
+                  order: this.params.order|| api.order || "createdAt DESC"
                 },
                 api.include && { include: api.include }
               )

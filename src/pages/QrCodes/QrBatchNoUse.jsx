@@ -28,10 +28,26 @@ export class QrBatchNoUse extends React.Component {
         rts: this.props.rts,
         uuid: this.uuid,
         data: "/qrbatchnos",
-        total: "/qrbatchnos/count"
+        total: "/qrbatchnos/count",
+        order: "batchNo DESC"
       },
       buttons: [],
-      search: [],
+      search: [
+        {
+          type: "field",
+          field: "batchNo",
+          title: "批次号"
+        },
+        {
+          type: "option",
+          title: "激活状态",
+          field: "activated",
+          options: [
+            {title: "已激活", value: true},
+            {title: "未激活", value: false},
+          ]
+        }
+      ],
       columns: [
         {
           title: "批次编号",
@@ -39,13 +55,13 @@ export class QrBatchNoUse extends React.Component {
           key: "batchNo"
         },
         {
-          title: "已使用二维码",
+          title: "已扫描二维码",
           dataIndex: "scanNumber",
           key: "scanNumber",
           render: text => text || 0
         },
         {
-          title: "未使用二维码",
+          title: "未扫描二维码",
           dataIndex: "unScanNumber",
           key: "unScanNumber",
           render: text => text || 0
@@ -54,7 +70,7 @@ export class QrBatchNoUse extends React.Component {
           title: "激活时间",
           dataIndex: "activatedDate",
           key: "activatedDate",
-          type: "date"
+          render: text => (text ? moment(text).format("YYYY-MM-DD HH:mm") : "")
         },
         {
           title: "状态",
