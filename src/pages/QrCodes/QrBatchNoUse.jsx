@@ -19,135 +19,49 @@ export class QrBatchNoUse extends React.Component {
   }
 
   componentWillMount() {
-    this.getSpecifications();
   }
 
   componentWillReceiveProps(nextProps) {}
 
-  getSpecifications = () => {
-    this.props.rts(
-      {
-        method: "get",
-        url: `/specifications`
-      },
-      this.uuid,
-      "specifications"
-    );
-  };
-
-  submitNew = values => {
-    this.props.rts(
-      {
-        method: "post",
-        url: `/qrbatchs/generate`,
-        data: values
-      },
-      this.uuid,
-      "submitNew",
-      () => {
-        this.setState({ refreshTable: true, visible: false });
-      }
-    );
-  };
-
   render() {
-    const { specifications } = this.props;
-
-    let specificationsList = [];
-
-    if (specifications && specifications[this.uuid]) {
-      specificationsList = specifications[this.uuid].map(t => {
-        return {
-          title: t.name,
-          value: t.id
-        };
-      });
-    }
 
     const config = {
       api: {
         rts: this.props.rts,
         uuid: this.uuid,
-        data: "/qrbatchs",
-        total: "/qrbatchs/count"
+        data: "/qrbatchnos",
+        total: "/qrbatchnos/count"
       },
-      buttons: [
-        {
-          title: "生产",
-          onClick: () => {
-            this.setState({ visible: true });
-          }
-        }
-      ],
+      buttons: [],
       search: [],
       columns: [
         {
-          title: "批次数量",
-          dataIndex: "amount",
-          key: "amount"
-        },
-        {
           title: "批次编号",
-          dataIndex: "batchNos",
-          key: "batchNos",
-          // width: 300,
-          // render: (text = [], record) => (
-          //   <div
-          //     style={{
-          //       overflow: "hidden",
-          //       textOverflow: "ellipsis",
-          //       whiteSpace: "nowrap",
-          //       width: "300px"
-          //     }}
-          //   >
-          //     {text.join(",")}
-          //   </div>
-          // )
-          render: (text = [], record) =>
-            text.length > 1 ? `${text[0]} ~ ${text[text.length - 1]}` : text[0]
+          dataIndex: "batchNo",
+          key: "batchNo"
         },
         {
-          title: "进度",
-          dataIndex: "generated",
-          key: "generated",
-          render: (text, record) => (
-            <Progress
-              percent={Math.round(record.generated / record.amount * 100)}
-              size="small"
-            />
-          )
+          title: "已使用二维码",
+          dataIndex: "use",
+          key: "use"
         },
         {
-          title: "模板",
-          dataIndex: "specification",
-          key: "specification",
-          render: (text, record) => (
-            <span title={text.description}>{`${text.name}/${text.quantity ||
-              0}个`}</span>
-          )
+          title: "未使用二维码",
+          dataIndex: "unused",
+          key: "unused"
         },
         {
-          title: "操作",
-          key: "handle",
-          render: (text, record) => (
-            <span>
-              {record.fileGenerated ? (
-                <a
-                  href="javascript:;"
-                  onClick={() => {
-                    window.open(
-                      `${Config.apiUrl}/api/qrbatchs/${record.id}/download`
-                    );
-                  }}
-                >
-                  下载
-                </a>
-              ) : (
-                ``
-              )}
-            </span>
-          )
-        }
+          title: "激活时间",
+          dataIndex: "activatedDate",
+          key: "activatedDate",
+          type: "date"
+        },
+        {
+          title: "状态",
+          dataIndex: "activated",
+          key: "activated",
+          render: (text)=>text?"已激活":"未激活"
+        },
       ],
       path: `${this.props.match.path}`,
       replace: this.props.replace,
@@ -164,42 +78,6 @@ export class QrBatchNoUse extends React.Component {
             <TableExpand {...config} />
           </Col>
         </Row>
-        <Modal
-          visible={this.state.visible}
-          title="生成二维码"
-          onCancel={() => {
-            this.setState({ visible: false });
-          }}
-          footer={null}
-        >
-          <FormExpand
-            elements={[
-              {
-                type: "number",
-                field: "amount",
-                label: "数量",
-                params: {
-                  rules: [{ required: true, message: "必填项" }]
-                }
-              },
-              {
-                type: "select",
-                field: "specificationId",
-                label: "规格",
-                options: specificationsList||[],
-                params: {
-                  rules: [{ required: true, message: "必填项" }]
-                }
-              },
-            ]}
-            onSubmit={values => {
-              this.submitNew(values);
-            }}
-            onCancel={() => {
-              this.setState({ visible: false });
-            }}
-          />
-        </Modal>
       </Grid>
     );
   }
@@ -210,11 +88,9 @@ const mapDispatchToProps = dispatch => {
 };
 
 const QrBatchNoUseuuid = state => state.get("rts").get("uuid");
-const specifications = state => state.get("rts").get("specifications");
 
 const mapStateToProps = createStructuredSelector({
-  QrBatchNoUseuuid,
-  specifications
+  QrBatchNoUseuuid
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(QrBatchNoUse);
