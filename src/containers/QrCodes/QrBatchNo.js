@@ -1,6 +1,6 @@
 export default {
     initialState: {
-      title: "批次生成状态",
+      title: "批次生成",
       subtitle: "",
       breadcrumb: true
     },
