@@ -48,7 +48,20 @@ export class Replenishmenter extends React.Component {
     );
   }
 
-  submitNew(values) {}
+  submitNew = values => {
+    this.props.rts(
+      {
+        method: "post",
+        url: `/accounts/replenishmenter/create`,
+        data: { data: { ...values, username: values.mobile } }
+      },
+      this.uuid,
+      "submitNew",
+      () => {
+        this.setState({ refreshTable: true, visible: false });
+      }
+    );
+  };
 
   render() {
     const { tenant } = this.props;
@@ -96,8 +109,8 @@ export class Replenishmenter extends React.Component {
         },
         {
           title: "兑奖中心",
-          dataIndex: "tenant",
-          key: "tenant"
+          dataIndex: "tenantName",
+          key: "tenantName"
         },
         {
           title: "操作",
