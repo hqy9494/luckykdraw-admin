@@ -53,7 +53,7 @@ export class Record extends React.Component {
       buttons: [{
         title: "导出待发货",
         onClick: () => {
-          window.open();
+          window.open('/api/awardrecords/fahuo/export?access_token=' + localStorage.token);
         }
       }],
       search: [

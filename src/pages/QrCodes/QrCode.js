@@ -54,7 +54,7 @@ export class Tenant extends React.Component {
 
   render() {
 
-    const { specification } = this.props;
+    const {specification} = this.props;
 
     let specificationList = [];
 
@@ -227,7 +227,7 @@ export class Tenant extends React.Component {
                 type: "select",
                 options: specificationList,
                 params: {
-                  rules: [{ required: true, message: "必填项" }]
+                  rules: [{required: true, message: "必填项"}]
                 }
               },
               {
@@ -250,7 +250,7 @@ export class Tenant extends React.Component {
 
         <Modal
           visible={this.state.showQrCode}
-          title={this.state.qrCode.batchNo + '-' + this.state.qrCode.code}
+          title={this.state.qrCode.batchNo + '-' + this.state.qrCode.code + '-' + this.state.qrCode.value}
           onCancel={() => {
             this.setState({showQrCode: false});
           }}
