@@ -60,7 +60,7 @@ export class PrizeShiwu extends React.Component {
         "submitNew",
         () => {
           this.setState({ refreshTable: true, visible: false });
-          window.location.reload();
+          // window.location.reload();
         }
       );
     }

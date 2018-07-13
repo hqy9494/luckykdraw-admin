@@ -18,13 +18,11 @@ export class QrBatchNoUse extends React.Component {
     this.uuid = uuid.v1();
   }
 
-  componentWillMount() {
-  }
+  componentWillMount() {}
 
   componentWillReceiveProps(nextProps) {}
 
   render() {
-
     const config = {
       api: {
         rts: this.props.rts,
@@ -42,13 +40,15 @@ export class QrBatchNoUse extends React.Component {
         },
         {
           title: "已使用二维码",
-          dataIndex: "use",
-          key: "use"
+          dataIndex: "scanNumber",
+          key: "scanNumber",
+          render: text => text || 0
         },
         {
           title: "未使用二维码",
-          dataIndex: "unused",
-          key: "unused"
+          dataIndex: "unScanNumber",
+          key: "unScanNumber",
+          render: text => text || 0
         },
         {
           title: "激活时间",
@@ -60,8 +60,8 @@ export class QrBatchNoUse extends React.Component {
           title: "状态",
           dataIndex: "activated",
           key: "activated",
-          render: (text)=>text?"已激活":"未激活"
-        },
+          render: text => (text ? "已激活" : "未激活")
+        }
       ],
       path: `${this.props.match.path}`,
       replace: this.props.replace,
@@ -93,4 +93,7 @@ const mapStateToProps = createStructuredSelector({
   QrBatchNoUseuuid
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(QrBatchNoUse);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(QrBatchNoUse);

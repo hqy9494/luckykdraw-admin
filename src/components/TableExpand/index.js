@@ -280,7 +280,7 @@ export default class TableExpand extends React.Component {
           type: curSearch.type,
           field: curSearch.field,
           title: curSearch.title,
-          values: curSearch.options.find((o)=> s.f === o.value)
+          values: curSearch.options.find((o)=> s.v === o.value)
         }
       }else if(curSearch.type === "date"){
         return {
