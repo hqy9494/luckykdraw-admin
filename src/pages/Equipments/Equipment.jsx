@@ -34,7 +34,7 @@ export class Tenant extends React.Component {
       "tenant"
     );
   };
-  
+
   getSpecification = () => {
     this.props.rts(
       {
@@ -48,34 +48,61 @@ export class Tenant extends React.Component {
 
   submitNew = values => {
     if (this.state.curRow && this.state.curRow.id) {
-
-    }else{
       this.props.rts(
-      {
-        method: "post",
-        url: `/boxes`,
-        data: {
-          name: values.name,
-          serial: values.serial,
-          tenantId: values.tenantId,
-          location: {
-            name: values.locationName,
-            address: values.address,
-            contactMobile: values.contactMobile,
-            contact: values.contact,
-            regionId: "ByWbXglYJ7"
-          },
-          specificationId: values.specificationId
+        {
+          method: "patch",
+          url: `/boxes/${this.state.curRow.id}`,
+          data: Object.assign(
+            {
+              name: values.name,
+              serial: values.serial,
+              tenantId: values.tenantId,
+              specificationId: values.specificationId
+            },
+            this.state.curRow.location &&
+              this.state.curRow.location.id && {
+                location: {
+                  id: this.state.curRow.location.id,
+                  name: values.locationName,
+                  address: values.address,
+                  contactMobile: values.contactMobile,
+                  contact: values.contact
+                }
+              }
+          )
+        },
+        this.uuid,
+        "submitNew",
+        () => {
+          this.setState({ refreshTable: true, visible: false });
         }
-      },
-      this.uuid,
-      "submitNew",
-      () => {
-        this.setState({ refreshTable: true, visible: false });
-      }
-    );
+      );
+    } else {
+      this.props.rts(
+        {
+          method: "post",
+          url: `/boxes`,
+          data: {
+            name: values.name,
+            serial: values.serial,
+            tenantId: values.tenantId,
+            location: {
+              name: values.locationName,
+              address: values.address,
+              contactMobile: values.contactMobile,
+              contact: values.contact,
+              regionId: "ByWbXglYJ7"
+            },
+            specificationId: values.specificationId
+          }
+        },
+        this.uuid,
+        "submitNew",
+        () => {
+          this.setState({ refreshTable: true, visible: false });
+        }
+      );
     }
-    
   };
 
   render() {
@@ -178,26 +205,26 @@ export class Tenant extends React.Component {
           render: (text, record) => (
             <span>
               <a
-                  href="javascript:;"
-                  onClick={() => {
-                    this.setState({ curRow: record, visible: true });
-                  }}
-                >
-                  编辑
-                </a>
+                href="javascript:;"
+                onClick={() => {
+                  this.setState({ curRow: record, visible: true });
+                }}
+              >
+                编辑
+              </a>
               <Divider type="vertical" />
               <a
-                  href="javascript:;"
-                  onClick={() => {
-                    this.props.to(
-                      `${this.props.match.path}/detail/${record.id}?name=${
-                        record.name
-                      }&type=box`
-                    );
-                  }}
-                >
-                  中奖模板
-                </a>
+                href="javascript:;"
+                onClick={() => {
+                  this.props.to(
+                    `${this.props.match.path}/detail/${record.id}?name=${
+                      record.name
+                    }&type=box`
+                  );
+                }}
+              >
+                中奖模板
+              </a>
             </span>
           )
         }
@@ -243,7 +270,8 @@ export class Tenant extends React.Component {
                 type: "select",
                 options: specificationList,
                 params: {
-                  initialValue: this.state.curRow && this.state.curRow.specificationId,
+                  initialValue:
+                    this.state.curRow && this.state.curRow.specificationId,
                   rules: [{ required: true, message: "必填项" }]
                 }
               },
@@ -270,7 +298,10 @@ export class Tenant extends React.Component {
                 field: "locationName",
                 label: "位置名称",
                 params: {
-                  initialValue: this.state.curRow && this.state.curRow.locationName,
+                  initialValue:
+                    this.state.curRow &&
+                    this.state.curRow.location &&
+                    this.state.curRow.location.name,
                   rules: [{ required: true, message: "必填项" }]
                 }
               },
@@ -279,7 +310,10 @@ export class Tenant extends React.Component {
                 field: "address",
                 label: "详细地址",
                 params: {
-                  initialValue: this.state.curRow && this.state.curRow.address,
+                  initialValue:
+                    this.state.curRow &&
+                    this.state.curRow.location &&
+                    this.state.curRow.location.address,
                   rules: [{ required: true, message: "必填项" }]
                 }
               },
@@ -288,7 +322,10 @@ export class Tenant extends React.Component {
                 field: "contactMobile",
                 label: "联系电话",
                 params: {
-                  initialValue: this.state.curRow && this.state.curRow.contactMobile,
+                  initialValue:
+                    this.state.curRow &&
+                    this.state.curRow.location &&
+                    this.state.curRow.location.contactMobile,
                   rules: [{ required: true, message: "必填项" }]
                 }
               },
@@ -297,7 +334,10 @@ export class Tenant extends React.Component {
                 field: "contact",
                 label: "联系人",
                 params: {
-                  initialValue: this.state.curRow && this.state.curRow.contact,
+                  initialValue:
+                    this.state.curRow &&
+                    this.state.curRow.location &&
+                    this.state.curRow.location.contact,
                   rules: [{ required: true, message: "必填项" }]
                 }
               }
@@ -329,4 +369,7 @@ const mapStateToProps = createStructuredSelector({
   specification
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Tenant);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Tenant);

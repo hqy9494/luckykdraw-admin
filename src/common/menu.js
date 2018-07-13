@@ -22,14 +22,14 @@ const menu = [{
       },
       {
         id: "batchNo",
-        name: "批次生成状态",
+        name: "批次生成",
         component: "batchNo"
       },
-      // {
-      //   id: "batchNoUse",
-      //   name: "批次使用状态",
-      //   component: "batchNoUse"
-      // }
+      {
+        id: "batchNoUse",
+        name: "批次状态",
+        component: "batchNoUse"
+      }
     ]
   },
   {

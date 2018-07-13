@@ -34,19 +34,19 @@ export default {
         component: 'QrCode',
         title: '二维码'
       },
-      // 二维码批次(生成状态)
+      // 二维码批次(生成)
       batchNo: {
         path: 'qrCodes/batchNo',
         module: 'QrCodes',
         component: 'QrBatchNo',
-        title: '批次生成状态'
+        title: '批次生成'
       },
-      // 二维码批次（使用状态）
+      // 二维码批次（状态）
       batchNoUse: {
         path: 'qrCodes/batchNoUse',
         module: 'QrCodes',
         component: 'QrBatchNoUse',
-        title: '批次使用状态'
+        title: '批次状态'
       },
       // 奖品
       prizeBase: {
