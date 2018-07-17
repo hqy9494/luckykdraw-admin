@@ -53,10 +53,10 @@ export class QrBatchNo extends React.Component {
   render() {
     const { specifications } = this.props;
 
-    let specificationsList = [];
+    let specificationList = [];
 
     if (specifications && specifications[this.uuid]) {
-      specificationsList = specifications[this.uuid].map(t => {
+      specificationList = specifications[this.uuid].map(t => {
         return {
           title: t.name,
           value: t.id
@@ -177,20 +177,20 @@ export class QrBatchNo extends React.Component {
               {
                 type: "number",
                 field: "amount",
-                label: "数量",
+                label: "批次数量",
                 params: {
-                  rules: [{ required: true, message: "必填项" }]
+                  rules: [{required: true, message: "必填项"}]
                 }
               },
               {
-                type: "select",
-                field: "specificationId",
                 label: "规格",
-                options: specificationsList||[],
+                field: "specificationId",
+                type: "select",
+                options: specificationList,
                 params: {
                   rules: [{ required: true, message: "必填项" }]
                 }
-              },
+              }
             ]}
             onSubmit={values => {
               this.submitNew(values);

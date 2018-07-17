@@ -247,14 +247,16 @@ export class Index extends React.Component {
               count3 += uf.awardPond;
               count4 += uf.sendAwardPond;
             });
-            let p1 = count3 === 0 ? 0 : (count1 - count3) / count3,
-              p2 = count4 === 0 ? 0 : (count2 - count4) / count4;
+            let p1 = count3 === 0 ? 0 : Math.abs((count1 - count3) / count3),
+              p2 = count4 === 0 ? 0 : Math.abs((count2 - count4) / count4);
             this.setState({
               tAwardPond: {
                 count1: count1.toFixed(2),
                 count2: count2.toFixed(2),
                 p1: (p1 * 100).toFixed(0),
-                p2: (p2 * 100).toFixed(0)
+                p2: (p2 * 100).toFixed(0),
+                add1: p1 > 0 ? true : false,
+                add2: p2 > 0 ? true : false
               }
             });
           }
@@ -308,14 +310,16 @@ export class Index extends React.Component {
               count3 += uf.awardPond;
               count4 += uf.sendAwardPond;
             });
-            let p1 = count3 === 0 ? 0 : (count1 - count3) / count3,
-              p2 = count4 === 0 ? 0 : (count2 - count4) / count4;
+            let p1 = count3 === 0 ? 0 : Math.abs((count1 - count3) / count3),
+              p2 = count4 === 0 ? 0 : Math.abs((count2 - count4) / count4);
             this.setState({
               wAwardPond: {
                 count1: count1.toFixed(2),
                 count2: count2.toFixed(2),
                 p1: (p1 * 100).toFixed(0),
-                p2: (p2 * 100).toFixed(0)
+                p2: (p2 * 100).toFixed(0),
+                add1: p1 > 0 ? true : false,
+                add2: p2 > 0 ? true : false
               }
             });
           }
@@ -369,14 +373,16 @@ export class Index extends React.Component {
               count3 += uf.awardPond;
               count4 += uf.sendAwardPond;
             });
-            let p1 = count3 === 0 ? 0 : (count1 - count3) / count3,
-              p2 = count4 === 0 ? 0 : (count2 - count4) / count4;
+            let p1 = count3 === 0 ? 0 : Math.abs((count1 - count3) / count3),
+              p2 = count4 === 0 ? 0 : Math.abs((count2 - count4) / count4);
             this.setState({
               mAwardPond: {
                 count1: count1.toFixed(2),
                 count2: count2.toFixed(2),
                 p1: (p1 * 100).toFixed(0),
-                p2: (p2 * 100).toFixed(0)
+                p2: (p2 * 100).toFixed(0),
+                add1: p1 > 0 ? true : false,
+                add2: p2 > 0 ? true : false
               }
             });
           }
@@ -502,8 +508,8 @@ export class Index extends React.Component {
 
   //处理百分比
   toPercent(a, b) {
-    if (!b) return 0;
-    return (Math.round(a / b) * 100).toFixed(0);
+    if (!Number(a) || !Number(b) || b === 0) return 0;
+    return Math.round((a / b * 100).toFixed(1));
   }
 
   render() {
@@ -590,7 +596,9 @@ export class Index extends React.Component {
               <div>
                 <span className="index-item1-label">现奖池总额</span>
                 <span className="index-item1-value">
-                  {this.state.count.cashPond || 0}
+                  {this.state.count.cashPond
+                    ? this.state.count.cashPond.toFixed(2)
+                    : 0}
                 </span>
               </div>
             </div>
@@ -601,7 +609,9 @@ export class Index extends React.Component {
               <div>
                 <span className="index-item1-label">累积奖池金额</span>
                 <span className="index-item1-value">
-                  {this.state.count.awardPond || 0}
+                  {this.state.count.awardPond
+                    ? this.state.count.awardPond.toFixed(2)
+                    : 0}
                 </span>
               </div>
             </div>
@@ -677,7 +687,7 @@ export class Index extends React.Component {
                       </span>
                       <span className="index-i3i-change">
                         <span style={{ color: "#333" }}>较昨天</span>
-                        {Number(this.state.tAwardPond.p1) > 0 ? (
+                        {this.state.tAwardPond.add1 ? (
                           <span className="index-i3item-percent index-i3item-percent_up">
                             <Icon type="arrow-up" />
                             {this.state.tAwardPond.p1 || 0}%
@@ -697,7 +707,7 @@ export class Index extends React.Component {
                       </span>
                       <span className="index-i3i-change">
                         <span style={{ color: "#333" }}>较昨天</span>
-                        {Number(this.state.tAwardPond.p2) > 0 ? (
+                        {this.state.tAwardPond.add2 ? (
                           <span className="index-i3item-percent index-i3item-percent_up">
                             <Icon type="arrow-up" />
                             {this.state.tAwardPond.p2 || 0}%
@@ -730,7 +740,7 @@ export class Index extends React.Component {
                       </span>
                       <span className="index-i3i-change">
                         <span style={{ color: "#333" }}>较上周</span>
-                        {Number(this.state.wAwardPond.p1) > 0 ? (
+                        {this.state.wAwardPond.add1 ? (
                           <span className="index-i3item-percent index-i3item-percent_up">
                             <Icon type="arrow-up" />
                             {this.state.wAwardPond.p1 || 0}%
@@ -750,7 +760,7 @@ export class Index extends React.Component {
                       </span>
                       <span className="index-i3i-change">
                         <span style={{ color: "#333" }}>较上周</span>
-                        {Number(this.state.wAwardPond.p2) > 0 ? (
+                        {this.state.wAwardPond.add2 ? (
                           <span className="index-i3item-percent index-i3item-percent_up">
                             <Icon type="arrow-up" />
                             {this.state.wAwardPond.p2 || 0}%
@@ -782,7 +792,7 @@ export class Index extends React.Component {
                       </span>
                       <span className="index-i3i-change">
                         <span style={{ color: "#333" }}>较上月</span>
-                        {Number(this.state.mAwardPond.p1) > 0 ? (
+                        {this.state.mAwardPond.add1 ? (
                           <span className="index-i3item-percent index-i3item-percent_up">
                             <Icon type="arrow-up" />
                             {this.state.mAwardPond.p1 || 0}%
@@ -802,7 +812,7 @@ export class Index extends React.Component {
                       </span>
                       <span className="index-i3i-change">
                         <span style={{ color: "#333" }}>较上月</span>
-                        {Number(this.state.mAwardPond.p2) > 0 ? (
+                        {this.state.mAwardPond.add2 ? (
                           <span className="index-i3item-percent index-i3item-percent_up">
                             <Icon type="arrow-up" />
                             {this.state.mAwardPond.p2 || 0}%

@@ -222,18 +222,18 @@ export class Tenant extends React.Component {
           <FormExpand
             elements={[
               {
-                label: "规格",
-                field: "specificationId",
-                type: "select",
-                options: specificationList,
+                type: "number",
+                field: "amount",
+                label: "批次数量",
                 params: {
                   rules: [{required: true, message: "必填项"}]
                 }
               },
               {
-                type: "number",
-                field: "amount",
-                label: "批次数量",
+                label: "规格",
+                field: "specificationId",
+                type: "select",
+                options: specificationList,
                 params: {
                   rules: [{required: true, message: "必填项"}]
                 }

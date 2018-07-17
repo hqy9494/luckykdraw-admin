@@ -40,7 +40,7 @@ export class PrizeShiwu extends React.Component {
         {
           method: "patch",
           url: `/MaterialAwards/${this.state.curRow.id}`,
-          data: values
+          data: {...values,img: values.img[0]}
         },
         this.uuid,
         "submitFix",
@@ -54,13 +54,13 @@ export class PrizeShiwu extends React.Component {
         {
           method: "post",
           url: `/MaterialAwards`,
-          data: values
+          data: {...values,img: values.img[0]}
         },
         this.uuid,
         "submitNew",
         () => {
           this.setState({ refreshTable: true, visible: false });
-          window.location.reload();
+          // window.location.reload();
         }
       );
     }
@@ -109,8 +109,8 @@ export class PrizeShiwu extends React.Component {
       columns: [
         {
           title: "奖品图",
-          dataIndex: "mainImage",
-          key: "mainImage",
+          dataIndex: "img",
+          key: "img",
           render: text => <img src={text} alt="商品图片" height="80" />
         },
         {
@@ -187,12 +187,12 @@ export class PrizeShiwu extends React.Component {
               },
               {
                 type: "picture",
-                field: "mainImage",
+                field: "img",
                 label: "图片",
                 params: {
                   initialValue: this.state.curRow &&
-                    this.state.curRow.mainImage && [
-                      this.state.curRow.mainImage
+                    this.state.curRow.img && [
+                      this.state.curRow.img
                     ],
                   rules: [{ required: true, message: "必填项" }]
                 },
@@ -219,6 +219,7 @@ export class PrizeShiwu extends React.Component {
               }
             ]}
             onSubmit={values => {
+              // console.log(values);
               this.submitNew(values);
             }}
             onCancel={() => {
