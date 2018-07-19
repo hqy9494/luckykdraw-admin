@@ -1,5 +1,7 @@
 import PrizeSuper from './PrizeSuper';
 import PrizeBase from './PrizeBase';
+import PrizeAward from './PrizeAward';
+import AwardSetting from './AwardSetting';
 import PrizeShiwu from './PrizeShiwu';
 import PrizeCoupon from './PrizeCoupon';
 import QrTemplate from './QrTemplate';
@@ -10,6 +12,8 @@ import Clue from './Clue';
 const Prizes = {
   PrizeSuper,
   PrizeBase,
+  PrizeAward,
+  AwardSetting,
   PrizeShiwu,
   PrizeCoupon,
   QrTemplate,

@@ -8,7 +8,18 @@ const menu = [{
     id: "record",
     icon: "profile",
     name: "中奖记录",
-    component: "record"
+    component: "record",
+    children: [{
+      id: "base",
+      name: "中奖记录",
+      component: "base"
+    },
+    {
+      id: "super",
+      name: "大奖记录",
+      component: "super"
+    }
+  ]
   },
   {
     id: "qrCodes",
@@ -44,6 +55,16 @@ const menu = [{
     name: "奖品",
     component: "prizes",
     children: [{
+        id: "award",
+        name: "奖项管理",
+        component: "award"
+      },
+      {
+        id: "awardSetting",
+        name: "设备奖项设置",
+        component: "awardSetting"
+      },
+      {
         id: "base",
         name: "奖品管理",
         component: "base"

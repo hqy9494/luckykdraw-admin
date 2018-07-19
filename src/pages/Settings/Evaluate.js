@@ -95,7 +95,7 @@ export class Evaluate extends React.Component {
             render: text => {
               return <div>
                 {
-                  text.map((t,i)=> <img key={i} src={t} alt="商品图片" height="60" style={{float: "left", marginLeft: 10}} />)
+                  text&&text.length>0?text.map((t,i)=> <img key={i} src={t} alt="商品图片" height="60" style={{float: "left", marginLeft: 10}} />):""
                 }
               </div>
             }

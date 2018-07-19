@@ -20,6 +20,7 @@ export class Tenant extends React.Component {
   componentWillMount() {
     this.getTenant();
     this.getSpecification();
+    this.getUser();
   }
 
   componentWillReceiveProps(nextProps) {}
@@ -43,6 +44,17 @@ export class Tenant extends React.Component {
       },
       this.uuid,
       "specification"
+    );
+  };
+
+  getUser = () => {
+    this.props.rts(
+      {
+        method: "get",
+        url: "/accounts/replenishmenters"
+      },
+      this.uuid,
+      "users"
     );
   };
 
@@ -77,6 +89,24 @@ export class Tenant extends React.Component {
           this.setState({ refreshTable: true, visible: false });
         }
       );
+
+      if (values.userId) {
+        this.props.rts(
+          {
+            method: "post",
+            url: "/boxes/bind/replenishment",
+            data: {
+              boxId: this.state.curRow.id,
+              userId: values.userId
+            }
+          },
+          this.uuid,
+          "submitNew",
+          () => {
+            this.setState({ refreshTable: true, visible: false });
+          }
+        );
+      }
     } else {
       this.props.rts(
         {
@@ -98,8 +128,24 @@ export class Tenant extends React.Component {
         },
         this.uuid,
         "submitNew",
-        () => {
-          this.setState({ refreshTable: true, visible: false });
+        result => {
+          if (values.userId) {
+            this.props.rts(
+              {
+                method: "post",
+                url: "/boxes/bind/replenishment",
+                data: {
+                  boxId: result.id,
+                  userId: values.userId
+                }
+              },
+              this.uuid,
+              "submitNew",
+              () => {
+                this.setState({ refreshTable: true, visible: false });
+              }
+            );
+          }
         }
       );
     }
@@ -126,6 +172,19 @@ export class Tenant extends React.Component {
       specificationList = specification[this.uuid].map(t => {
         return {
           title: t.name,
+          value: t.id
+        };
+      });
+    }
+
+    const { users } = this.props;
+
+    let usersList = [];
+
+    if (users && users[this.uuid]) {
+      usersList = users[this.uuid].map(t => {
+        return {
+          title: t.fullname,
           value: t.id
         };
       });
@@ -340,6 +399,16 @@ export class Tenant extends React.Component {
                     this.state.curRow.location.contact,
                   rules: [{ required: true, message: "必填项" }]
                 }
+              },
+              {
+                label: "补货员",
+                field: "userId",
+                type: "select",
+                options: usersList,
+                params: {
+                  initialValue: this.state.curRow && this.state.curRow.replenishmentId,
+                  rules: [{ required: true, message: "必填项" }]
+                }
               }
             ]}
             onSubmit={values => {
@@ -362,11 +431,13 @@ const mapDispatchToProps = dispatch => {
 const Tenantuuid = state => state.get("rts").get("uuid");
 const tenant = state => state.get("rts").get("tenant");
 const specification = state => state.get("rts").get("specification");
+const users = state => state.get("rts").get("users");
 
 const mapStateToProps = createStructuredSelector({
   Tenantuuid,
   tenant,
-  specification
+  specification,
+  users
 });
 
 export default connect(

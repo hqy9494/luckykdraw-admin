@@ -14,12 +14,15 @@ import QrTemplate from './Prizes/QrTemplate';
 import QrTemplateDetail from './Prizes/QrTemplateDetail';
 import Specification from './Prizes/Specification';
 import Clue from './Prizes/Clue';
+import PrizeAward from './Prizes/PrizeAward';
+import AwardSetting from './Prizes/AwardSetting';
 //
 import Balance from './Balances/Balance';
 //
 import Equipment from './Equipments/Equipment.jsx';
 //
 import Record from './Records/Record';
+import SuperRecord from './Records/SuperRecord';
 import Replenishmenter from './Settings/Replenishmenter.jsx';
 import ReplenishmenterApply from './Settings/ReplenishmenterApply';
 import Evaluate from './Settings/Evaluate';
@@ -35,6 +38,8 @@ const modules = {
   QrTemplateDetail,
   Specification,
   Clue,
+  PrizeAward,
+  AwardSetting,
   PrizeSuper,
   PrizeBase,
   PrizeShiwu,
@@ -42,6 +47,7 @@ const modules = {
   Balance,
   Equipment,
   Record,
+  SuperRecord,
   Replenishmenter,
   ReplenishmenterApply,
   Evaluate

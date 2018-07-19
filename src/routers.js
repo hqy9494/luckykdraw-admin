@@ -22,10 +22,16 @@ export default {
       },
       // 中奖记录
       record: {
-        path: 'record',
+        path: 'record/base',
         module: 'Records',
         component: 'Record',
         title: '中奖记录'
+      },
+      superRecord: {
+        path: 'Record/super',
+        module: 'Records',
+        component: 'SuperRecord',
+        title: '大奖记录'
       },
       // 二维码
       qrCode: {
@@ -49,6 +55,18 @@ export default {
         title: '批次状态'
       },
       // 奖品
+      prizeAward: {
+        path: 'prizes/award',
+        module: 'Prizes',
+        component: 'PrizeAward',
+        title: '奖项管理'
+      },
+      awardSetting: {
+        path: 'prizes/awardSetting',
+        module: 'Prizes',
+        component: 'AwardSetting',
+        title: '设备奖项设置'
+      },
       prizeBase: {
         path: 'prizes/base',
         module: 'Prizes',
@@ -83,13 +101,13 @@ export default {
         path: 'prizes/template',
         module: 'Prizes',
         component: 'QrTemplate',
-        title: '二维码模板',
+        title: '奖品模板',
         subs: {
           templateDetail: {
             path: '/detail/:id',
             module: 'Prizes',
             component: 'QrTemplateDetail',
-            title: '二维码模板详情'
+            title: '奖品模板详情'
           }
         }
       },
