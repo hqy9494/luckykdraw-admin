@@ -25,26 +25,26 @@ export class SuperRecord extends React.Component {
       api: {
         rts: this.props.rts,
         uuid: this.uuid,
-        data: "",
-        total: ""
+        data: "/stockAwardRecords/all"
       },
       buttons: [],
       search: [],
       columns: [
         {
             title: "奖项名称",
-            dataIndex: "a1",
-            key: "a1"
+            dataIndex: "stockAward.name",
+            key: "stockAward.name"
           },
           {
             title: "中奖用户",
-            dataIndex: "a2",
-            key: "a2"
+            dataIndex: "user.fullname",
+            key: "user.fullname"
           },
           {
             title: "中奖时间",
-            dataIndex: "a3",
-            key: "a3"
+            dataIndex: "createdAt",
+            key: "createdAt",
+            type: "date"
           },
           {
             title: "中奖位置",
@@ -53,8 +53,8 @@ export class SuperRecord extends React.Component {
           },
           {
             title: "派发员",
-            dataIndex: "a5",
-            key: "a5"
+            dataIndex: "sender.fullname",
+            key: "sender.fullname"
           },
       ]
     };

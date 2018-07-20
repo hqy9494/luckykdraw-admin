@@ -91,8 +91,8 @@ export class AwardSetting extends React.Component {
           },
         {
           title: "累计奖品数量",
-          dataIndex: "a5",
-          key: "a5"
+          dataIndex: "ljjpsl",
+          key: "ljjpsl"
         },
         {
             title: "实物奖项",

@@ -116,7 +116,7 @@ export class PrizeAward extends React.Component {
                 label: "实物累计金额",
                 field: "stockCount",
                 type: "select",
-                options: [{title: 200, value:200},{title: 300, value:300},{title: 500, value:500}],
+                options: [{title: 3, value:3},{title: 10, value:10},{title: 200, value:200},{title: 300, value:300},{title: 500, value:500}],
                 params: {
                   initialValue: this.state.curRow && this.state.curRow.stockCount,
                   rules: [{ required: true, message: "必填项" }]
