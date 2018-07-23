@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 import uuid from "uuid";
 import { Col, Grid, Row } from "react-bootstrap";
-import { Modal,Divider } from "antd";
+import { Modal, Divider, Popconfirm } from "antd";
 import TableExpand from "../../components/TableExpand";
 import FormExpand from "../../components/FormExpand";
 
@@ -52,8 +52,26 @@ export class AwardSetting extends React.Component {
         }
       );
     } else {
-
     }
+  };
+
+  submitEnabled = (boxId, ifEnable) => {
+    if (boxId) {
+    this.props.rts(
+      {
+        method: "post",
+        url: "/boxStock/switch",
+        data: {
+          boxId,
+          ifEnable
+        }
+      },
+      this.uuid,
+      "submitEnabled",
+      () => {
+        this.setState({ refreshTable: true });
+      }
+    );}
   };
 
   render() {
@@ -80,46 +98,74 @@ export class AwardSetting extends React.Component {
       search: [],
       columns: [
         {
-            title: "设备名称",
-            dataIndex: "name",
-            key: "name"
-          },
-          {
-            title: "实物累计金额",
-            dataIndex: "boxStock.stock",
-            key: "boxStock.stock"
-          },
+          title: "设备名称",
+          dataIndex: "name",
+          key: "name"
+        },
         {
-          title: "累计奖品数量",
+          title: "实物累计金额",
+          dataIndex: "boxStock.stock",
+          key: "boxStock.stock"
+        },
+        {
+          title: "未派发奖品数量",
           dataIndex: "ljjpsl",
           key: "ljjpsl"
         },
         {
-            title: "实物奖项",
-            dataIndex: "stockAward.name",
-            key: "stockAward.name"
-          },
-          {
-            title: "奖项额度",
-            dataIndex: "stockAward.stockCount",
-            key: "stockAward.stockCount"
-          },
-          {
-            title: "操作",
-            key: "handle",
-            render: (text, record) => (
-              <span>
+          title: "累计奖品数量",
+          dataIndex: "asarc",
+          key: "asarc"
+        },
+        {
+          title: "实物奖项",
+          dataIndex: "stockAward.name",
+          key: "stockAward.name"
+        },
+        {
+          title: "奖项额度",
+          dataIndex: "stockAward.stockCount",
+          key: "stockAward.stockCount"
+        },
+        {
+          title: "状态",
+          dataIndex: "boxStock.enabled",
+          key: "boxStock.enabled",
+          render: text => (text ? "开启" : "关闭")
+        },
+        {
+          title: "操作",
+          key: "handle",
+          render: (text, record) => (
+            <span>
+              <a
+                href="javascript:;"
+                onClick={() => {
+                  this.setState({ curRow: record, visible: true });
+                }}
+              >
+                重置奖项
+              </a>
+              <Divider type="vertical" />
+              <Popconfirm
+                title={`是否${record.boxStock.enabled ? "关闭" : "开启"}${
+                  record.name
+                }奖项设置`}
+                onConfirm={() => {
+                  this.submitEnabled(record.id, !record.boxStock.enabled);
+                }}
+                okText="是"
+                cancelText="否"
+              >
                 <a
                   href="javascript:;"
-                  onClick={() => {
-                    this.setState({ curRow: record, visible: true });
-                  }}
                 >
-                  重置奖项
+                  {record.boxStock.enabled ? "关闭" : "开启"}
                 </a>
-              </span>
-            )
-          }
+              </Popconfirm>
+            </span>
+          )
+        }
       ]
     };
 
@@ -184,4 +230,7 @@ const mapStateToProps = createStructuredSelector({
   type
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AwardSetting);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AwardSetting);
