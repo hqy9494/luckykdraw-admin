@@ -7,7 +7,7 @@ import { Modal, Divider, Popconfirm } from "antd";
 import TableExpand from "../../components/TableExpand";
 import FormExpand from "../../components/FormExpand";
 
-export class Evaluate extends React.Component {
+export class AwardSetting extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -18,115 +18,149 @@ export class Evaluate extends React.Component {
   }
 
   componentWillMount() {
-      
+    this.getType();
   }
 
   componentWillReceiveProps(nextProps) {}
+
+  getType = () => {
+    this.props.rts(
+      {
+        method: "get",
+        url: "/stockAwards"
+      },
+      this.uuid,
+      "type"
+    );
+  };
 
   submitNew = values => {
     if (this.state.curRow && this.state.curRow.id) {
       this.props.rts(
         {
-          method: "patch",
-          url: `/awards/${this.state.curRow.id}`,
-          data: values
+          method: "post",
+          url: "/boxStock/bind",
+          data: {
+            boxId: this.state.curRow.id,
+            stockAwardId: values.stockAwardId
+          }
         },
         this.uuid,
         "submitFix",
         () => {
           this.setState({ refreshTable: true, visible: false });
-          window.location.reload();
         }
       );
     } else {
-      this.props.rts(
-        {
-          method: "post",
-          url: `/awards`,
-          data: values
-        },
-        this.uuid,
-        "submitNew",
-        () => {
-          this.setState({ refreshTable: true, visible: false });
-          window.location.reload();
-        }
-      );
     }
   };
 
-  delete=(id)=>{
+  submitEnabled = (boxId, ifEnable) => {
+    if (boxId) {
     this.props.rts(
       {
-        method: "delete",
-        url: `/posts/${id}`
+        method: "post",
+        url: "/boxStock/switch",
+        data: {
+          boxId,
+          ifEnable
+        }
       },
       this.uuid,
-      "delete",
+      "submitEnabled",
       () => {
         this.setState({ refreshTable: true });
-        // window.location.reload();
       }
-    );
-  }
+    );}
+  };
 
   render() {
+    const { type } = this.props;
+
+    let typeList = [];
+
+    if (type && type[this.uuid]) {
+      typeList = type[this.uuid].map(t => {
+        return {
+          title: t.name,
+          value: t.id
+        };
+      });
+    }
+
     const config = {
       api: {
         rts: this.props.rts,
         uuid: this.uuid,
-        data: "/posts",
-        total: "/posts/count"
+        data: "/boxStock"
       },
-      buttons: [
-        // {
-        //   title: "添加",
-        //   onClick: () => {
-        //     this.setState({ visible: true, curRow: null });
-        //   }
-        // }
-      ],
+      buttons: [],
       search: [],
       columns: [
         {
-            title: "图片",
-            dataIndex: "images",
-            key: "images",
-            render: text => {
-              return <div>
-                {
-                  text&&text.length>0?text.map((t,i)=> <img key={i} src={t} alt="商品图片" height="60" style={{float: "left", marginLeft: 10}} />):""
-                }
-              </div>
-            }
+          title: "设备名称",
+          dataIndex: "name",
+          key: "name"
         },
         {
-            title: "内容",
-            dataIndex: "title",
-            key: "title"
+          title: "实物累计金额",
+          dataIndex: "boxStock.stock",
+          key: "boxStock.stock"
         },
         {
-            title: "微信昵称",
-            dataIndex: "user.nickname",
-            key: "user.nickname"
+          title: "未派发奖品数量",
+          dataIndex: "ljjpsl",
+          key: "ljjpsl"
+        },
+        {
+          title: "累计奖品数量",
+          dataIndex: "asarc",
+          key: "asarc"
+        },
+        {
+          title: "实物奖项",
+          dataIndex: "stockAward.name",
+          key: "stockAward.name"
+        },
+        {
+          title: "奖项额度",
+          dataIndex: "stockAward.stockCount",
+          key: "stockAward.stockCount"
+        },
+        {
+          title: "状态",
+          dataIndex: "boxStock.enabled",
+          key: "boxStock.enabled",
+          render: text => (text ? "开启" : "关闭")
         },
         {
           title: "操作",
           key: "handle",
           render: (text, record) => (
             <span>
-              {/* <a
+              <a
                 href="javascript:;"
                 onClick={() => {
                   this.setState({ curRow: record, visible: true });
                 }}
               >
-                编辑
+                重置奖项
               </a>
-              <Divider type="vertical" /> */}
-              <Popconfirm title="确定删除此条晒单" onConfirm={()=>{this.delete(record.tid)}} okText="是" cancelText="否">
-                <a href="javascript:;">
-                  删除
+              <Divider type="vertical" />
+              <Popconfirm
+                title={`是否${record.boxStock.enabled ? "关闭" : "开启"}${
+                  record.name
+                }奖项设置`}
+                onConfirm={() => {
+                  this.submitEnabled(record.id, !record.boxStock.enabled);
+                }}
+                okText="是"
+                cancelText="否"
+              >
+                <a
+                  href="javascript:;"
+                >
+                  {record.boxStock.enabled ? "关闭" : "开启"}
                 </a>
               </Popconfirm>
             </span>
@@ -152,7 +186,7 @@ export class Evaluate extends React.Component {
         </Row>
         <Modal
           visible={this.state.visible}
-          title={`${this.state.curRow && this.state.curRow.user.nickname}的晒单` || "新建晒图"}
+          title={(this.state.curRow && this.state.curRow.name) || "添加奖品"}
           onCancel={() => {
             this.setState({ visible: false });
             window.location.reload();
@@ -162,23 +196,12 @@ export class Evaluate extends React.Component {
           <FormExpand
             elements={[
               {
-                type: "picture",
-                field: "mainImage",
-                label: "图片",
+                label: "实物奖项",
+                field: "stockAwardId",
+                type: "select",
+                options: typeList,
                 params: {
-                  initialValue: this.state.curRow &&
-                    this.state.curRow.images,
                   rules: [{ required: true, message: "必填项" }]
-                },
-                upload: "/api/files/upload"
-              },
-              {
-                type: "text",
-                field: "title",
-                label: "内容",
-                params: {
-                  initialValue:
-                    this.state.curRow && this.state.curRow.title
                 }
               }
             ]}
@@ -187,7 +210,6 @@ export class Evaluate extends React.Component {
             }}
             onCancel={() => {
               this.setState({ visible: false });
-              window.location.reload();
             }}
           />
         </Modal>
@@ -200,10 +222,15 @@ const mapDispatchToProps = dispatch => {
   return {};
 };
 
-const Evaluateuuid = state => state.get("rts").get("uuid")
+const AwardSettinguuid = state => state.get("rts").get("uuid");
+const type = state => state.get("rts").get("type");
 
 const mapStateToProps = createStructuredSelector({
-  Evaluateuuid,
+  AwardSettinguuid,
+  type
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Evaluate);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AwardSetting);

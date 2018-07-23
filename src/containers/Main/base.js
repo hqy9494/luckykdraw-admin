@@ -23,6 +23,12 @@ import BaseContent from "./Layout/BaseContent";
 import ContentWrapper from "../../components/Layout/ContentWrapper";
 import { parseParameter } from "../../utils/utils";
 
+message.config({
+  top: 90,
+  duration: 10,
+  maxCount: 3,
+});
+
 // 根据配置读取并拼接组件
 const BaseConstructor = (config, title) => {
   class Base extends React.Component {

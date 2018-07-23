@@ -231,8 +231,8 @@ export default class TableExpand extends React.Component {
     });
   };
 
-  jumpUrl = (newParams = {}) => {
-    const params = Object.assign({}, this.params, newParams);
+  jumpUrl = (newParams = {},obj={}) => {
+    const params = Object.assign({}, this.params, newParams,obj);
     this.props.replace(
       this.props.path,
       `?${this.tab ? `tab=${this.tab}&` : ""}q=${JSON.stringify(params)}`
@@ -342,7 +342,7 @@ export default class TableExpand extends React.Component {
                       onSearchChange={searchs => {
                         // console.log(searchs);
                         console.log(this.simplifySearchs(searchs));
-                        this.jumpUrl({ s: this.simplifySearchs(searchs) });
+                        this.jumpUrl({ s: this.simplifySearchs(searchs) },{skip:0});
                       }}
                     />
                   )}
