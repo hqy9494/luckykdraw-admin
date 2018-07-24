@@ -57,21 +57,22 @@ export class AwardSetting extends React.Component {
 
   submitEnabled = (boxId, ifEnable) => {
     if (boxId) {
-    this.props.rts(
-      {
-        method: "post",
-        url: "/boxStock/switch",
-        data: {
-          boxId,
-          ifEnable
+      this.props.rts(
+        {
+          method: "post",
+          url: "/boxStock/switch",
+          data: {
+            boxId,
+            ifEnable
+          }
+        },
+        this.uuid,
+        "submitEnabled",
+        () => {
+          this.setState({ refreshTable: true });
         }
-      },
-      this.uuid,
-      "submitEnabled",
-      () => {
-        this.setState({ refreshTable: true });
-      }
-    );}
+      );
+    }
   };
 
   render() {
@@ -136,35 +137,36 @@ export class AwardSetting extends React.Component {
         {
           title: "操作",
           key: "handle",
-          render: (text, record) => (
-            <span>
-              <a
-                href="javascript:;"
-                onClick={() => {
-                  this.setState({ curRow: record, visible: true });
-                }}
-              >
-                重置奖项
-              </a>
-              <Divider type="vertical" />
-              <Popconfirm
-                title={`是否${record.boxStock.enabled ? "关闭" : "开启"}${
-                  record.name
-                }奖项设置`}
-                onConfirm={() => {
-                  this.submitEnabled(record.id, !record.boxStock.enabled);
-                }}
-                okText="是"
-                cancelText="否"
-              >
+          render: (text, record) => {
+            let boxStock = record.boxStock ? record.boxStock : {};
+            return (
+              <span>
                 <a
                   href="javascript:;"
+                  onClick={() => {
+                    this.setState({ curRow: record, visible: true });
+                  }}
                 >
-                  {record.boxStock.enabled ? "关闭" : "开启"}
+                  重置奖项
                 </a>
-              </Popconfirm>
-            </span>
-          )
+                <Divider type="vertical" />
+                <Popconfirm
+                  title={`是否${boxStock.enabled ? "关闭" : "开启"}${
+                    record.name
+                  }奖项设置`}
+                  onConfirm={() => {
+                    this.submitEnabled(record.id, !boxStock.enabled);
+                  }}
+                  okText="是"
+                  cancelText="否"
+                >
+                  <a href="javascript:;">
+                    {boxStock.enabled ? "关闭" : "开启"}
+                  </a>
+                </Popconfirm>
+              </span>
+            );
+          }
         }
       ]
     };
