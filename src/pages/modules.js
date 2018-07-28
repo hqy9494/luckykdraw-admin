@@ -26,7 +26,7 @@ import SuperRecord from './Records/SuperRecord';
 import Replenishmenter from './Settings/Replenishmenter.jsx';
 import ReplenishmenterApply from './Settings/ReplenishmenterApply';
 import Evaluate from './Settings/Evaluate';
-
+import Statistic from './Statistic/index'
 
 const modules = {
   Index,
@@ -50,7 +50,8 @@ const modules = {
   SuperRecord,
   Replenishmenter,
   ReplenishmenterApply,
-  Evaluate
+  Evaluate,
+  Statistic
 };
 
 export default modules;

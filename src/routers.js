@@ -156,6 +156,12 @@ export default {
         module: 'Settings',
         component: 'Evaluate',
         title: '晒单管理'
+      },
+      Statistic: {
+        path: 'statistic',
+        module: 'Statistic',
+        component: 'Statistic',
+        title: '统计'
       }
     }
   }

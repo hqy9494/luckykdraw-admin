@@ -1,9 +1,8 @@
 import baseConfig from './base';
 
 const config = {
-  apiUrl: 'https://hk.uugo.in',
-  mobileUrl: "https://hk.uugo.in/#/",
-  env: 'test'  // don't remove the appEnv property here
+  env: 'test',
+  apiUrl: 'http://192.168.16.54:4000/'
 };
 
-export default Object.freeze(Object.assign(baseConfig, config));
+export default Object.freeze(Object.assign({}, baseConfig, config));
