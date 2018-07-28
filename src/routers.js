@@ -4,15 +4,15 @@ export default {
   home: {
     module: '',
     path: '/',
-    redirect: '/dashboard',
+    redirect: '/tenant',
     subs: {
       // 主页
-      dashboard: {
-        path: 'dashboard',
-        module: 'Indexs',
-        component: 'Index',
-        title: '主页'
-      },
+      // dashboard: {
+      //   path: 'dashboard',
+      //   module: 'Indexs',
+      //   component: 'Index',
+      //   title: '主页'
+      // },
       // 兑奖中心
       tenant: {
         path: 'tenant',
