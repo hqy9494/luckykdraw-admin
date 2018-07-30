@@ -162,6 +162,18 @@ export default {
         module: 'Statistic',
         component: 'Statistic',
         title: '统计'
+      },
+      StockAwardConsume: {
+        path: 'prizes/consume/1',
+        module: 'Prizes',
+        component: 'StockAwardConsume',
+        title: '中奖池消耗'
+      },
+      BigStockAwardConsume: {
+        path: 'prizes/consume/2',
+        module: 'Prizes',
+        component: 'StockAwardConsume',
+        title: '大奖池消耗'
       }
     }
   }

@@ -98,6 +98,16 @@ const menu = [{
         id: "clue",
         name: "线索",
         component: "clue"
+      },
+      {
+        id: "consume/1",
+        name: "中奖池消耗",
+        component: "consume/1"
+      },
+      {
+        id: "consume/2",
+        name: "大奖池消耗",
+        component: "consume/2"
       }
     ]
   },

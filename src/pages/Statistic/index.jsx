@@ -11,9 +11,6 @@ import BoxRank from "./BoxRank"
 import DailyBoxSale from "./DailyBoxSale"
 import SevenDayInfo from "./SevenDayInfo"
 import moment from "moment"
-import TableExpand from "../../components/TableExpand";
-import FormExpand from "../../components/FormExpand";
-import { Col, Row, Table } from "antd";
 import styles from "./index.scss";
 
 export class Statistic extends React.Component {

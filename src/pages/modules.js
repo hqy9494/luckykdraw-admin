@@ -16,6 +16,7 @@ import Specification from './Prizes/Specification';
 import Clue from './Prizes/Clue';
 import PrizeAward from './Prizes/PrizeAward';
 import AwardSetting from './Prizes/AwardSetting';
+import StockAwardConsume from './Prizes/StockAwardConsume';
 //
 import Balance from './Balances/Balance';
 //
@@ -51,7 +52,8 @@ const modules = {
   Replenishmenter,
   ReplenishmenterApply,
   Evaluate,
-  Statistic
+  Statistic,
+  StockAwardConsume
 };
 
 export default modules;
