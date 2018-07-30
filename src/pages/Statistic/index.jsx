@@ -155,7 +155,7 @@ export class Statistic extends React.Component {
       {key: "扫码销售额", value: saleCount.saleSum || 0},
       {key: "今日派出奖金", value: saleCount.sendToday || 0},
       {key: "中奖池累积金额", value: saleCount.zjcljje || 0},
-      {key: "大奖池累积金额", value: saleCount.djljje || 0}
+      {key: "大奖池累积金额", value: parseFloat(saleCount.djljje.toFixed(2)) || 0}
     ];
 
     boxesInfo = boxesInfo || {};
