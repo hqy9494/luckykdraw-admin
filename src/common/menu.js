@@ -1,4 +1,11 @@
-const menu = [{
+const menu = [
+  {
+    id: "statistic",
+    icon: "line-chart",
+    name: "数据统计",
+    component: "statistic"
+  },
+  {
     id: "tenant",
     icon: "shop",
     name: "兑奖中心",
