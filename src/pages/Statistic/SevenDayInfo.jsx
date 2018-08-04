@@ -1,5 +1,5 @@
 import React from "react";
-import { Col, Row, Table } from "antd";
+import { Col, Row, Table, Pagination } from "antd";
 import moment from "moment"
 
 export class SevenDayInfo extends React.Component {
@@ -8,7 +8,7 @@ export class SevenDayInfo extends React.Component {
   }
 
   render() {
-    let {content} =  this.props;
+    let {content, haspagination, onChange} =  this.props;
     content = content || [];
 
     const columns = [{
@@ -51,7 +51,7 @@ export class SevenDayInfo extends React.Component {
       let dayinfo = content[`seven${i}`];
       if (dayinfo) {
         data[i] = {
-          time: moment().subtract(i, "day").format("YYYY-MM-DD"),
+          time: moment(dayinfo.day).subtract(i, "day").format("YYYY-MM-DD"),
           pondCount: dayinfo.pondCount,
           sendDay: dayinfo.sendDay,
           pondSum: dayinfo.pondSum,
@@ -66,6 +66,7 @@ export class SevenDayInfo extends React.Component {
     return (
       <div className="statistic-box-with-title-bar" style={{width: "100%"}}>
         <Table columns={columns} dataSource={data} pagination={false} />
+        {haspagination && <Pagination className="pagination-statistic" onChange={(page) => {onChange(page)}} total={500} />}
       </div>
     );
   }

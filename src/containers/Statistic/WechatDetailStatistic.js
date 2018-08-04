@@ -1,13 +1,12 @@
 export default {
   initialState: {
-    title: "统 计",
-    // subTitle: [{ display: "主 页" }],
+    title: "微信数据",
     selectedKeys: "statistic",
-    openKeys: "allStatistic"
+    openKeys: "wechatDetailStatistic"
   },
   component: [
     {
-      module: "Statistic",
+      module: "WechatDetailStatistic",
       getProps: ["rts"]
     }
   ]

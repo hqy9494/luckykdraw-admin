@@ -7,12 +7,12 @@ export default {
     redirect: '/tenant',
     subs: {
       // 主页
-      // dashboard: {
-      //   path: 'dashboard',
-      //   module: 'Indexs',
-      //   component: 'Index',
-      //   title: '主页'
-      // },
+      dashboard: {
+        path: 'dashboard',
+        module: 'Indexs',
+        component: 'Index',
+        title: '主页'
+      },
       // 兑奖中心
       tenant: {
         path: 'tenant',
@@ -161,7 +161,39 @@ export default {
         path: 'statistic',
         module: 'Statistic',
         component: 'Statistic',
-        title: '统计'
+        title: '统计',
+        subs: {
+          allStatistic: {
+            path: '/allStatistic',
+            module: 'Statistic',
+            component: 'Statistic',
+            title: '统计'
+          },
+          RangeStatistic: {
+            path: '/rangeStatistic',
+            module: 'Statistic',
+            component: 'RangeStatistic',
+            title: '动态统计'
+          },
+          BoxDetailStatistic: {
+            path: '/boxDetailStatistic',
+            module: 'Statistic',
+            component: 'BoxDetailStatistic',
+            title: '设备数据'
+          },
+          SaleDetailStatistic: {
+            path: '/saleDetailStatistic',
+            module: 'Statistic',
+            component: 'SaleDetailStatistic',
+            title: '销售数据'
+          },
+          WechatDetailStatistic: {
+            path: '/wechatDetailStatistic',
+            module: 'Statistic',
+            component: 'WechatDetailStatistic',
+            title: '微信数据'
+          }
+        }
       },
       StockAwardConsume: {
         path: 'prizes/consume/1',
@@ -174,6 +206,12 @@ export default {
         module: 'Prizes',
         component: 'StockAwardConsume',
         title: '大奖池消耗'
+      },
+      Region: {
+        path: 'regions',
+        module: 'Region',
+        component: 'Region',
+        title: '区域管理'
       }
     }
   }

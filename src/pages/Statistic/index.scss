@@ -64,10 +64,18 @@
     margin-top: 16px;
     margin-right: 20px;
   }
+  .pagination-statistic {
+    float: right;
+    margin: 20px;
+  }
 }
 
 .statistic-box-rank-table {
   td {
     padding: 5px !important;
   }
+}
+
+.statistic-choose-date-picker-fa{
+  float: right;
 }

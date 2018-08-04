@@ -185,7 +185,7 @@ export class Statistic extends React.Component {
         <BuyAgainInfoBox content={buyTimes} />
         <BoxRank content={boxRank} />
         <DailyBoxSale content={boxAverage}/>
-        <SevenDayInfo content={{seven0,seven1,seven2,seven3,seven4,seven5,seven6}} />
+        <SevenDayInfo content={{seven0,seven1,seven2,seven3,seven4,seven5,seven6}} haspagination={false} />
       </Grid>
     );
   }

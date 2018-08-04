@@ -27,7 +27,12 @@ import SuperRecord from './Records/SuperRecord';
 import Replenishmenter from './Settings/Replenishmenter.jsx';
 import ReplenishmenterApply from './Settings/ReplenishmenterApply';
 import Evaluate from './Settings/Evaluate';
-import Statistic from './Statistic/index'
+import Statistic from './Statistic/index';
+import Region from './Region/index'
+import RangeStatistic from './Statistic/chooseIndex'
+import BoxDetailStatistic from './Statistic/boxDetailStatistic'
+import SaleDetailStatistic from './Statistic/saleDetailStatistic'
+import WechatDetailStatistic from './Statistic/wechatDetailStatistic'
 
 const modules = {
   Index,
@@ -53,7 +58,12 @@ const modules = {
   ReplenishmenterApply,
   Evaluate,
   Statistic,
-  StockAwardConsume
+  StockAwardConsume,
+  Region,
+  RangeStatistic,
+  BoxDetailStatistic,
+  SaleDetailStatistic,
+  WechatDetailStatistic
 };
 
 export default modules;

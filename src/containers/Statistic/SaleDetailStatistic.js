@@ -1,13 +1,12 @@
 export default {
   initialState: {
-    title: "统 计",
-    // subTitle: [{ display: "主 页" }],
+    title: "销售数据",
     selectedKeys: "statistic",
-    openKeys: "allStatistic"
+    openKeys: "saleDetailStatistic"
   },
   component: [
     {
-      module: "Statistic",
+      module: "SaleDetailStatistic",
       getProps: ["rts"]
     }
   ]

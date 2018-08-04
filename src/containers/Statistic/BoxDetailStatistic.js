@@ -1,13 +1,12 @@
 export default {
   initialState: {
-    title: "统 计",
-    // subTitle: [{ display: "主 页" }],
+    title: "设备数据",
     selectedKeys: "statistic",
-    openKeys: "allStatistic"
+    openKeys: "boxDetailStatistic"
   },
   component: [
     {
-      module: "Statistic",
+      module: "BoxDetailStatistic",
       getProps: ["rts"]
     }
   ]

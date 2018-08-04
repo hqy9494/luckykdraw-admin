@@ -3,7 +3,28 @@ const menu = [
     id: "statistic",
     icon: "line-chart",
     name: "数据统计",
-    component: "statistic"
+    component: "statistic",
+    children: [{
+      id: "allStatistic",
+      name: "数据统计",
+      component: "allStatistic"
+    }, {
+      id: "rangeStatistic",
+      name: "动态统计",
+      component: "rangeStatistic"
+    }, {
+      id: "boxDetailStatistic",
+      name: "设备数据",
+      component: "boxDetailStatistic"
+    }, {
+      id: "saleDetailStatistic",
+      name: "销售数据",
+      component: "saleDetailStatistic"
+    }, {
+      id: "wechatDetailStatistic",
+      name: "微信数据",
+      component: "wechatDetailStatistic"
+    }]
   },
   {
     id: "tenant",
@@ -140,6 +161,12 @@ const menu = [
     icon: "message",
     name: "晒单",
     component: "Evaluate"
+  },
+  {
+    id: "regions",
+    icon: "environment-o",
+    name: "区域管理",
+    component: "regions"
   }
 ];
 

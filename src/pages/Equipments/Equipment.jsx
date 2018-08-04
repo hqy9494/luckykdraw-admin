@@ -4,7 +4,7 @@ import { createStructuredSelector } from "reselect";
 import moment from "moment";
 import uuid from "uuid";
 import { Grid, Row, Col } from "react-bootstrap";
-import { Divider, Popconfirm, Modal } from "antd";
+import { Divider, Popconfirm, Modal, TreeSelect } from "antd";
 import TableExpand from "../../components/TableExpand";
 import FormExpand from "../../components/FormExpand";
 
@@ -12,7 +12,8 @@ export class Tenant extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      visible: false
+      visible: false,
+      locationModel: false
     };
     this.uuid = uuid.v1();
   }
@@ -21,6 +22,7 @@ export class Tenant extends React.Component {
     this.getTenant();
     this.getSpecification();
     this.getUser();
+    this.getRegionJson();
   }
 
   componentWillReceiveProps(nextProps) {}
@@ -33,6 +35,20 @@ export class Tenant extends React.Component {
       },
       this.uuid,
       "tenant"
+    );
+  };
+
+  getRegionJson = () => {
+    this.props.rts(
+      {
+        method: "get",
+        url: '/regions/regionsjson'
+      },
+      this.uuid,
+      "treeData",
+      treeData => {
+        this.setState({ treeData: treeData });
+      }
     );
   };
 
@@ -151,8 +167,36 @@ export class Tenant extends React.Component {
     }
   };
 
+  onChange = (v) => {
+    this.setState({
+      choosedId: v
+    })
+  };
+
+  handleOk = () => {
+    this.setState({
+      locationModel: false
+    });
+    this.props.rts(
+      {
+        method: "post",
+        url: "/regions/bindBox",
+        data: {
+          locationId: this.state.locationId,
+          regionId: this.state.choosedId
+        }
+      },
+      this.uuid,
+      "submitNew",
+      () => {
+        this.setState({ refreshTable: true, visible: false });
+      }
+    );
+  };
+
   render() {
     const { tenant } = this.props;
+    const { treeData } = this.state;
     let tenantList = [];
 
     if (tenant && tenant[this.uuid]) {
@@ -283,6 +327,20 @@ export class Tenant extends React.Component {
                 }}
               >
                 中奖模板
+              </a>
+              <Divider type="vertical" />
+              <a
+                href="javascript:;"
+                onClick={() => {
+                  this.setState({
+                    locationModel: true,
+                    locationName: record.location && record.location.address,
+                    regionName: record.region && record.region.name,
+                    locationId: record.location && record.location.id
+                  })
+                }}
+              >
+                绑定区域
               </a>
             </span>
           )
@@ -418,6 +476,30 @@ export class Tenant extends React.Component {
               this.setState({ visible: false });
             }}
           />
+        </Modal>
+        <Modal
+          visible={this.state.locationModel}
+          title={"绑定机器"}
+          onOk={this.handleOk}
+          onCancel={() => {
+            this.setState({ locationModel: false });
+          }}
+        >
+          <p>
+            机器位置：{this.state.locationName}
+          </p>
+          <p>
+            机器区域：{this.state.regionName}
+          </p>
+          <TreeSelect
+            treeData={treeData}
+            style={{ width: 300 }}
+            dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+            allowClear
+            treeDefaultExpandAll
+            onChange={this.onChange}
+          >
+          </TreeSelect>
         </Modal>
       </Grid>
     );

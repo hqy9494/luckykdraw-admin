@@ -15,7 +15,8 @@ import Equipments from "../Equipments/modules";
 import Setting from "../Settings/modules";
 import Records from "../Records/modules";
 import Settings from "../Settings/modules";
-import Statistic from "../Statistic/modules"
+import Statistic from "../Statistic/modules";
+import Region from "../Region/modules"
 
 const modules = {
   Indexs,
@@ -27,7 +28,8 @@ const modules = {
   Setting,
   Records,
   Settings,
-  Statistic
+  Statistic,
+  Region
 };
 
 export function mapDispatchToProps(dispatch) {

@@ -1,13 +1,13 @@
 export default {
   initialState: {
-    title: "统 计",
+    title: "动态统计",
     // subTitle: [{ display: "主 页" }],
     selectedKeys: "statistic",
-    openKeys: "allStatistic"
+    openKeys: "rangeStatistic"
   },
   component: [
     {
-      module: "Statistic",
+      module: "RangeStatistic",
       getProps: ["rts"]
     }
   ]

@@ -8,7 +8,7 @@ export class LongTopBar extends React.Component {
   }
 
   render() {
-    let { title, content, icon, color} =  this.props;
+    let { title, content, icon, color, width } =  this.props;
 
     return (
       <div style={{marginBottom: 10}}>
@@ -20,7 +20,7 @@ export class LongTopBar extends React.Component {
           <Row>
             {content && content.map((v,i) =>
               (
-                <Col key={i} md={3} className="statistic-long-top-col">
+                <Col key={i} md={3} style={{width: width}} className="statistic-long-top-col">
                   <Col md={12}>
                     {v.value}
                   </Col>
