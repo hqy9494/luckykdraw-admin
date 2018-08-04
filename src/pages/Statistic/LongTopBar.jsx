@@ -1,5 +1,5 @@
 import React from "react";
-import { Col, Row } from "react-bootstrap";
+import { Col, Row } from "antd";
 import { Icon } from "antd"
 
 export class LongTopBar extends React.Component {
@@ -20,7 +20,7 @@ export class LongTopBar extends React.Component {
           <Row>
             {content && content.map((v,i) =>
               (
-                <Col key={i} md={3} style={{width: width}} className="statistic-long-top-col">
+                <Col key={i} span={6} style={{width: width}} className="statistic-long-top-col">
                   <Col md={12}>
                     {v.value}
                   </Col>
