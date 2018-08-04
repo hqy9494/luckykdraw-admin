@@ -9,7 +9,7 @@ export class DailyBoxSale extends React.Component {
   render() {
     let {content} =  this.props;
     let data = [{
-      key: "今日设备平均销售额",
+      key: "今日扫码设备平均销售额",
       value: content.dailySaleAverage,
       unit: "¥",
       color: "#699bfc"

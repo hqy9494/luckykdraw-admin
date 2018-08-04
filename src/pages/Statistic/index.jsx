@@ -169,7 +169,7 @@ export class Statistic extends React.Component {
     buyersStatistic = buyersStatistic || {};
 
     let boxAverage = {
-      dailySaleAverage: parseFloat(saleCount.saleSum/boxesInfo.boxCount).toFixed(2),
+      dailySaleAverage: parseFloat(saleCount.saleSum/boxesInfo.dayActiveBoxCount).toFixed(2),
       dailySendAverage: parseFloat(saleCount.sendToday/boxesInfo.boxCount).toFixed(2),
       dailyBoxAverage: parseFloat((boxesInfo.pondCount || 0)/boxesInfo.boxCount).toFixed(2),
       dailyUserAverage: parseFloat(wechatCount.followToday/boxesInfo.boxCount).toFixed(2)
