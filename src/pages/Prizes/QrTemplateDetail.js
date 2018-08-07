@@ -52,8 +52,8 @@ export class QrTemplateDetail extends React.Component {
                 if (r.award) {
                   return {
                     value: r.amount,
-                    id: r.award.id,
-                    title: r.award.name
+                    id: r.id,
+                    title: r.name
                   };
                 }
               })
@@ -119,7 +119,7 @@ export class QrTemplateDetail extends React.Component {
         };
       });
     }
-    
+
     const { getFieldDecorator, getFieldValue } = this.props.form;
     const formItemLayout = {
       labelCol: {
@@ -150,10 +150,10 @@ export class QrTemplateDetail extends React.Component {
           })(
             <InputNumber style={{ width: '60%', marginRight: 8 }} />
           )}
-          <Icon
+          {this.props.params.type==="box" && <Icon
             type="minus-circle-o"
             onClick={() => this.remove(k.id)}
-          />
+          />}
         </FormItem>
       );
     });
@@ -178,7 +178,7 @@ export class QrTemplateDetail extends React.Component {
               </FormItem>
               ):null
             }
-            
+
             <FormItem {...formItemLayoutWithOutLabel}>
               <Button type="primary" htmlType="submit">保存</Button>
             </FormItem>
