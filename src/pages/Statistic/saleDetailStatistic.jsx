@@ -92,7 +92,7 @@ export class SaleDetailStatistic extends React.Component {
             }
             return {
               date: apl.date,
-              value: Number(apl[key].toFixed(2))
+              value: Number(apl[key].toFixed(2)) * 30
             };
           });
           this.setState({
