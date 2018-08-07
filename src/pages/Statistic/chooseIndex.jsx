@@ -146,9 +146,9 @@ export class Statistic extends React.Component {
 
     let saleContent = [
       {key: "扫码销售额", value: allStatistic.saleSum || 0},
-      {key: "今日派出奖金", value: parseFloat(allStatistic.sendToday).toFixed(2) || 0},
-      {key: "中奖池累积金额", value: allStatistic.zjcljje ? parseFloat(allStatistic.zjcljje.toFixed(2)) : 0},
-      {key: "大奖池累积金额", value: allStatistic.djljje ? parseFloat(allStatistic.djljje.toFixed(2)) : 0}
+      {key: "今日派出奖金", value: parseInt(allStatistic.sendToday) || 0},
+      {key: "中奖池累积金额", value: allStatistic.zjcljje ? parseInt(allStatistic.zjcljje) : 0},
+      {key: "大奖池累积金额", value: allStatistic.djljje ? parseInt(allStatistic.djljje) : 0}
     ];
 
     let boxesContent = [
@@ -159,6 +159,9 @@ export class Statistic extends React.Component {
     ];
 
     let boxBuyerRank = allStatistic.boxBuyerRank || [];
+    for (let i = 0; i < boxBuyerRank.length; i++) {
+      boxBuyerRank[i].nickname = boxBuyerRank[i].nickname || "未关注用户"
+    }
     let boxAwardRank = allStatistic.boxAwardRank || [];
 
     const boxBuyerColumns = [{

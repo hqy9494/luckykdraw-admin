@@ -136,10 +136,10 @@ export class SaleDetailStatistic extends React.Component {
 
     let saleContent = [
       {key: "扫码销售额", value: result.saleSum || 0},
-      {key: "今日派出奖金", value: parseFloat(result.sendToday).toFixed(2) || 0},
-      {key: "今日派出红包", value: result.sendRedPacket ? parseFloat(result.sendRedPacket.toFixed(2)) : 0},
-      {key: "中奖池累计金额", value: result.zjcljje ? parseFloat(result.zjcljje.toFixed(2)) : 0},
-      {key: "大奖池累计金额", value: result.djljje ? parseFloat(result.djljje.toFixed(2)) : 0}
+      {key: "今日派出奖金", value: parseInt(result.sendToday) || 0},
+      {key: "今日派出红包", value: result.sendRedPacket ? parseInt(result.sendRedPacket.toFixed(2)) : 0},
+      {key: "中奖池累计金额", value: result.zjcljje ? parseInt(result.zjcljje.toFixed(2)) : 0},
+      {key: "大奖池累计金额", value: result.djljje ? parseInt(result.djljje.toFixed(2)) : 0}
     ];
 
     const columns = [{
@@ -159,7 +159,10 @@ export class SaleDetailStatistic extends React.Component {
       title: '派发奖金',
       dataIndex: 'sendAwardPond',
       key: 'sendAwardPond',
-      align: "center"
+      align: "center",
+      render: (v) => {
+        return parseInt(v)
+      }
     }];
 
     let data = tableRes;

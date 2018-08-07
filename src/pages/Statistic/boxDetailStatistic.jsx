@@ -74,8 +74,8 @@ export class BoxDetailStatistic extends React.Component {
     let saleContent = [
       {key: "全部设备数量", value: result.boxCount || 0},
       {key: "扫码盒数", value: result.pondCount || 0},
-      {key: "销售金额", value: result.pondSum ? parseFloat(result.pondSum.toFixed(2)) : 0},
-      {key: "派发金额", value: result.sendToday ? parseFloat(result.sendToday.toFixed(2)) : 0}
+      {key: "销售金额", value: result.pondSum ? parseInt(result.pondSum.toFixed(2)) : 0},
+      {key: "派发金额", value: result.sendToday ? parseInt(result.sendToday.toFixed(2)) : 0}
     ];
 
     const columns = [{
@@ -107,7 +107,7 @@ export class BoxDetailStatistic extends React.Component {
       key: 'res',
       align: "center",
       render: (v) => {
-        return v.toFixed(2)
+        return parseInt(v)
       }
     }];
 
