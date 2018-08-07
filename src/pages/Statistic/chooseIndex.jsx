@@ -146,7 +146,7 @@ export class Statistic extends React.Component {
 
     let saleContent = [
       {key: "扫码销售额", value: allStatistic.saleSum || 0},
-      {key: "今日派出奖金", value: allStatistic.sendToday || 0},
+      {key: "今日派出奖金", value: parseFloat(allStatistic.sendToday).toFixed(2) || 0},
       {key: "中奖池累积金额", value: allStatistic.zjcljje ? parseFloat(allStatistic.zjcljje.toFixed(2)) : 0},
       {key: "大奖池累积金额", value: allStatistic.djljje ? parseFloat(allStatistic.djljje.toFixed(2)) : 0}
     ];

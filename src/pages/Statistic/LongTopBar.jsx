@@ -21,10 +21,10 @@ export class LongTopBar extends React.Component {
             {content && content.map((v,i) =>
               (
                 <Col key={i} span={6} style={{width: width}} className="statistic-long-top-col">
-                  <Col md={12}>
+                  <Col md={24}>
                     {v.value}
                   </Col>
-                  <Col md={12}>
+                  <Col md={24}>
                     {v.key}
                   </Col>
                 </Col>

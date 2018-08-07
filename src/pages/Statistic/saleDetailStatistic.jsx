@@ -136,7 +136,7 @@ export class SaleDetailStatistic extends React.Component {
 
     let saleContent = [
       {key: "扫码销售额", value: result.saleSum || 0},
-      {key: "今日派出奖金", value: result.sendToday || 0},
+      {key: "今日派出奖金", value: parseFloat(result.sendToday).toFixed(2) || 0},
       {key: "今日派出红包", value: result.sendRedPacket ? parseFloat(result.sendRedPacket.toFixed(2)) : 0},
       {key: "中奖池累计金额", value: result.zjcljje ? parseFloat(result.zjcljje.toFixed(2)) : 0},
       {key: "大奖池累计金额", value: result.djljje ? parseFloat(result.djljje.toFixed(2)) : 0}

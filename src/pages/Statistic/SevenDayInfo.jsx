@@ -51,9 +51,9 @@ export class SevenDayInfo extends React.Component {
       let dayinfo = content[`seven${i}`];
       if (dayinfo) {
         data[i] = {
-          time: moment(dayinfo.day).subtract(i, "day").format("YYYY-MM-DD"),
+          time: dayinfo.day,
           pondCount: dayinfo.pondCount,
-          sendDay: dayinfo.sendDay,
+          sendDay: parseFloat(dayinfo.sendDay).toFixed(2),
           pondSum: dayinfo.pondSum,
           followedScanCount: dayinfo.followedScanCount,
           unfollowedScanCount: dayinfo.unfollowedScanCount,
