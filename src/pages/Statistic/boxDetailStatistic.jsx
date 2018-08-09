@@ -67,6 +67,10 @@ export class BoxDetailStatistic extends React.Component {
     this.getChangeDetail(st, et, page - 1)
   }
 
+  handClick(record) {
+    this.props.to(`/statistic/rangeStatistic?id=${record.boxId}`)
+  }
+
   render() {
     let { result } = this.state;
     result = result || {};
@@ -124,7 +128,10 @@ export class BoxDetailStatistic extends React.Component {
         </div>
         <LongTopBar title="数据总览" content={saleContent} icon="wallet" color="#152678" />
         <div className="statistic-box-with-title-bar" style={{width: "100%"}}>
-          <Table columns={columns} dataSource={data} pagination={false} />
+          <Table onRow={(record) => {
+            return {
+            onClick: () => {this.handClick(record)}
+          }}} columns={columns} dataSource={data} pagination={false} />
           <Pagination className="pagination-statistic" defaultPageSize={7} onChange={(page) => {this.onPageChange(page)}} total={result.allBoxListCount} />
         </div>
       </Grid>
