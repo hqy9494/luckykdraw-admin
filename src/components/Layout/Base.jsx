@@ -8,6 +8,12 @@ import Footer from "./Footer";
 class Base extends React.Component {
   render() {
     const authenticated = Boolean(this.props.user);
+    let noSync = false;
+    let { user } = this.props;
+    user = user || {};
+    if (user.username == "admin" && user.fullname == "Administrator") {
+      noSync = true
+    }
 
     if (!authenticated) {
       return <div className="wrapper">{this.props.children}</div>;
@@ -16,13 +22,20 @@ class Base extends React.Component {
         <div className="wrapper">
           <Header />
 
-          <Sidebar noSync />
+          <Sidebar
+            menu={
+              this.props.user && this.props.user.menu
+                ? this.props.user.menu
+                : []
+            }
+            noSync={noSync}
+          />
 
           <Offsidebar />
 
           <section>{this.props.children}</section>
 
-          {/* <Footer /> */}
+          <Footer />
         </div>
       );
     }

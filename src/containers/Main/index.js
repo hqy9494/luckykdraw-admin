@@ -25,37 +25,6 @@ export class Main extends React.Component {
 
   render() {
     const { user, location } = this.props;
-    const currentKey = location.pathname.split("/")[1] || "/";
-    const timeout = { enter: 500, exit: 500 };
-
-    // Animations supported
-    //      'rag-fadeIn'
-    //      'rag-fadeInUp'
-    //      'rag-fadeInDown'
-    //      'rag-fadeInRight'
-    //      'rag-fadeInLeft'
-    //      'rag-fadeInUpBig'
-    //      'rag-fadeInDownBig'
-    //      'rag-fadeInRightBig'
-    //      'rag-fadeInLeftBig'
-    //      'rag-zoomBackDown'
-    // <TransitionGroup>
-    //   <CSSTransition
-    //     key={currentKey}
-    //     timeout={timeout}
-    //     classNames={animationName}
-    //     exit={false}
-    //   >
-    //     <Switch>
-    //       <Route exact path="/login" component={Login} />
-    //       <ProtectedRoute
-    //         authenticate={user}
-    //         component={fullRouters(routerConfig)}
-    //       />
-    //     </Switch>
-    //   </CSSTransition>
-    // </TransitionGroup>
-    const animationName = "rag-fadeIn";
 
     return (
       <Base user={user}>
@@ -72,7 +41,6 @@ export class Main extends React.Component {
 }
 
 export function mapDispatchToProps(dispatch) {
-  // eslint-disable-line no-unused-vars
   return {};
 }
 

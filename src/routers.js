@@ -4,7 +4,7 @@ export default {
   home: {
     module: '',
     path: '/',
-    redirect: '/tenant',
+    redirect: '/dashboard',
     subs: {
       // 主页
       dashboard: {
@@ -212,6 +212,66 @@ export default {
         module: 'Region',
         component: 'Region',
         title: '区域管理'
+      },
+      roleManager: {
+        path: "safety/roleManager",
+        module: "Settings",
+        component: "RoleManager",
+        title: "角色管理",
+        subs: {
+          roleManagerAdd: {
+            path: "/add",
+            module: "Settings",
+            component: "RoleManagerAdd",
+            title: "新建角色"
+          },
+          roleManagerDetail: {
+            path: "/detail/:id",
+            module: "Settings",
+            component: "RoleManagerDetail",
+            title: "角色详情"
+          }
+        }
+      },
+      menuManager: {
+        path: "safety/menuManager",
+        module: "Settings",
+        component: "MenuManager",
+        title: "菜单管理",
+        subs: {
+          menuManagerAdd: {
+            path: "/add",
+            module: "Settings",
+            component: "MenuManagerAdd",
+            title: "新建菜单"
+          },
+          menuManagerDetail: {
+            path: "/detail/:id",
+            module: "Settings",
+            component: "MenuManagerDetail",
+            title: "菜单详情"
+          }
+        }
+      },
+      staffManager: {
+        path: "safety/staffManager",
+        module: "Settings",
+        component: "StaffManager",
+        title: "员工管理",
+        subs: {
+          staffManagerAdd: {
+            path: "/add",
+            module: "Setting",
+            component: "StaffManagerAdd",
+            title: "新建员工"
+          },
+          staffManagerDetail: {
+            path: "/detail/:id",
+            module: "Setting",
+            component: "StaffManagerDetail",
+            title: "员工详情"
+          }
+        }
       }
     }
   }

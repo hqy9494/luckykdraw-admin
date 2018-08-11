@@ -167,6 +167,29 @@ const menu = [
     icon: "environment-o",
     name: "区域管理",
     component: "regions"
+  },
+  {
+    id: "setting",
+    icon: "safety",
+    name: "超级管理员",
+    component: "safety",
+    children: [
+      {
+        id: "roleManager",
+        name: "角色管理",
+        component: "roleManager"
+      },
+      {
+        id: "menuManager",
+        name: "菜单管理",
+        component: "menuManager"
+      },
+      {
+        id: "staffManager",
+        name: "员工管理",
+        component: "staffManager"
+      }
+    ]
   }
 ];
 

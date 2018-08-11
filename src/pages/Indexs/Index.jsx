@@ -56,21 +56,27 @@ export class Index extends React.Component {
   }
 
   componentWillMount() {
-    this.getCount();
-    this.getBuyTop();
-    this.getOldNewUser();
-    this.getYAward();
-    this.getScanAndFollow();
-    this.getUnfollow();
-    this.getTAwardPond();
-    this.getWAwardPond();
-    this.getMAwardPond();
-    this.getAwardPondLine();
-    this.getWxUserLine();
-    this.getRepeatPurchase();
+    const { user } = this.props;
+    let seeable = (user.username == "admin" && user.fullname == "Administrator") ? true : false;
+    if (seeable) {
+      this.getCount();
+      this.getBuyTop();
+      this.getOldNewUser();
+      this.getYAward();
+      this.getScanAndFollow();
+      this.getUnfollow();
+      this.getTAwardPond();
+      this.getWAwardPond();
+      this.getMAwardPond();
+      this.getAwardPondLine();
+      this.getWxUserLine();
+      this.getRepeatPurchase();
+    }
   }
 
-  componentWillReceiveProps(nextProps) {}
+  componentWillReceiveProps(nextProps) {
+
+  }
 
   //微信关注总人数,现奖池总额,累积奖池金额
   getCount() {
@@ -576,276 +582,281 @@ export class Index extends React.Component {
         nice: false
       }
     };
+    const { user } = this.props;
+    let seeable = (user.username == "admin" && user.fullname == "Administrator") ? true : false;
     return (
-      <section className="index-page">
-        <Row gutter={{ sm: 0, md: 20 }}>
-          <Col sm={24} md={8}>
-            <div className="index-item1">
-              <div className="index-item1-icon index-item1-icon1" />
-              <div>
-                <span className="index-item1-label">微信关注总人数</span>
-                <span className="index-item1-value">
+      <div>
+        {
+          seeable ?
+          <section className="index-page">
+            <Row gutter={{ sm: 0, md: 20 }}>
+              <Col sm={24} md={8}>
+                <div className="index-item1">
+                  <div className="index-item1-icon index-item1-icon1" />
+                  <div>
+                    <span className="index-item1-label">微信关注总人数</span>
+                    <span className="index-item1-value">
                   {this.state.count.followingCount || 0}
                 </span>
-              </div>
-            </div>
-          </Col>
-          <Col sm={24} md={8}>
-            <div className="index-item1">
-              <div className="index-item1-icon index-item1-icon2" />
-              <div>
-                <span className="index-item1-label">现奖池总额</span>
-                <span className="index-item1-value">
+                  </div>
+                </div>
+              </Col>
+              <Col sm={24} md={8}>
+                <div className="index-item1">
+                  <div className="index-item1-icon index-item1-icon2" />
+                  <div>
+                    <span className="index-item1-label">现奖池总额</span>
+                    <span className="index-item1-value">
                   {this.state.count.cashPond
                     ? this.state.count.cashPond.toFixed(2)
                     : 0}
                 </span>
-              </div>
-            </div>
-          </Col>
-          <Col sm={24} md={8}>
-            <div className="index-item1">
-              <div className="index-item1-icon index-item1-icon3" />
-              <div>
-                <span className="index-item1-label">累积奖池金额</span>
-                <span className="index-item1-value">
+                  </div>
+                </div>
+              </Col>
+              <Col sm={24} md={8}>
+                <div className="index-item1">
+                  <div className="index-item1-icon index-item1-icon3" />
+                  <div>
+                    <span className="index-item1-label">累积奖池金额</span>
+                    <span className="index-item1-value">
                   {this.state.count.awardPond
                     ? this.state.count.awardPond.toFixed(2)
                     : 0}
                 </span>
-              </div>
-            </div>
-          </Col>
-        </Row>
-        <Row gutter={{ sm: 0, md: 20 }} style={{ marginTop: 20 }}>
-          <Col sm={24} md={16}>
-            <Card
-              title="奖池总额"
-              extra={
-                <RangePicker
-                  value={
-                    this.state.date_awardPondLine.startTime &&
-                    this.state.date_awardPondLine.endTime && [
-                      moment(this.state.date_awardPondLine.startTime),
-                      moment(this.state.date_awardPondLine.endTime)
-                    ]
-                  }
-                  onChange={date => {
-                    this.setState(
-                      {
-                        date_awardPondLine: {
-                          startTime: date[0].format("YYYY-MM-DD"),
-                          endTime: date[1].format("YYYY-MM-DD")
-                        }
-                      },
-                      () => {
-                        this.getAwardPondLine();
+                  </div>
+                </div>
+              </Col>
+            </Row>
+            <Row gutter={{ sm: 0, md: 20 }} style={{ marginTop: 20 }}>
+              <Col sm={24} md={16}>
+                <Card
+                  title="奖池总额"
+                  extra={
+                    <RangePicker
+                      value={
+                        this.state.date_awardPondLine.startTime &&
+                        this.state.date_awardPondLine.endTime && [
+                          moment(this.state.date_awardPondLine.startTime),
+                          moment(this.state.date_awardPondLine.endTime)
+                        ]
                       }
-                    );
-                  }}
-                  placeholder={["开始时间", "结束时间"]}
-                />
-              }
-              style={{
-                height: 535,
-                boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.16)"
-              }}
-            >
-              {this.state.line1 &&
-                this.state.line1.length > 0 && (
-                  <Chart
-                    height={490}
-                    data={this.state.line1}
-                    scale={cols1}
-                    forceFit
-                  >
-                    <Axis name="date" />
-                    <Axis name="value" />
-                    <Tooltip crosshairs={{ type: "line" }} />
-                    <Geom type="area" position="date*value" />
-                    <Geom type="line" position="date*value" size={2} />
-                  </Chart>
-                )}
-            </Card>
-          </Col>
-          <Col sm={24} md={8}>
-            <Row>
-              <Col md={24}>
-                <Card
-                  title="今日新增奖池数据"
+                      onChange={date => {
+                        this.setState(
+                          {
+                            date_awardPondLine: {
+                              startTime: date[0].format("YYYY-MM-DD"),
+                              endTime: date[1].format("YYYY-MM-DD")
+                            }
+                          },
+                          () => {
+                            this.getAwardPondLine();
+                          }
+                        );
+                      }}
+                      placeholder={["开始时间", "结束时间"]}
+                    />
+                  }
                   style={{
-                    height: 165,
-                    boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.16)",
-                    marginBottom: 20
-                  }}
-                >
-                  <div className="index-item3">
-                    <div className="index-i3-item index-i3-item_left">
-                      <span className="index-i3i-icon">收</span>
-                      <span className="index-i3i-value">
-                        ￥{this.state.tAwardPond.count1 || 0}
-                      </span>
-                      <span className="index-i3i-change">
-                        <span style={{ color: "#333" }}>较昨天</span>
-                        {this.state.tAwardPond.add1 ? (
-                          <span className="index-i3item-percent index-i3item-percent_up">
-                            <Icon type="arrow-up" />
-                            {this.state.tAwardPond.p1 || 0}%
-                          </span>
-                        ) : (
-                          <span className="index-i3item-percent index-i3item-percent_down">
-                            <Icon type="arrow-down" />
-                            {this.state.tAwardPond.p1 || 0}%
-                          </span>
-                        )}
-                      </span>
-                    </div>
-                    <div className="index-i3-item index-i3-item_right">
-                      <span className="index-i3i-icon">派</span>
-                      <span className="index-i3i-value">
-                        ￥{this.state.tAwardPond.count2 || 0}
-                      </span>
-                      <span className="index-i3i-change">
-                        <span style={{ color: "#333" }}>较昨天</span>
-                        {this.state.tAwardPond.add2 ? (
-                          <span className="index-i3item-percent index-i3item-percent_up">
-                            <Icon type="arrow-up" />
-                            {this.state.tAwardPond.p2 || 0}%
-                          </span>
-                        ) : (
-                          <span className="index-i3item-percent index-i3item-percent_down">
-                            <Icon type="arrow-down" />
-                            {this.state.tAwardPond.p2 || 0}%
-                          </span>
-                        )}
-                      </span>
-                    </div>
-                  </div>
-                </Card>
-              </Col>
-              <Col md={24}>
-                <Card
-                  title="本周新增奖池数据"
-                  style={{
-                    height: 165,
-                    boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.16)",
-                    marginBottom: 20
-                  }}
-                >
-                  <div className="index-item3">
-                    <div className="index-i3-item index-i3-item_left">
-                      <span className="index-i3i-icon">收</span>
-                      <span className="index-i3i-value">
-                        ￥{this.state.wAwardPond.count1 || 0}
-                      </span>
-                      <span className="index-i3i-change">
-                        <span style={{ color: "#333" }}>较上周</span>
-                        {this.state.wAwardPond.add1 ? (
-                          <span className="index-i3item-percent index-i3item-percent_up">
-                            <Icon type="arrow-up" />
-                            {this.state.wAwardPond.p1 || 0}%
-                          </span>
-                        ) : (
-                          <span className="index-i3item-percent index-i3item-percent_down">
-                            <Icon type="arrow-down" />
-                            {this.state.wAwardPond.p1 || 0}%
-                          </span>
-                        )}
-                      </span>
-                    </div>
-                    <div className="index-i3-item index-i3-item_right">
-                      <span className="index-i3i-icon">派</span>
-                      <span className="index-i3i-value">
-                        ￥{this.state.wAwardPond.count2 || 0}
-                      </span>
-                      <span className="index-i3i-change">
-                        <span style={{ color: "#333" }}>较上周</span>
-                        {this.state.wAwardPond.add2 ? (
-                          <span className="index-i3item-percent index-i3item-percent_up">
-                            <Icon type="arrow-up" />
-                            {this.state.wAwardPond.p2 || 0}%
-                          </span>
-                        ) : (
-                          <span className="index-i3item-percent index-i3item-percent_down">
-                            <Icon type="arrow-down" />
-                            {this.state.wAwardPond.p2 || 0}%
-                          </span>
-                        )}
-                      </span>
-                    </div>
-                  </div>
-                </Card>
-              </Col>
-              <Col md={24}>
-                <Card
-                  title="本月新增奖池数据"
-                  style={{
-                    height: 165,
+                    height: 535,
                     boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.16)"
                   }}
                 >
-                  <div className="index-item3">
-                    <div className="index-i3-item index-i3-item_left">
-                      <span className="index-i3i-icon">收</span>
-                      <span className="index-i3i-value">
-                        ￥{this.state.mAwardPond.count1 || 0}
-                      </span>
-                      <span className="index-i3i-change">
-                        <span style={{ color: "#333" }}>较上月</span>
-                        {this.state.mAwardPond.add1 ? (
-                          <span className="index-i3item-percent index-i3item-percent_up">
-                            <Icon type="arrow-up" />
-                            {this.state.mAwardPond.p1 || 0}%
-                          </span>
-                        ) : (
-                          <span className="index-i3item-percent index-i3item-percent_down">
-                            <Icon type="arrow-down" />
-                            {this.state.mAwardPond.p1 || 0}%
-                          </span>
-                        )}
-                      </span>
-                    </div>
-                    <div className="index-i3-item index-i3-item_right">
-                      <span className="index-i3i-icon">派</span>
-                      <span className="index-i3i-value">
-                        ￥{this.state.mAwardPond.count2 || 0}
-                      </span>
-                      <span className="index-i3i-change">
-                        <span style={{ color: "#333" }}>较上月</span>
-                        {this.state.mAwardPond.add2 ? (
-                          <span className="index-i3item-percent index-i3item-percent_up">
-                            <Icon type="arrow-up" />
-                            {this.state.mAwardPond.p2 || 0}%
-                          </span>
-                        ) : (
-                          <span className="index-i3item-percent index-i3item-percent_down">
-                            <Icon type="arrow-down" />
-                            {this.state.mAwardPond.p2 || 0}%
-                          </span>
-                        )}
-                      </span>
-                    </div>
-                  </div>
+                  {this.state.line1 &&
+                  this.state.line1.length > 0 && (
+                    <Chart
+                      height={490}
+                      data={this.state.line1}
+                      scale={cols1}
+                      forceFit
+                    >
+                      <Axis name="date" />
+                      <Axis name="value" />
+                      <Tooltip crosshairs={{ type: "line" }} />
+                      <Geom type="area" position="date*value" />
+                      <Geom type="line" position="date*value" size={2} />
+                    </Chart>
+                  )}
                 </Card>
               </Col>
+              <Col sm={24} md={8}>
+                <Row>
+                  <Col md={24}>
+                    <Card
+                      title="今日新增奖池数据"
+                      style={{
+                        height: 165,
+                        boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.16)",
+                        marginBottom: 20
+                      }}
+                    >
+                      <div className="index-item3">
+                        <div className="index-i3-item index-i3-item_left">
+                          <span className="index-i3i-icon">收</span>
+                          <span className="index-i3i-value">
+                        ￥{this.state.tAwardPond.count1 || 0}
+                      </span>
+                          <span className="index-i3i-change">
+                        <span style={{ color: "#333" }}>较昨天</span>
+                            {this.state.tAwardPond.add1 ? (
+                              <span className="index-i3item-percent index-i3item-percent_up">
+                            <Icon type="arrow-up" />
+                                {this.state.tAwardPond.p1 || 0}%
+                          </span>
+                            ) : (
+                              <span className="index-i3item-percent index-i3item-percent_down">
+                            <Icon type="arrow-down" />
+                                {this.state.tAwardPond.p1 || 0}%
+                          </span>
+                            )}
+                      </span>
+                        </div>
+                        <div className="index-i3-item index-i3-item_right">
+                          <span className="index-i3i-icon">派</span>
+                          <span className="index-i3i-value">
+                        ￥{this.state.tAwardPond.count2 || 0}
+                      </span>
+                          <span className="index-i3i-change">
+                        <span style={{ color: "#333" }}>较昨天</span>
+                            {this.state.tAwardPond.add2 ? (
+                              <span className="index-i3item-percent index-i3item-percent_up">
+                            <Icon type="arrow-up" />
+                                {this.state.tAwardPond.p2 || 0}%
+                          </span>
+                            ) : (
+                              <span className="index-i3item-percent index-i3item-percent_down">
+                            <Icon type="arrow-down" />
+                                {this.state.tAwardPond.p2 || 0}%
+                          </span>
+                            )}
+                      </span>
+                        </div>
+                      </div>
+                    </Card>
+                  </Col>
+                  <Col md={24}>
+                    <Card
+                      title="本周新增奖池数据"
+                      style={{
+                        height: 165,
+                        boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.16)",
+                        marginBottom: 20
+                      }}
+                    >
+                      <div className="index-item3">
+                        <div className="index-i3-item index-i3-item_left">
+                          <span className="index-i3i-icon">收</span>
+                          <span className="index-i3i-value">
+                        ￥{this.state.wAwardPond.count1 || 0}
+                      </span>
+                          <span className="index-i3i-change">
+                        <span style={{ color: "#333" }}>较上周</span>
+                            {this.state.wAwardPond.add1 ? (
+                              <span className="index-i3item-percent index-i3item-percent_up">
+                            <Icon type="arrow-up" />
+                                {this.state.wAwardPond.p1 || 0}%
+                          </span>
+                            ) : (
+                              <span className="index-i3item-percent index-i3item-percent_down">
+                            <Icon type="arrow-down" />
+                                {this.state.wAwardPond.p1 || 0}%
+                          </span>
+                            )}
+                      </span>
+                        </div>
+                        <div className="index-i3-item index-i3-item_right">
+                          <span className="index-i3i-icon">派</span>
+                          <span className="index-i3i-value">
+                        ￥{this.state.wAwardPond.count2 || 0}
+                      </span>
+                          <span className="index-i3i-change">
+                        <span style={{ color: "#333" }}>较上周</span>
+                            {this.state.wAwardPond.add2 ? (
+                              <span className="index-i3item-percent index-i3item-percent_up">
+                            <Icon type="arrow-up" />
+                                {this.state.wAwardPond.p2 || 0}%
+                          </span>
+                            ) : (
+                              <span className="index-i3item-percent index-i3item-percent_down">
+                            <Icon type="arrow-down" />
+                                {this.state.wAwardPond.p2 || 0}%
+                          </span>
+                            )}
+                      </span>
+                        </div>
+                      </div>
+                    </Card>
+                  </Col>
+                  <Col md={24}>
+                    <Card
+                      title="本月新增奖池数据"
+                      style={{
+                        height: 165,
+                        boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.16)"
+                      }}
+                    >
+                      <div className="index-item3">
+                        <div className="index-i3-item index-i3-item_left">
+                          <span className="index-i3i-icon">收</span>
+                          <span className="index-i3i-value">
+                        ￥{this.state.mAwardPond.count1 || 0}
+                      </span>
+                          <span className="index-i3i-change">
+                        <span style={{ color: "#333" }}>较上月</span>
+                            {this.state.mAwardPond.add1 ? (
+                              <span className="index-i3item-percent index-i3item-percent_up">
+                            <Icon type="arrow-up" />
+                                {this.state.mAwardPond.p1 || 0}%
+                          </span>
+                            ) : (
+                              <span className="index-i3item-percent index-i3item-percent_down">
+                            <Icon type="arrow-down" />
+                                {this.state.mAwardPond.p1 || 0}%
+                          </span>
+                            )}
+                      </span>
+                        </div>
+                        <div className="index-i3-item index-i3-item_right">
+                          <span className="index-i3i-icon">派</span>
+                          <span className="index-i3i-value">
+                        ￥{this.state.mAwardPond.count2 || 0}
+                      </span>
+                          <span className="index-i3i-change">
+                        <span style={{ color: "#333" }}>较上月</span>
+                            {this.state.mAwardPond.add2 ? (
+                              <span className="index-i3item-percent index-i3item-percent_up">
+                            <Icon type="arrow-up" />
+                                {this.state.mAwardPond.p2 || 0}%
+                          </span>
+                            ) : (
+                              <span className="index-i3item-percent index-i3item-percent_down">
+                            <Icon type="arrow-down" />
+                                {this.state.mAwardPond.p2 || 0}%
+                          </span>
+                            )}
+                      </span>
+                        </div>
+                      </div>
+                    </Card>
+                  </Col>
+                </Row>
+              </Col>
             </Row>
-          </Col>
-        </Row>
-        <Row gutter={{ sm: 0, md: 20 }} style={{ marginTop: 20 }}>
-          <Col sm={24} md={12}>
-            <Card
-              title="购买人数性别分布"
-              style={{
-                height: 263,
-                boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.16)"
-              }}
-            >
-              <div className="index-item4">
-                <div className="index-i4-row1">
-                  <span className="index-i4-icon1" />
-                  <span className="index-i4-icon2" />
-                </div>
-                <div className="index-i4-row2">
+            <Row gutter={{ sm: 0, md: 20 }} style={{ marginTop: 20 }}>
+              <Col sm={24} md={12}>
+                <Card
+                  title="购买人数性别分布"
+                  style={{
+                    height: 263,
+                    boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.16)"
+                  }}
+                >
+                  <div className="index-item4">
+                    <div className="index-i4-row1">
+                      <span className="index-i4-icon1" />
+                      <span className="index-i4-icon2" />
+                    </div>
+                    <div className="index-i4-row2">
                   <span
                     className="index-i4-percent1"
                     style={{
@@ -855,514 +866,44 @@ export class Index extends React.Component {
                       )}%`
                     }}
                   />
-                  <span
-                    className="index-i4-percent2"
-                    style={{
-                      width: `${this.toPercent(
-                        this.state.count.womanBuyer,
-                        this.state.count.manBuyer + this.state.count.womanBuyer
-                      )}%`
-                    }}
-                  />
-                </div>
-                <div className="index-i4-row3">
-                  <span className="index-i4-value1">
-                    {this.state.count.manBuyer || 0}人（{this.toPercent(
-                      this.state.count.manBuyer,
-                      this.state.count.manBuyer + this.state.count.womanBuyer
-                    )}%）
-                  </span>
-                  <span className="index-i4-value1">
-                    {this.state.count.womanBuyer || 0}人（{this.toPercent(
-                      this.state.count.womanBuyer,
-                      this.state.count.manBuyer + this.state.count.womanBuyer
-                    )}%）
-                  </span>
-                </div>
-              </div>
-            </Card>
-          </Col>
-          <Col sm={24} md={12}>
-            <Card
-              title="复购率"
-              extra={
-                <MonthPicker
-                  value={moment(this.state.date_RPurchase)}
-                  onChange={date => {
-                    this.setState(
-                      { date_RPurchase: date.format("YYYY-MM") },
-                      () => {
-                        this.getRepeatPurchase();
-                      }
-                    );
-                  }}
-                  placeholder="请选择月份"
-                />
-              }
-              style={{
-                height: 263,
-                boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.16)"
-              }}
-            >
-              <div style={{ display: "flex" }}>
-                <div style={{ width: "60%", display: "inline-block" }}>
-                  {this.state.line3 &&
-                    this.state.line3.length > 0 && (
-                      <Chart
-                        height={196}
-                        data={this.state.line3}
-                        scale={cols3}
-                        padding={{
-                          top: "auto",
-                          right: 100,
-                          bottom: 20,
-                          left: "auto"
-                        }}
-                        forceFit
-                      >
-                        <Tooltip />
-                        <Coord type="rect" transpose scale={[1, -1]} />
-                        <Geom
-                          type="intervalSymmetric"
-                          position="action*pv"
-                          shape="pyramid"
-                          color={[
-                            "action",
-                            [
-                              "#0050B3",
-                              "#1890FF",
-                              "#40A9FF",
-                              "#69C0FF",
-                              "#BAE7FF"
-                            ]
-                          ]}
-                        >
-                          <Label
-                            content={[
-                              "action*pv",
-                              (action, pv) => {
-                                return action + " " + pv;
-                              }
-                            ]}
-                            offset={35}
-                            labeLine={{
-                              lineWidth: 1,
-                              stroke: "rgba(0, 0, 0, 0.15)"
-                            }}
-                          />
-                        </Geom>
-                      </Chart>
-                    )}
-                </div>
-                {this.state.rPurchase &&
-                  this.state.rPurchase && (
-                    <div style={{ width: "40%", display: "inline-block" }}>
-                      <div className="index-item5">
-                        <div className="index-i5-count">
-                          总人数{this.state.rPurchase["1"].all || 0}人（{this
-                            .state.rPurchase["1"].p || 0}%）
-                        </div>
-                        <div className="index-i5-value">
-                          <span className="index-i5-value1">
-                            {this.state.rPurchase["1"].man || 0}人
-                          </span>
-                          <span className="index-i5-value2">
-                            {this.state.rPurchase["1"].woman || 0}人
-                          </span>
-                        </div>
-                      </div>
-                      <div className="index-item5">
-                        <div className="index-i5-count">
-                          总人数{this.state.rPurchase["2"].all || 0}人（{this
-                            .state.rPurchase["2"].p || 0}%）
-                        </div>
-                        <div className="index-i5-value">
-                          <span className="index-i5-value1">
-                            {this.state.rPurchase["2"].man || 0}人
-                          </span>
-                          <span className="index-i5-value2">
-                            {this.state.rPurchase["2"].woman || 0}人
-                          </span>
-                        </div>
-                      </div>
-                      <div className="index-item5">
-                        <div className="index-i5-count">
-                          总人数{this.state.rPurchase["3-5"].all || 0}人（{this
-                            .state.rPurchase["3-5"].p || 0}%）
-                        </div>
-                        <div className="index-i5-value">
-                          <span className="index-i5-value1">
-                            {this.state.rPurchase["3-5"].man || 0}人
-                          </span>
-                          <span className="index-i5-value2">
-                            {this.state.rPurchase["3-5"].woman || 0}人
-                          </span>
-                        </div>
-                      </div>
-                      <div className="index-item5">
-                        <div className="index-i5-count">
-                          总人数{this.state.rPurchase["5+"].all || 0}人（{this
-                            .state.rPurchase["5+"].p || 0}%）
-                        </div>
-                        <div className="index-i5-value">
-                          <span className="index-i5-value1">
-                            {this.state.rPurchase["5+"].man || 0}人
-                          </span>
-                          <span className="index-i5-value2">
-                            {this.state.rPurchase["5+"].woman || 0}人
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-              </div>
-            </Card>
-          </Col>
-        </Row>
-        <Row gutter={{ sm: 0, md: 20 }} style={{ marginTop: 20 }}>
-          <Col sm={24} md={16}>
-            <Card
-              title="微信新增用户数"
-              extra={
-                <RangePicker
-                  value={
-                    this.state.date_wxUserLine.startTime &&
-                    this.state.date_wxUserLine.endTime && [
-                      moment(this.state.date_wxUserLine.startTime),
-                      moment(this.state.date_wxUserLine.endTime)
-                    ]
-                  }
-                  onChange={date => {
-                    this.setState(
-                      {
-                        date_wxUserLine: {
-                          startTime: date[0].format("YYYY-MM-DD"),
-                          endTime: date[1].format("YYYY-MM-DD")
-                        }
-                      },
-                      () => {
-                        this.getWxUserLine();
-                      }
-                    );
-                  }}
-                  placeholder={["开始时间", "结束时间"]}
-                />
-              }
-              style={{
-                height: 535,
-                boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.16)"
-              }}
-            >
-              {this.state.line2 &&
-                this.state.line2.length > 0 && (
-                  <Chart
-                    height={475}
-                    data={this.state.line2}
-                    scale={cols2}
-                    forceFit
-                  >
-                    <Axis name="date" />
-                    <Axis name="value" />
-                    <Legend />
-                    <Tooltip crosshairs={{ type: "line" }} />
-                    <Geom type="area" position="date*value" color="userType" />
-                    <Geom
-                      type="line"
-                      position="date*value"
-                      size={2}
-                      color="userType"
-                    />
-                  </Chart>
-                )}
-            </Card>
-          </Col>
-          <Col sm={24} md={8}>
-            <Row>
-              <Col md={24}>
-                <Card
-                  title="扫码关注"
-                  extra={
-                    <RangePicker
-                      value={
-                        this.state.date_scanAndFollow.startTime &&
-                        this.state.date_scanAndFollow.endTime && [
-                          moment(this.state.date_scanAndFollow.startTime),
-                          moment(this.state.date_scanAndFollow.endTime)
-                        ]
-                      }
-                      onChange={date => {
-                        this.setState(
-                          {
-                            date_scanAndFollow: {
-                              startTime: date[0].format("YYYY-MM-DD"),
-                              endTime: date[1].format("YYYY-MM-DD")
-                            }
-                          },
-                          () => {
-                            this.getScanAndFollow();
-                          }
-                        );
-                      }}
-                      placeholder={["开始时间", "结束时间"]}
-                      ranges={{
-                        近7天: [
-                          moment()
-                            .subtract(6, "day")
-                            .startOf("day"),
-                          moment()
-                        ]
-                      }}
-                    />
-                  }
-                  style={{
-                    height: 165,
-                    boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.16)",
-                    marginBottom: 20
-                  }}
-                >
-                  <div className="index-item3">
-                    <div className="index-i3-item index-i3-item_left">
-                      <span className="index-i3i-icon">注</span>
-                      <span className="index-i3i-value">
-                        {this.state.scanAndFollow.count1 || 0}
-                      </span>
-                      <span className="index-i3i-change">
-                        <span style={{ color: "#333" }}>扫码关注</span>
-                      </span>
-                    </div>
-                    <div className="index-i3-item index-i3-item_right">
-                      <span className="index-i3i-icon">未</span>
-                      <span className="index-i3i-value">
-                        {this.state.scanAndFollow.count2 || 0}
-                      </span>
-                      <span className="index-i3i-change">
-                        <span style={{ color: "#333" }}>扫码未关注</span>
-                      </span>
-                    </div>
-                  </div>
-                </Card>
-              </Col>
-              <Col md={24}>
-                <Card
-                  title="取消关注"
-                  extra={
-                    <RangePicker
-                      value={
-                        this.state.date_unfollow.startTime &&
-                        this.state.date_unfollow.endTime && [
-                          moment(this.state.date_unfollow.startTime),
-                          moment(this.state.date_unfollow.endTime)
-                        ]
-                      }
-                      onChange={date => {
-                        this.setState(
-                          {
-                            date_unfollow: {
-                              startTime: date[0].format("YYYY-MM-DD"),
-                              endTime: date[1].format("YYYY-MM-DD")
-                            }
-                          },
-                          () => {
-                            this.getUnfollow();
-                          }
-                        );
-                      }}
-                      placeholder={["开始时间", "结束时间"]}
-                      ranges={{
-                        近7天: [
-                          moment()
-                            .subtract(6, "day")
-                            .startOf("day"),
-                          moment()
-                        ]
-                      }}
-                    />
-                  }
-                  style={{
-                    height: 165,
-                    boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.16)",
-                    marginBottom: 20
-                  }}
-                >
-                  <div className="index-item3">
-                    <div className="index-i3-item index-i3-item_left">
-                      <span className="index-i3i-icon">净</span>
-                      <span className="index-i3i-value">
-                        {this.state.unfollow.count1 || 0}
-                      </span>
-                      <span className="index-i3i-change">
-                        <span style={{ color: "#333" }}>净关注数</span>
-                      </span>
-                    </div>
-                    <div className="index-i3-item index-i3-item_right">
-                      <span className="index-i3i-icon">消</span>
-                      <span className="index-i3i-value">
-                        {this.state.unfollow.count2 || 0}
-                      </span>
-                      <span className="index-i3i-change">
-                        <span style={{ color: "#333" }}>取消关注数</span>
-                      </span>
-                    </div>
-                  </div>
-                </Card>
-              </Col>
-              <Col md={24}>
-                <Card
-                  title="关注人数性别分布"
-                  style={{
-                    height: 165,
-                    boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.16)"
-                  }}
-                >
-                  <div className="index-item4 small">
-                    <div className="index-i4-row1">
-                      <span className="index-i4-icon1" />
-                      <span className="index-i4-icon2" />
-                    </div>
-                    <div className="index-i4-row2">
-                      <span
-                        className="index-i4-percent1"
-                        style={{
-                          width: `${this.toPercent(
-                            this.state.count.manFollow,
-                            this.state.count.manFollow +
-                              this.state.count.womanFollow
-                          )}%`
-                        }}
-                      />
                       <span
                         className="index-i4-percent2"
                         style={{
                           width: `${this.toPercent(
-                            this.state.count.womanFollow,
-                            this.state.count.manFollow +
-                              this.state.count.womanFollow
+                            this.state.count.womanBuyer,
+                            this.state.count.manBuyer + this.state.count.womanBuyer
                           )}%`
                         }}
                       />
                     </div>
                     <div className="index-i4-row3">
+                  <span className="index-i4-value1">
+                    {this.state.count.manBuyer || 0}人（{this.toPercent(
+                    this.state.count.manBuyer,
+                    this.state.count.manBuyer + this.state.count.womanBuyer
+                  )}%）
+                  </span>
                       <span className="index-i4-value1">
-                        {this.state.count.manFollow}人（{`${this.toPercent(
-                          this.state.count.manFollow,
-                          this.state.count.manFollow +
-                            this.state.count.womanFollow
-                        )}`}%）
-                      </span>
-                      <span className="index-i4-value1">
-                        {this.state.count.womanFollow}人（{`${this.toPercent(
-                          this.state.count.womanFollow,
-                          this.state.count.manFollow +
-                            this.state.count.womanFollow
-                        )}`}%）
-                      </span>
+                    {this.state.count.womanBuyer || 0}人（{this.toPercent(
+                        this.state.count.womanBuyer,
+                        this.state.count.manBuyer + this.state.count.womanBuyer
+                      )}%）
+                  </span>
                     </div>
                   </div>
                 </Card>
               </Col>
-            </Row>
-          </Col>
-        </Row>
-        <Row gutter={{ sm: 0, md: 20 }} style={{ marginTop: 20 }}>
-          <Col sm={24} md={8}>
-            <Row>
-              <Col md={24}>
+              <Col sm={24} md={12}>
                 <Card
-                  title="今日新老用户对比分布"
-                  style={{
-                    height: 360,
-                    boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.16)",
-                    marginBottom: 20
-                  }}
-                >
-                  <div className="index-item4">
-                    <div className="index-i4-row1">
-                      <span className="index-i8-icon1" />
-                      <span className="index-i8-icon2" />
-                    </div>
-                    <div className="index-i4-row2">
-                      <span
-                        className="index-i8-percent1"
-                        style={{
-                          width: `${this.toPercent(
-                            this.state.oldNewUser.newUser,
-                            this.state.oldNewUser.oldUser +
-                              this.state.oldNewUser.newUser
-                          )}%`
-                        }}
-                      />
-                      <span
-                        className="index-i8-percent2"
-                        style={{
-                          width: `${this.toPercent(
-                            this.state.oldNewUser.oldUser,
-                            this.state.oldNewUser.oldUser +
-                              this.state.oldNewUser.newUser
-                          )}%`
-                        }}
-                      />
-                    </div>
-                    <div className="index-i4-row3">
-                      <span className="index-i8-value1">
-                        {this.state.oldNewUser.newUser || 0}人（{`${this.toPercent(
-                          this.state.oldNewUser.newUser,
-                          this.state.oldNewUser.oldUser +
-                            this.state.oldNewUser.newUser
-                        )}`}%）
-                      </span>
-                      <span className="index-i8-value1">
-                        {this.state.oldNewUser.oldUser || 0}人（{`${this.toPercent(
-                          this.state.oldNewUser.oldUser,
-                          this.state.oldNewUser.oldUser +
-                            this.state.oldNewUser.newUser
-                        )}`}%）
-                      </span>
-                    </div>
-                  </div>
-                  <div style={{ marginTop: 50 }}>
-                    <div style={{ fontSize: 18, color: "#333" }}>
-                      今日平均购买盒数
-                    </div>
-                    <div
-                      style={{
-                        fontSize: 18,
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        marginTop: 15
-                      }}
-                    >
-                      <span style={{ color: "#5FBBA8" }}>
-                        {this.state.oldNewUser.newUser === 0
-                          ? 0
-                          : (
-                              this.state.oldNewUser.newOrderCount /
-                              this.state.oldNewUser.newUser
-                            ).toFixed(2)}盒
-                      </span>
-                      <span style={{ color: "#FC562E" }}>
-                        {this.state.oldNewUser.oldUser === 0
-                          ? 0
-                          : (
-                              this.state.oldNewUser.oldOrderCount /
-                              this.state.oldNewUser.oldUser
-                            ).toFixed(2)}盒
-                      </span>
-                    </div>
-                  </div>
-                </Card>
-              </Col>
-              <Col md={24}>
-                <Card
-                  title="用户累积购买排行"
+                  title="复购率"
                   extra={
                     <MonthPicker
-                      value={moment(this.state.date_buyTop)}
+                      value={moment(this.state.date_RPurchase)}
                       onChange={date => {
                         this.setState(
-                          { date_buyTop: date.format("YYYY-MM") },
+                          { date_RPurchase: date.format("YYYY-MM") },
                           () => {
-                            this.getBuyTop();
+                            this.getRepeatPurchase();
                           }
                         );
                       }}
@@ -1370,43 +911,520 @@ export class Index extends React.Component {
                     />
                   }
                   style={{
-                    height: 340,
+                    height: 263,
+                    boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.16)"
+                  }}
+                >
+                  <div style={{ display: "flex" }}>
+                    <div style={{ width: "60%", display: "inline-block" }}>
+                      {this.state.line3 &&
+                      this.state.line3.length > 0 && (
+                        <Chart
+                          height={196}
+                          data={this.state.line3}
+                          scale={cols3}
+                          padding={{
+                            top: "auto",
+                            right: 100,
+                            bottom: 20,
+                            left: "auto"
+                          }}
+                          forceFit
+                        >
+                          <Tooltip />
+                          <Coord type="rect" transpose scale={[1, -1]} />
+                          <Geom
+                            type="intervalSymmetric"
+                            position="action*pv"
+                            shape="pyramid"
+                            color={[
+                              "action",
+                              [
+                                "#0050B3",
+                                "#1890FF",
+                                "#40A9FF",
+                                "#69C0FF",
+                                "#BAE7FF"
+                              ]
+                            ]}
+                          >
+                            <Label
+                              content={[
+                                "action*pv",
+                                (action, pv) => {
+                                  return action + " " + pv;
+                                }
+                              ]}
+                              offset={35}
+                              labeLine={{
+                                lineWidth: 1,
+                                stroke: "rgba(0, 0, 0, 0.15)"
+                              }}
+                            />
+                          </Geom>
+                        </Chart>
+                      )}
+                    </div>
+                    {this.state.rPurchase &&
+                    this.state.rPurchase && (
+                      <div style={{ width: "40%", display: "inline-block" }}>
+                        <div className="index-item5">
+                          <div className="index-i5-count">
+                            总人数{this.state.rPurchase["1"].all || 0}人（{this
+                            .state.rPurchase["1"].p || 0}%）
+                          </div>
+                          <div className="index-i5-value">
+                          <span className="index-i5-value1">
+                            {this.state.rPurchase["1"].man || 0}人
+                          </span>
+                            <span className="index-i5-value2">
+                            {this.state.rPurchase["1"].woman || 0}人
+                          </span>
+                          </div>
+                        </div>
+                        <div className="index-item5">
+                          <div className="index-i5-count">
+                            总人数{this.state.rPurchase["2"].all || 0}人（{this
+                            .state.rPurchase["2"].p || 0}%）
+                          </div>
+                          <div className="index-i5-value">
+                          <span className="index-i5-value1">
+                            {this.state.rPurchase["2"].man || 0}人
+                          </span>
+                            <span className="index-i5-value2">
+                            {this.state.rPurchase["2"].woman || 0}人
+                          </span>
+                          </div>
+                        </div>
+                        <div className="index-item5">
+                          <div className="index-i5-count">
+                            总人数{this.state.rPurchase["3-5"].all || 0}人（{this
+                            .state.rPurchase["3-5"].p || 0}%）
+                          </div>
+                          <div className="index-i5-value">
+                          <span className="index-i5-value1">
+                            {this.state.rPurchase["3-5"].man || 0}人
+                          </span>
+                            <span className="index-i5-value2">
+                            {this.state.rPurchase["3-5"].woman || 0}人
+                          </span>
+                          </div>
+                        </div>
+                        <div className="index-item5">
+                          <div className="index-i5-count">
+                            总人数{this.state.rPurchase["5+"].all || 0}人（{this
+                            .state.rPurchase["5+"].p || 0}%）
+                          </div>
+                          <div className="index-i5-value">
+                          <span className="index-i5-value1">
+                            {this.state.rPurchase["5+"].man || 0}人
+                          </span>
+                            <span className="index-i5-value2">
+                            {this.state.rPurchase["5+"].woman || 0}人
+                          </span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </Card>
+              </Col>
+            </Row>
+            <Row gutter={{ sm: 0, md: 20 }} style={{ marginTop: 20 }}>
+              <Col sm={24} md={16}>
+                <Card
+                  title="微信新增用户数"
+                  extra={
+                    <RangePicker
+                      value={
+                        this.state.date_wxUserLine.startTime &&
+                        this.state.date_wxUserLine.endTime && [
+                          moment(this.state.date_wxUserLine.startTime),
+                          moment(this.state.date_wxUserLine.endTime)
+                        ]
+                      }
+                      onChange={date => {
+                        this.setState(
+                          {
+                            date_wxUserLine: {
+                              startTime: date[0].format("YYYY-MM-DD"),
+                              endTime: date[1].format("YYYY-MM-DD")
+                            }
+                          },
+                          () => {
+                            this.getWxUserLine();
+                          }
+                        );
+                      }}
+                      placeholder={["开始时间", "结束时间"]}
+                    />
+                  }
+                  style={{
+                    height: 535,
+                    boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.16)"
+                  }}
+                >
+                  {this.state.line2 &&
+                  this.state.line2.length > 0 && (
+                    <Chart
+                      height={475}
+                      data={this.state.line2}
+                      scale={cols2}
+                      forceFit
+                    >
+                      <Axis name="date" />
+                      <Axis name="value" />
+                      <Legend />
+                      <Tooltip crosshairs={{ type: "line" }} />
+                      <Geom type="area" position="date*value" color="userType" />
+                      <Geom
+                        type="line"
+                        position="date*value"
+                        size={2}
+                        color="userType"
+                      />
+                    </Chart>
+                  )}
+                </Card>
+              </Col>
+              <Col sm={24} md={8}>
+                <Row>
+                  <Col md={24}>
+                    <Card
+                      title="扫码关注"
+                      extra={
+                        <RangePicker
+                          value={
+                            this.state.date_scanAndFollow.startTime &&
+                            this.state.date_scanAndFollow.endTime && [
+                              moment(this.state.date_scanAndFollow.startTime),
+                              moment(this.state.date_scanAndFollow.endTime)
+                            ]
+                          }
+                          onChange={date => {
+                            this.setState(
+                              {
+                                date_scanAndFollow: {
+                                  startTime: date[0].format("YYYY-MM-DD"),
+                                  endTime: date[1].format("YYYY-MM-DD")
+                                }
+                              },
+                              () => {
+                                this.getScanAndFollow();
+                              }
+                            );
+                          }}
+                          placeholder={["开始时间", "结束时间"]}
+                          ranges={{
+                            近7天: [
+                              moment()
+                                .subtract(6, "day")
+                                .startOf("day"),
+                              moment()
+                            ]
+                          }}
+                        />
+                      }
+                      style={{
+                        height: 165,
+                        boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.16)",
+                        marginBottom: 20
+                      }}
+                    >
+                      <div className="index-item3">
+                        <div className="index-i3-item index-i3-item_left">
+                          <span className="index-i3i-icon">注</span>
+                          <span className="index-i3i-value">
+                        {this.state.scanAndFollow.count1 || 0}
+                      </span>
+                          <span className="index-i3i-change">
+                        <span style={{ color: "#333" }}>扫码关注</span>
+                      </span>
+                        </div>
+                        <div className="index-i3-item index-i3-item_right">
+                          <span className="index-i3i-icon">未</span>
+                          <span className="index-i3i-value">
+                        {this.state.scanAndFollow.count2 || 0}
+                      </span>
+                          <span className="index-i3i-change">
+                        <span style={{ color: "#333" }}>扫码未关注</span>
+                      </span>
+                        </div>
+                      </div>
+                    </Card>
+                  </Col>
+                  <Col md={24}>
+                    <Card
+                      title="取消关注"
+                      extra={
+                        <RangePicker
+                          value={
+                            this.state.date_unfollow.startTime &&
+                            this.state.date_unfollow.endTime && [
+                              moment(this.state.date_unfollow.startTime),
+                              moment(this.state.date_unfollow.endTime)
+                            ]
+                          }
+                          onChange={date => {
+                            this.setState(
+                              {
+                                date_unfollow: {
+                                  startTime: date[0].format("YYYY-MM-DD"),
+                                  endTime: date[1].format("YYYY-MM-DD")
+                                }
+                              },
+                              () => {
+                                this.getUnfollow();
+                              }
+                            );
+                          }}
+                          placeholder={["开始时间", "结束时间"]}
+                          ranges={{
+                            近7天: [
+                              moment()
+                                .subtract(6, "day")
+                                .startOf("day"),
+                              moment()
+                            ]
+                          }}
+                        />
+                      }
+                      style={{
+                        height: 165,
+                        boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.16)",
+                        marginBottom: 20
+                      }}
+                    >
+                      <div className="index-item3">
+                        <div className="index-i3-item index-i3-item_left">
+                          <span className="index-i3i-icon">净</span>
+                          <span className="index-i3i-value">
+                        {this.state.unfollow.count1 || 0}
+                      </span>
+                          <span className="index-i3i-change">
+                        <span style={{ color: "#333" }}>净关注数</span>
+                      </span>
+                        </div>
+                        <div className="index-i3-item index-i3-item_right">
+                          <span className="index-i3i-icon">消</span>
+                          <span className="index-i3i-value">
+                        {this.state.unfollow.count2 || 0}
+                      </span>
+                          <span className="index-i3i-change">
+                        <span style={{ color: "#333" }}>取消关注数</span>
+                      </span>
+                        </div>
+                      </div>
+                    </Card>
+                  </Col>
+                  <Col md={24}>
+                    <Card
+                      title="关注人数性别分布"
+                      style={{
+                        height: 165,
+                        boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.16)"
+                      }}
+                    >
+                      <div className="index-item4 small">
+                        <div className="index-i4-row1">
+                          <span className="index-i4-icon1" />
+                          <span className="index-i4-icon2" />
+                        </div>
+                        <div className="index-i4-row2">
+                      <span
+                        className="index-i4-percent1"
+                        style={{
+                          width: `${this.toPercent(
+                            this.state.count.manFollow,
+                            this.state.count.manFollow +
+                            this.state.count.womanFollow
+                          )}%`
+                        }}
+                      />
+                          <span
+                            className="index-i4-percent2"
+                            style={{
+                              width: `${this.toPercent(
+                                this.state.count.womanFollow,
+                                this.state.count.manFollow +
+                                this.state.count.womanFollow
+                              )}%`
+                            }}
+                          />
+                        </div>
+                        <div className="index-i4-row3">
+                      <span className="index-i4-value1">
+                        {this.state.count.manFollow}人（{`${this.toPercent(
+                        this.state.count.manFollow,
+                        this.state.count.manFollow +
+                        this.state.count.womanFollow
+                      )}`}%）
+                      </span>
+                          <span className="index-i4-value1">
+                        {this.state.count.womanFollow}人（{`${this.toPercent(
+                            this.state.count.womanFollow,
+                            this.state.count.manFollow +
+                            this.state.count.womanFollow
+                          )}`}%）
+                      </span>
+                        </div>
+                      </div>
+                    </Card>
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+            <Row gutter={{ sm: 0, md: 20 }} style={{ marginTop: 20 }}>
+              <Col sm={24} md={8}>
+                <Row>
+                  <Col md={24}>
+                    <Card
+                      title="今日新老用户对比分布"
+                      style={{
+                        height: 360,
+                        boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.16)",
+                        marginBottom: 20
+                      }}
+                    >
+                      <div className="index-item4">
+                        <div className="index-i4-row1">
+                          <span className="index-i8-icon1" />
+                          <span className="index-i8-icon2" />
+                        </div>
+                        <div className="index-i4-row2">
+                      <span
+                        className="index-i8-percent1"
+                        style={{
+                          width: `${this.toPercent(
+                            this.state.oldNewUser.newUser,
+                            this.state.oldNewUser.oldUser +
+                            this.state.oldNewUser.newUser
+                          )}%`
+                        }}
+                      />
+                          <span
+                            className="index-i8-percent2"
+                            style={{
+                              width: `${this.toPercent(
+                                this.state.oldNewUser.oldUser,
+                                this.state.oldNewUser.oldUser +
+                                this.state.oldNewUser.newUser
+                              )}%`
+                            }}
+                          />
+                        </div>
+                        <div className="index-i4-row3">
+                      <span className="index-i8-value1">
+                        {this.state.oldNewUser.newUser || 0}人（{`${this.toPercent(
+                        this.state.oldNewUser.newUser,
+                        this.state.oldNewUser.oldUser +
+                        this.state.oldNewUser.newUser
+                      )}`}%）
+                      </span>
+                          <span className="index-i8-value1">
+                        {this.state.oldNewUser.oldUser || 0}人（{`${this.toPercent(
+                            this.state.oldNewUser.oldUser,
+                            this.state.oldNewUser.oldUser +
+                            this.state.oldNewUser.newUser
+                          )}`}%）
+                      </span>
+                        </div>
+                      </div>
+                      <div style={{ marginTop: 50 }}>
+                        <div style={{ fontSize: 18, color: "#333" }}>
+                          今日平均购买盒数
+                        </div>
+                        <div
+                          style={{
+                            fontSize: 18,
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            marginTop: 15
+                          }}
+                        >
+                      <span style={{ color: "#5FBBA8" }}>
+                        {this.state.oldNewUser.newUser === 0
+                          ? 0
+                          : (
+                            this.state.oldNewUser.newOrderCount /
+                            this.state.oldNewUser.newUser
+                          ).toFixed(2)}盒
+                      </span>
+                          <span style={{ color: "#FC562E" }}>
+                        {this.state.oldNewUser.oldUser === 0
+                          ? 0
+                          : (
+                            this.state.oldNewUser.oldOrderCount /
+                            this.state.oldNewUser.oldUser
+                          ).toFixed(2)}盒
+                      </span>
+                        </div>
+                      </div>
+                    </Card>
+                  </Col>
+                  <Col md={24}>
+                    <Card
+                      title="用户累积购买排行"
+                      extra={
+                        <MonthPicker
+                          value={moment(this.state.date_buyTop)}
+                          onChange={date => {
+                            this.setState(
+                              { date_buyTop: date.format("YYYY-MM") },
+                              () => {
+                                this.getBuyTop();
+                              }
+                            );
+                          }}
+                          placeholder="请选择月份"
+                        />
+                      }
+                      style={{
+                        height: 340,
+                        boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.16)"
+                      }}
+                    >
+                      <Table
+                        size="small"
+                        locale={{ emptyText: "暂无数据" }}
+                        columns={columns1}
+                        dataSource={this.state.buytop || []}
+                        pagination={false}
+                        scroll={{ y: 200 }}
+                        rowKey="userId"
+                      />
+                    </Card>
+                  </Col>
+                </Row>
+              </Col>
+              <Col sm={24} md={16}>
+                <Card
+                  title="昨日奖品排行"
+                  style={{
+                    height: 720,
                     boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.16)"
                   }}
                 >
                   <Table
-                    size="small"
                     locale={{ emptyText: "暂无数据" }}
-                    columns={columns1}
-                    dataSource={this.state.buytop || []}
+                    columns={columns2}
+                    dataSource={this.state.yAward || []}
                     pagination={false}
-                    scroll={{ y: 200 }}
-                    rowKey="userId"
+                    scroll={{ y: 540 }}
+                    rowKey="i"
                   />
                 </Card>
               </Col>
             </Row>
-          </Col>
-          <Col sm={24} md={16}>
-            <Card
-              title="昨日奖品排行"
-              style={{
-                height: 720,
-                boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.16)"
-              }}
-            >
-              <Table
-                locale={{ emptyText: "暂无数据" }}
-                columns={columns2}
-                dataSource={this.state.yAward || []}
-                pagination={false}
-                scroll={{ y: 540 }}
-                rowKey="i"
-              />
-            </Card>
-          </Col>
-        </Row>
-      </section>
+          </section>
+            :
+            <div>
+              抽奖管理后台
+            </div>
+        }
+      </div>
+
     );
   }
 }

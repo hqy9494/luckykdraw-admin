@@ -34,6 +34,16 @@ import BoxDetailStatistic from './Statistic/boxDetailStatistic'
 import SaleDetailStatistic from './Statistic/saleDetailStatistic'
 import WechatDetailStatistic from './Statistic/wechatDetailStatistic'
 
+import StaffManager from "./Settings/StaffManager";
+import StaffManagerAdd from "./Settings/StaffManagerAdd";
+import StaffManagerDetail from "./Settings/StaffManagerDetail";
+import RoleManager from "./Settings/RoleManager";
+import RoleManagerAdd from "./Settings/RoleManagerAdd";
+import RoleManagerDetail from "./Settings/RoleManagerDetail";
+import MenuManager from "./Settings/MenuManager";
+import MenuManagerAdd from "./Settings/MenuManagerAdd";
+import MenuManagerDetail from "./Settings/MenuManagerDetail";
+
 const modules = {
   Index,
   Tenant,
@@ -63,7 +73,16 @@ const modules = {
   RangeStatistic,
   BoxDetailStatistic,
   SaleDetailStatistic,
-  WechatDetailStatistic
+  WechatDetailStatistic,
+  StaffManager,
+  StaffManagerAdd,
+  StaffManagerDetail,
+  RoleManager,
+  RoleManagerAdd,
+  RoleManagerDetail,
+  MenuManager,
+  MenuManagerAdd,
+  MenuManagerDetail
 };
 
 export default modules;
