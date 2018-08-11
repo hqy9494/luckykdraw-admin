@@ -92,7 +92,7 @@ export class MenuManager extends React.Component {
                     <Button
                       onClick={() => {
                         this.props.to(
-                          `${this.props.match.path}/detail/add`
+                          `${this.props.match.path}/add`
                         );
                       }}
                     >
