@@ -7,7 +7,7 @@ export class BoxInfoBar extends React.Component {
   }
 
   render() {
-    let { title, content, icon, color } =  this.props;
+    let { title, content, icon, color, type } =  this.props;
 
     return (
       <div style={{marginBottom: 10}}>
@@ -19,7 +19,7 @@ export class BoxInfoBar extends React.Component {
           <Row gutter={30}>
             {content && content.map((v,i) =>
               (
-                <Col key={i} span={6}>
+                <Col key={i} span={6} style={type === "fiveBlock" ? {width: "20%"} : {}}>
                   <div className="statistic-box-info-bar" style={{background: v.background}}>
                     <Col span={24} style={{fontSize: 25}}>
                       {v.value}

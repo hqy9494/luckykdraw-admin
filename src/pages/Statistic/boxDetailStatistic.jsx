@@ -86,7 +86,16 @@ export class BoxDetailStatistic extends React.Component {
       title: '设备名称',
       dataIndex: 'boxName',
       key: 'boxName',
-      align: "center"
+      align: "center",
+      render: (v,r) => {
+        if (r.fromType === 'direct') {
+          return <div>{v}<span className="statistic-box-rank-table-direct">直</span></div>
+        }
+        if (r.fromType === 'agent') {
+          return <div>{v}<span className="statistic-box-rank-table-agent">代</span></div>
+        }
+        return v
+      }
     }, {
       title: '设备地址',
       dataIndex: 'address',

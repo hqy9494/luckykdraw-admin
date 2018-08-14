@@ -85,7 +85,8 @@ export class Tenant extends React.Component {
               name: values.name,
               serial: values.serial,
               tenantId: values.tenantId,
-              specificationId: values.specificationId
+              specificationId: values.specificationId,
+              fromType: values.fromType
             },
             this.state.curRow.location &&
               this.state.curRow.location.id && {
@@ -137,7 +138,8 @@ export class Tenant extends React.Component {
               address: values.address,
               contactMobile: values.contactMobile,
               contact: values.contact,
-              regionId: "ByWbXglYJ7"
+              regionId: "ByWbXglYJ7",
+              fromType: values.fromType
             },
             specificationId: values.specificationId
           }
@@ -224,6 +226,7 @@ export class Tenant extends React.Component {
     const { users } = this.props;
 
     let usersList = [];
+    let fromTypeList = [{title: "直营", value: "direct"}, {title: "代理", value: "agent"}];
 
     if (users && users[this.uuid]) {
       usersList = users[this.uuid].map(t => {
@@ -466,6 +469,15 @@ export class Tenant extends React.Component {
                 params: {
                   initialValue: this.state.curRow && this.state.curRow.replenishmentId,
                   rules: [{ required: true, message: "必填项" }]
+                }
+              },
+              {
+                label: "所属类型",
+                field: "fromType",
+                type: "select",
+                options: fromTypeList,
+                params: {
+                  initialValue: this.state.curRow && this.state.curRow.fromType
                 }
               }
             ]}

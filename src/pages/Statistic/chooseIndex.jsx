@@ -36,15 +36,31 @@ export class Statistic extends React.Component {
     const { params } = this.props;
     if (params.id) {
       this.getRangeStatistic(this.state.st, this.state.et, params.id);
+      this.getStatisticDailyInBox(this.state.st, this.state.et, params.id);
       this.setState({selectedId: params.id})
     } else {
       this.getFirstRangeStatistic();
+      this.getStatisticDailyInBox(this.state.st, this.state.et);
     }
   }
 
   componentWillReceiveProps(nextProps) {
 
   }
+
+  getStatisticDailyInBox = (st, et, id) => {
+    this.props.rts(
+      {
+        method: "get",
+        url: `/StatisticDailyInBoxes/getDailyStatistic?st=${st}&et=${et}&id=${id}`
+      },
+      this.uuid,
+      "dailyInBox",
+      dailyInBox => {
+        this.setState({ dailyInBox });
+      }
+    );
+  };
 
   getCompareInfo = (regionId) => {
     this.props.rts(
@@ -88,7 +104,11 @@ export class Statistic extends React.Component {
           this.setState({ selectedId: province.mainProvince.id });
         }
         this.getSevenDaysInfo();
-        this.getCompareInfo(province.mainProvince.id);
+        if (this.props.params.id) {
+          this.getCompareInfo(this.props.params.id);
+        } else {
+          this.getCompareInfo(province.mainProvince.id);
+        }
       }
     );
   }
@@ -141,6 +161,7 @@ export class Statistic extends React.Component {
     st = st || moment().format("YYYY-MM-DD");
     et = et || moment().format("YYYY-MM-DD");
     this.getRangeStatistic(st, et, value);
+    this.getStatisticDailyInBox(st, et, value);
     this.getCompareInfo(value);
     this.getSevenDaysInfo(0, value)
   }
@@ -149,6 +170,7 @@ export class Statistic extends React.Component {
     this.setState({st: dateString[0], et: dateString[1]}, () => {this.getSevenDaysInfo()});
     let { selectedId } = this.state;
     this.getRangeStatistic(dateString[0], dateString[1], selectedId);
+    this.getStatisticDailyInBox(dateString[0], dateString[1], selectedId);
   }
 
   getRegionsjsonDom(json) {
@@ -196,8 +218,9 @@ export class Statistic extends React.Component {
   }
 
   render() {
-    let { allStatistic, regionsjson, compareInfo } = this.state;
+    let { allStatistic, regionsjson, compareInfo, dailyInBox } = this.state;
     let { regionBoxes } = this.state;
+    console.log(dailyInBox);
 
     compareInfo = compareInfo || {};
     allStatistic = allStatistic || {};
@@ -228,23 +251,24 @@ export class Statistic extends React.Component {
         value: parseFloat((compareInfo.todaySum - compareInfo.yesterdaySum)/(compareInfo.yesterdaySum || 1)*100).toFixed(1)
       },
       {
+        keyOne: `今日：${compareInfo.todaySum * 30}`, keyTwo: `上周同日：${compareInfo.preWeekTodaySum * 30}`,
+        value: parseFloat((compareInfo.todaySum - compareInfo.preWeekTodaySum)/(compareInfo.preWeekTodaySum || 1)*100).toFixed(1)
+      },
+      {
         keyOne: `本周：${compareInfo.thisWeekSum * 30}`, keyTwo: `上周：${compareInfo.preWeekSum * 30}`,
         value: parseFloat((compareInfo.thisWeekSum - compareInfo.preWeekSum)/(compareInfo.preWeekSum || 1)*100).toFixed(1)
       },
       {
         keyOne: `本月：${compareInfo.thisMonthSum * 30}`, keyTwo: `上月：${compareInfo.preMonthSum * 30}`,
         value: parseFloat((compareInfo.thisMonthSum - compareInfo.preMonthSum)/(compareInfo.preMonthSum || 1)*100).toFixed(1)
-      },
-      {
-        keyOne: `本月：${compareInfo.thisMonthSum * 30}`, keyTwo: `上上月：${compareInfo.prePreMonthSum * 30}`,
-        value: parseFloat((compareInfo.thisMonthSum - compareInfo.prePreMonthSum)/(compareInfo.prePreMonthSum || 1)*100).toFixed(1)
       }
     ];
 
     let boxesContent = [
       {key: "全部设备数量", value: allStatistic.boxCount || 0, background: "#1069c9"},
-      {key: "今日扫码设备", value: allStatistic.dayActiveBoxCount || 0, background: "#fd996b"},
-      {key: "今日扫码盒数", value: allStatistic.pondCount || 0, background: "#ca3538"},
+      {key: "扫码设备", value: allStatistic.dayActiveBoxCount || 0, background: "#fd996b"},
+      {key: "扫码设备平均销售", value: parseFloat((allStatistic.pondCount || 0)*30/(allStatistic.dayActiveBoxCount || 1)).toFixed(1), background: "#FF9900"},
+      {key: "扫码盒数", value: allStatistic.pondCount || 0, background: "#ca3538"},
       {key: "购买男女比例", value: `${allStatistic.manRate}%/${allStatistic.womanRate}%`, background: "#6acb9a"}
     ];
 
@@ -329,6 +353,44 @@ export class Statistic extends React.Component {
       }
     }];
 
+    let columns2 = [{
+      title: '日期',
+      dataIndex: 'date',
+      key: 'date',
+      align: "center"
+    }, {
+      title: '销售盒数',
+      dataIndex: 'saleCount',
+      key: 'saleCount',
+      align: "center"
+    }, {
+      title: '派出金额',
+      dataIndex: 'sendSum',
+      key: 'sendSum',
+      align: "center"
+    }, {
+      title: '销售金额',
+      dataIndex: 'saleSum',
+      key: 'saleSum',
+      align: "center"
+    }, {
+      title: '已关注扫码',
+      dataIndex: 'followedScan',
+      key: 'followedScan',
+      align: "center",
+      render: (v) => {
+        return v || 0
+      }
+    }, {
+      title: '未关注扫码(扫后关注／未关注)',
+      dataIndex: 'unfollowedAfterScan',
+      key: 'unfollowedAfterScan',
+      align: "center",
+      render: (v, record) => {
+        return `${record.unfollowedScan || 0}(${record.followedAfterScan || 0}/${record.unfollowedAfterScan || 0})`
+      }
+    }];
+
     return (
       <Grid fluid>
         <div style={{marginBottom: 20}}>
@@ -341,7 +403,7 @@ export class Statistic extends React.Component {
         </div>
         <LongTopBar title="销售数据" content={saleContent} icon="wallet" color="#152678" />
         <LongTopBar2 title="同期销售额对比数据" content={compareContent} icon="wallet" color="#152678" />
-        <BoxInfoBar title="设备数据" content={boxesContent} icon="printer" color="#2197d8"  />
+        <BoxInfoBar type="fiveBlock" title="设备数据" content={boxesContent} icon="printer" color="#2197d8"  />
         <BuyerStatisticBox content={buyersStatistic} />
         <div style={{width: "2%", float: "left", height: 1}} />
         <BuyAgainInfoBox content={buyTimes} />
@@ -353,6 +415,9 @@ export class Statistic extends React.Component {
               onClick: () => {this.handClick(record)}
             }}} columns={columns} dataSource={regionBoxes && regionBoxes.boxList} pagination={false} />
           <Pagination className="pagination-statistic" defaultPageSize={7} onChange={(page) => {this.getSevenDaysInfo(page)}} total={regionBoxes && regionBoxes.allBoxListCount} />
+        </div>
+        <div className="statistic-box-with-title-bar" style={{width: "100%"}}>
+          <Table columns={columns2} dataSource={dailyInBox && dailyInBox.result || []} pagination={false} />
         </div>
       </Grid>
     );
