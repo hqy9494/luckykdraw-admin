@@ -254,6 +254,10 @@ export class Statistic extends React.Component {
         value: parseFloat((compareInfo.todaySum - compareInfo.preWeekTodaySum)/(compareInfo.preWeekTodaySum || 1)*100).toFixed(1)
       },
       {
+        keyOne: `今日：${compareInfo.todaySum * 30}`, keyTwo: `上上周同日：${compareInfo.prePreWeekTodaySum * 30}`,
+        value: parseFloat((compareInfo.todaySum - compareInfo.prePreWeekTodaySum)/(compareInfo.prePreWeekTodaySum || 1)*100).toFixed(1)
+      },
+      {
         keyOne: `本周：${compareInfo.thisWeekSum * 30}`, keyTwo: `上周：${compareInfo.preWeekSum * 30}`,
         value: parseFloat((compareInfo.thisWeekSum - compareInfo.preWeekSum)/(compareInfo.preWeekSum || 1)*100).toFixed(1)
       },
@@ -401,7 +405,7 @@ export class Statistic extends React.Component {
           />
         </div>
         <LongTopBar title="销售数据" content={saleContent} icon="wallet" color="#152678" />
-        <LongTopBar2 title="同期销售额对比数据" content={compareContent} icon="wallet" color="#152678" />
+        <LongTopBar2 title="同期销售额对比数据" content={compareContent} icon="wallet" color="#152678" width="20%" />
         <BoxInfoBar type="fiveBlock" title="设备数据" content={boxesContent} icon="printer" color="#2197d8"  />
         <BuyerStatisticBox content={buyersStatistic} />
         <div style={{width: "2%", float: "left", height: 1}} />
@@ -413,7 +417,7 @@ export class Statistic extends React.Component {
             return {
               onClick: () => {this.handClick(record)}
             }}} columns={columns} dataSource={regionBoxes && regionBoxes.boxList} pagination={false} />
-          <Pagination className="pagination-statistic" defaultPageSize={7} onChange={(page) => {this.getSevenDaysInfo(page)}} total={regionBoxes && regionBoxes.allBoxListCount} />
+          <Pagination className="pagination-statistic" defaultPageSize={7} onChange={(page) => {this.getSevenDaysInfo(page-1)}} total={regionBoxes && regionBoxes.allBoxListCount} />
         </div>
         <div className="statistic-box-with-title-bar" style={{width: "100%"}}>
           <Table columns={columns2} dataSource={dailyInBox && dailyInBox.result || []} pagination={false} />
