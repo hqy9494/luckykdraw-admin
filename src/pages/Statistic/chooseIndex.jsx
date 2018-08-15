@@ -220,7 +220,6 @@ export class Statistic extends React.Component {
   render() {
     let { allStatistic, regionsjson, compareInfo, dailyInBox } = this.state;
     let { regionBoxes } = this.state;
-    console.log(dailyInBox);
 
     compareInfo = compareInfo || {};
     allStatistic = allStatistic || {};

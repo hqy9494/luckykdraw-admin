@@ -89,10 +89,10 @@ export class BoxDetailStatistic extends React.Component {
       align: "center",
       render: (v,r) => {
         if (r.fromType === 'direct') {
-          return <div>{v}<span className="statistic-box-rank-table-direct">直</span></div>
+          return <div>{v}<img className="statistic-box-rank-table-direct-agent" src="./assets/img/direct.jpg" /></div>
         }
         if (r.fromType === 'agent') {
-          return <div>{v}<span className="statistic-box-rank-table-agent">代</span></div>
+          return <div>{v}<img className="statistic-box-rank-table-direct-agent" src="./assets/img/agent.jpg" /></div>
         }
         return v
       }
