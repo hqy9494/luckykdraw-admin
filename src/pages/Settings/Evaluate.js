@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 import uuid from "uuid";
 import { Col, Grid, Row } from "react-bootstrap";
-import { Modal, Divider, Popconfirm } from "antd";
+import { Modal, Divider, Popconfirm, Select } from "antd";
 import TableExpand from "../../components/TableExpand";
 import FormExpand from "../../components/FormExpand";
 
@@ -12,13 +12,14 @@ export class Evaluate extends React.Component {
     super(props);
     this.state = {
       visible: false,
-      refreshTable: false
+      refreshTable: false,
+      type: 1
     };
     this.uuid = uuid.v1();
   }
 
   componentWillMount() {
-      
+
   }
 
   componentWillReceiveProps(nextProps) {}
@@ -75,8 +76,9 @@ export class Evaluate extends React.Component {
       api: {
         rts: this.props.rts,
         uuid: this.uuid,
-        data: "/posts",
-        total: "/posts/count"
+        data: `/posts`,
+        total: "/posts/count",
+        filter: {type: this.state.type}
       },
       buttons: [
         // {
@@ -135,8 +137,32 @@ export class Evaluate extends React.Component {
       ]
     };
 
+    let options = [{
+      id: 1,
+      description: "普通奖晒单"
+    },{
+      id: 2,
+      description: "实物奖晒单"
+    },{
+      id: 3,
+      description: "官方晒图"
+    }];
+
     return (
       <Grid fluid>
+        <Select
+          style={{ width: 200, marginBottom: 10 }}
+          defaultValue={1}
+          onChange={value => {
+            this.setState({type: value}, () => {this.setState({refreshTable: true})})
+          }}
+        >
+          {options.map(o => (
+            <Option key={o.id} value={o.id}>
+              {o.description}
+            </Option>
+          ))}
+        </Select>
         <Row>
           <Col lg={12}>
             <TableExpand

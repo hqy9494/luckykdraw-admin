@@ -31,7 +31,7 @@ export default class TableExpand extends React.Component {
         ? JSON.parse(decodeURI(getParameterByName("q")))
         : {};
     }
-    
+
     this.state = {
       pageSize: 10,
       data: [],
@@ -86,8 +86,9 @@ export default class TableExpand extends React.Component {
                   ),
                   order: this.params.order|| api.order || "createdAt DESC"
                 },
-                
-                api.include && { include: api.include }
+
+                api.include && { include: api.include },
+                api.filter
               )
             }
           },
@@ -116,7 +117,8 @@ export default class TableExpand extends React.Component {
                   skip: this.params.skip || 0,
                   order: this.params.order|| api.order || "createdAt DESC"
                 },
-                api.include && { include: api.include }
+                api.include && { include: api.include },
+                api.filter
               )
             }
           },
@@ -267,7 +269,7 @@ export default class TableExpand extends React.Component {
     const { search } = this.props;
     return searchs.map((s)=>{
       let curSearch = search.find((ss)=> s.f === ss.field);
-      
+
       if(curSearch.type === "field" || curSearch.type === "number" || curSearch.type === "relevance"){
         return {
           type: curSearch.type,
@@ -326,7 +328,7 @@ export default class TableExpand extends React.Component {
       pagination.current = Math.ceil(skip / pageSize + 1);
       pagination.onChange = this.onChange;
     }
-    
+
     return (
       <Panel>
         <Row>

@@ -127,6 +127,11 @@ export class PrizeShiwu extends React.Component {
           key: "price"
         },
         {
+          title: "成本",
+          dataIndex: "cost",
+          key: "cost"
+        },
+        {
           title: "库存",
           dataIndex: "inventory",
           key: "inventory"
@@ -204,6 +209,15 @@ export class PrizeShiwu extends React.Component {
                 label: "面额",
                 params: {
                   initialValue: this.state.curRow && this.state.curRow.price,
+                  rules: [{ required: true, message: "必填项" }]
+                }
+              },
+              {
+                type: "number",
+                field: "cost",
+                label: "成本价",
+                params: {
+                  initialValue: this.state.curRow && this.state.curRow.cost,
                   rules: [{ required: true, message: "必填项" }]
                 }
               },
