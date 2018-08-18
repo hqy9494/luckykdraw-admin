@@ -101,7 +101,7 @@ export class Region extends React.Component {
     const columns = [
       {
         title: '区域名称',
-        dataIndex: 'label',
+        dataIndex: 'title',
       },
       {
         title: '所含设备数',
