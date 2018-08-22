@@ -11,7 +11,7 @@ const menu = [
     }, {
       id: "rangeStatistic",
       name: "动态统计",
-      component: "rangeStatistic"
+      component: "rangeStatistic?id=HyLQBLUg7"
     }, {
       id: "boxDetailStatistic",
       name: "设备数据",
