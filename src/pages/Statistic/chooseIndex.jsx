@@ -363,7 +363,7 @@ export class Statistic extends React.Component {
       key: 'res',
       align: "center",
       render: (v) => {
-        return parseInt(v)
+        return v && parseInt(v) || 0
       }
     }];
 
