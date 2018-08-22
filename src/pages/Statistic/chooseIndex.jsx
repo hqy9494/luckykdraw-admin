@@ -220,6 +220,8 @@ export class Statistic extends React.Component {
   render() {
     let { allStatistic, regionsjson, compareInfo, dailyInBox } = this.state;
     let { regionBoxes } = this.state;
+    let { st, et } = this.state;
+    let duration = moment(et).diff(moment(st), 'days') + 1;
 
     compareInfo = compareInfo || {};
     allStatistic = allStatistic || {};
@@ -270,7 +272,7 @@ export class Statistic extends React.Component {
     let boxesContent = [
       {key: "全部设备数量", value: allStatistic.boxCount || 0, background: "#1069c9"},
       {key: "扫码设备", value: allStatistic.dayActiveBoxCount || 0, background: "#fd996b"},
-      {key: "扫码设备平均销售", value: parseFloat((allStatistic.pondCount || 0)*30/(allStatistic.dayActiveBoxCount || 1)).toFixed(1), background: "#FF9900"},
+      {key: "扫码设备平均销售", value: parseFloat((allStatistic.pondCount || 0)*30/(allStatistic.dayActiveBoxCount || 1)/duration).toFixed(1), background: "#FF9900"},
       {key: "扫码盒数", value: allStatistic.pondCount || 0, background: "#ca3538"},
       {key: "购买男女比例", value: `${allStatistic.manRate}%/${allStatistic.womanRate}%`, background: "#6acb9a"}
     ];
@@ -327,7 +329,16 @@ export class Statistic extends React.Component {
       title: '设备名称',
       dataIndex: 'boxName',
       key: 'boxName',
-      align: "center"
+      align: "center",
+      render: (v, r) => {
+        if (r.fromType === 'direct') {
+          return <div>{v}<img className="statistic-box-rank-table-direct-agent" src="./assets/img/direct.jpg" /></div>
+        }
+        if (r.fromType === 'agent') {
+          return <div>{v}<img className="statistic-box-rank-table-direct-agent" src="./assets/img/agent.jpg" /></div>
+        }
+        return v
+      }
     }, {
       title: '设备地址',
       dataIndex: 'address',

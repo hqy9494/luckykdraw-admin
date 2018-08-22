@@ -44,6 +44,11 @@ import MenuManager from "./Settings/MenuManager";
 import MenuManagerAdd from "./Settings/MenuManagerAdd";
 import MenuManagerDetail from "./Settings/MenuManagerDetail";
 
+import UserList from "./BuyTimesAward/UserList"
+import UserBuyList from "./BuyTimesAward/UserBuyList"
+import Award from "./BuyTimesAward/Award"
+import AwardRecord from "./BuyTimesAward/AwardRecord"
+
 const modules = {
   Index,
   Tenant,
@@ -82,7 +87,11 @@ const modules = {
   RoleManagerDetail,
   MenuManager,
   MenuManagerAdd,
-  MenuManagerDetail
+  MenuManagerDetail,
+  UserList,
+  UserBuyList,
+  Award,
+  AwardRecord
 };
 
 export default modules;

@@ -19,7 +19,16 @@ export class BoxRank extends React.Component {
       title: '设备名称',
       dataIndex: 'name',
       key: 'name',
-      align: "center"
+      align: "center",
+      render: (v, r) => {
+        if (r.fromType === 'direct') {
+          return <div>{v}<img className="statistic-box-rank-table-direct-agent" src="./assets/img/direct.jpg" /></div>
+        }
+        if (r.fromType === 'agent') {
+          return <div>{v}<img className="statistic-box-rank-table-direct-agent" src="./assets/img/agent.jpg" /></div>
+        }
+        return v
+      }
     }, {
       title: '今日销售额',
       dataIndex: 'sum',
@@ -39,7 +48,8 @@ export class BoxRank extends React.Component {
         order: i + 1,
         name: content[i] ? content[i].name : '',
         count: content[i] ? content[i].sum : '',
-        sum: content[i] ? content[i].sum * 30 : ''
+        sum: content[i] ? content[i].sum * 30 : '',
+        fromType: content[i] ? content[i].fromType : ''
       }
     }
 

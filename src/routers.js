@@ -272,6 +272,38 @@ export default {
             title: "员工详情"
           }
         }
+      },
+      BuyTimesAward: {
+        path: "buyTimesAward",
+        module: "BuyTimesAward",
+        component: "UserList",
+        title: "多次购买者",
+        subs: {
+          UserList: {
+            path: "/userList",
+            module: "BuyTimesAward",
+            component: "UserList",
+            title: "用户列表"
+          },
+          UserBuyList: {
+            path: "/userList/:id",
+            module: "BuyTimesAward",
+            component: "UserBuyList",
+            title: "购买列表"
+          },
+          Award: {
+            path: "/awards",
+            module: "BuyTimesAward",
+            component: "Award",
+            title: "奖品列表"
+          },
+          AwardRecord: {
+            path: "/awardRecords",
+            module: "BuyTimesAward",
+            component: "AwardRecord",
+            title: "派发列表"
+          }
+        }
       }
     }
   }

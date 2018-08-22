@@ -190,6 +190,29 @@ const menu = [
         component: "staffManager"
       }
     ]
+  },
+  {
+    id: "buyTimesAward",
+    icon: "user",
+    name: "多次购买",
+    component: "buyTimesAward",
+    children: [
+      {
+        id: "userList",
+        name: "用户列表",
+        component: "userList"
+      },
+      {
+        id: "awards",
+        name: "奖品列表",
+        component: "awards"
+      },
+      {
+        id: "awardRecords",
+        name: "派发列表",
+        component: "awardRecords"
+      }
+    ]
   }
 ];
 
