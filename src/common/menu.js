@@ -112,16 +112,16 @@ const menu = [
         name: "优惠券",
         component: "coupon"
       },
-      {
-        id: "template",
-        name: "奖品模板",
-        component: "template"
-      },
-      {
-        id: "specification",
-        name: "奖品规格",
-        component: "specification"
-      },
+      // {
+      //   id: "template",
+      //   name: "奖品模板",
+      //   component: "template"
+      // },
+      // {
+      //   id: "specification",
+      //   name: "奖品规格",
+      //   component: "specification"
+      // },
       {
         id: "clue",
         name: "线索",
