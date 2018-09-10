@@ -12,8 +12,10 @@ const TabPane = Tabs.TabPane;
 export class Record extends React.Component {
   constructor(props) {
     super(props);
+    let params = props.params;
     this.state = {
-      visible: false
+      visible: false,
+      selectTabKey: params.tab || 1
     };
     this.uuid = uuid.v1();
   }
@@ -257,11 +259,12 @@ export class Record extends React.Component {
 
     return (
       <Grid fluid>
-        <Tabs defaultActiveKey="1">
+        <Tabs defaultActiveKey="1" activeKey={this.state.selectTabKey} onChange={(activeKey) => {this.props.to(`/record/base?tab=${activeKey}`)}}>
           <TabPane tab="实物" key="1">
             <Row>
               <Col lg={12}>
                 <TableExpand
+                  tab="1"
                   {...config1}
                   path={`${this.props.match.path}`}
                   replace={this.props.replace}
@@ -335,6 +338,7 @@ export class Record extends React.Component {
               <Col lg={12}>
                 <TableExpand
                   {...config2}
+                  tab="2"
                   path={`${this.props.match.path}`}
                   replace={this.props.replace}
                   refresh={this.state.refreshTable2}
