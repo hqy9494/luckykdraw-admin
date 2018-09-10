@@ -15,7 +15,7 @@ export class Record extends React.Component {
     let params = props.params;
     this.state = {
       visible: false,
-      selectTabKey: params.tab || 1
+      selectTabKey: params.tab || "1"
     };
     this.uuid = uuid.v1();
   }

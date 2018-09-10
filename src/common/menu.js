@@ -213,6 +213,12 @@ const menu = [
         component: "awardRecords"
       }
     ]
+  },
+  {
+    id: "PostActive",
+    icon: "sound",
+    name: "活动",
+    component: "PostActive"
   }
 ];
 

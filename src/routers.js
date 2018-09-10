@@ -157,6 +157,12 @@ export default {
         component: 'Evaluate',
         title: '晒单管理'
       },
+      PostActive: {
+        path: 'postActive',
+        module: 'Settings',
+        component: 'PostActive',
+        title: '活动管理'
+      },
       Statistic: {
         path: 'statistic',
         module: 'Statistic',

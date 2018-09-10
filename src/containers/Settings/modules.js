@@ -10,6 +10,7 @@ import RoleManagerDetail from "./RoleManagerDetail";
 import MenuManager from "./MenuManager";
 import MenuManagerAdd from "./MenuManagerAdd";
 import MenuManagerDetail from "./MenuManagerDetail";
+import PostActive from "./PostActive"
 
 const Settings = {
   Replenishmenter,
@@ -23,7 +24,8 @@ const Settings = {
   RoleManagerDetail,
   MenuManager,
   MenuManagerAdd,
-  MenuManagerDetail
+  MenuManagerDetail,
+  PostActive
 };
 
 export default Settings;

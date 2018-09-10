@@ -6,8 +6,9 @@ import { Col, Grid, Row } from "react-bootstrap";
 import { Modal, Divider, Popconfirm, Select } from "antd";
 import TableExpand from "../../components/TableExpand";
 import FormExpand from "../../components/FormExpand";
+import moment from "moment"
 
-export class Evaluate extends React.Component {
+export class PostActive extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -29,7 +30,7 @@ export class Evaluate extends React.Component {
       this.props.rts(
         {
           method: "patch",
-          url: `/awards/${this.state.curRow.id}`,
+          url: `/PostActives/${this.state.curRow.id}`,
           data: values
         },
         this.uuid,
@@ -43,7 +44,7 @@ export class Evaluate extends React.Component {
       this.props.rts(
         {
           method: "post",
-          url: `/awards`,
+          url: `/PostActives`,
           data: values
         },
         this.uuid,
@@ -60,29 +61,10 @@ export class Evaluate extends React.Component {
     this.props.rts(
       {
         method: "delete",
-        url: `/posts/${id}`
+        url: `/PostActives/${id}`
       },
       this.uuid,
       "delete",
-      () => {
-        this.setState({ refreshTable: true });
-        // window.location.reload();
-      }
-    );
-  };
-
-  banUser = (userId, enable) => {
-    this.props.rts(
-      {
-        method: "post",
-        url: `/accountBanInPosts/switch`,
-        params: {
-          userId: userId,
-          enable: !enable
-        }
-      },
-      this.uuid,
-      "switch",
       () => {
         this.setState({ refreshTable: true });
       }
@@ -94,100 +76,68 @@ export class Evaluate extends React.Component {
       api: {
         rts: this.props.rts,
         uuid: this.uuid,
-        data: `/posts`,
-        total: "/posts/count",
-        filter: {type: this.state.type}
+        data: `/PostActives`,
+        total: "/PostActives/count"
       },
+
       buttons: [
-        // {
-        //   title: "添加",
-        //   onClick: () => {
-        //     this.setState({ visible: true, curRow: null });
-        //   }
-        // }
+        {
+          title: "添加",
+          onClick: () => {
+            this.setState({ visible: true, curRow: null });
+          }
+        }
       ],
       search: [],
       columns: [
         {
-            title: "图片",
-            dataIndex: "images",
-            key: "images",
-            render: text => {
-              return <div>
-                {
-                  text&&text.length>0?text.map((t,i)=> <img key={i} src={t} alt="商品图片" height="60" style={{float: "left", marginLeft: 10}} />):""
-                }
-              </div>
-            }
+          title: "活动名称",
+          dataIndex: "name",
+          key: "name"
         },
         {
-            title: "内容",
-            dataIndex: "title",
-            key: "title"
+          title: "图片",
+          dataIndex: "image",
+          key: "image",
+          render: text => {
+            return <div>
+              {
+                <img src={text} alt="图片" height="60" style={{float: "left", marginLeft: 10}} />
+              }
+            </div>
+          }
         },
         {
-            title: "微信昵称",
-            dataIndex: "user.nickname",
-            key: "user.nickname"
+          title: "活动链接",
+          dataIndex: "url",
+          key: "url"
         },
         {
-            title: "用户是否被禁",
-            dataIndex: "ban",
-            key: "ban",
-            render: (v) => {
-              return v ? (v.enable ? "否" : "是") : "否"
-            }
+          title: "新增时间",
+          dataIndex: "createdAt",
+          key: "createdAt",
+          render: v => {
+            return moment(v).format("YYYY-MM-DD HH:mm")
+          }
         },
         {
           title: "操作",
           key: "handle",
-          render: (text, record) => {
-            let v = record.ban;
-            let enable = v ? (v.enable ? true : false) : true;
-            return <span>
-              <Popconfirm title="确定删除此条晒单" onConfirm={()=>{this.delete(record.tid)}} okText="是" cancelText="否">
+          render: (text, record) => (
+            <span>
+              <Popconfirm title="确定删除此活动" onConfirm={()=>{this.delete(record.id)}} okText="是" cancelText="否">
                 <a href="javascript:;">
                   删除
                 </a>
               </Popconfirm>
-              <Divider type="vertical" />
-              <Popconfirm title={enable ? "确定禁止该用户晒单" : "确定恢复该用户晒单"} onConfirm={()=>{this.banUser(record.user.id, enable)}} okText="是" cancelText="否">
-                <a href="javascript:;">
-                  {enable ? "禁止晒图" : "恢复晒图"}
-                </a>
-              </Popconfirm>
             </span>
-          }
+          )
         }
       ]
     };
 
-    let options = [{
-      id: 1,
-      description: "普通奖晒单"
-    },{
-      id: 2,
-      description: "实物奖晒单"
-    },{
-      id: 3,
-      description: "官方晒图"
-    }];
-
     return (
       <Grid fluid>
-        <Select
-          style={{ width: 200, marginBottom: 10 }}
-          defaultValue={1}
-          onChange={value => {
-            this.setState({type: value}, () => {this.setState({refreshTable: true})})
-          }}
-        >
-          {options.map(o => (
-            <Option key={o.id} value={o.id}>
-              {o.description}
-            </Option>
-          ))}
-        </Select>
         <Row>
           <Col lg={12}>
             <TableExpand
@@ -203,7 +153,7 @@ export class Evaluate extends React.Component {
         </Row>
         <Modal
           visible={this.state.visible}
-          title={`${this.state.curRow && this.state.curRow.user.nickname}的晒单` || "新建晒图"}
+          title={`${this.state.curRow && this.state.curRow.name}活动` || "新建活动"}
           onCancel={() => {
             this.setState({ visible: false });
             window.location.reload();
@@ -214,22 +164,31 @@ export class Evaluate extends React.Component {
             elements={[
               {
                 type: "picture",
-                field: "mainImage",
+                field: "image",
                 label: "图片",
                 params: {
                   initialValue: this.state.curRow &&
-                    this.state.curRow.images,
+                    this.state.curRow.image,
                   rules: [{ required: true, message: "必填项" }]
                 },
                 upload: "/api/files/upload"
               },
               {
                 type: "text",
-                field: "title",
-                label: "内容",
+                field: "name",
+                label: "活动名称",
                 params: {
                   initialValue:
-                    this.state.curRow && this.state.curRow.title
+                    this.state.curRow && this.state.curRow.name
+                }
+              },
+              {
+                type: "text",
+                field: "url",
+                label: "活动链接",
+                params: {
+                  initialValue:
+                  this.state.curRow && this.state.curRow.url
                 }
               }
             ]}
@@ -257,4 +216,4 @@ const mapStateToProps = createStructuredSelector({
   Evaluateuuid,
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Evaluate);
+export default connect(mapStateToProps, mapDispatchToProps)(PostActive);

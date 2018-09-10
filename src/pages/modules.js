@@ -49,6 +49,8 @@ import UserBuyList from "./BuyTimesAward/UserBuyList"
 import Award from "./BuyTimesAward/Award"
 import AwardRecord from "./BuyTimesAward/AwardRecord"
 
+import PostActive from "./Settings/PostActive"
+
 const modules = {
   Index,
   Tenant,
@@ -91,7 +93,8 @@ const modules = {
   UserList,
   UserBuyList,
   Award,
-  AwardRecord
+  AwardRecord,
+  PostActive
 };
 
 export default modules;
