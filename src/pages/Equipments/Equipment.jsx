@@ -196,6 +196,24 @@ export class Tenant extends React.Component {
     );
   };
 
+  enableBox = (id, enable) => {
+    this.props.rts(
+      {
+        method: "post",
+        url: "/boxes/switchEnable",
+        params: {
+          id,
+          enable
+        }
+      },
+      this.uuid,
+      "enableBox",
+      () => {
+        this.setState({ refreshTable: true });
+      }
+    );
+  };
+
   render() {
     const { tenant } = this.props;
     const { treeData } = this.state;
@@ -238,6 +256,7 @@ export class Tenant extends React.Component {
     }
 
     const config = {
+      replace: this.props.replace,
       api: {
         rts: this.props.rts,
         uuid: this.uuid,
@@ -256,6 +275,11 @@ export class Tenant extends React.Component {
           type: "field",
           field: "name",
           title: "名称"
+        },
+        {
+          type: "field",
+          field: "region",
+          title: "设备区域"
         },
         {
           type: "relevance",
@@ -296,14 +320,30 @@ export class Tenant extends React.Component {
           key: "location.address"
         },
         {
-          title: "兑奖中心",
-          dataIndex: "tenant.name",
-          key: "tenant.name"
+          title: "区域",
+          dataIndex: "region",
+          key: "region",
+          render: (v) => {
+            return v && v.name
+          }
         },
+        // {
+        //   title: "兑奖中心",
+        //   dataIndex: "tenant.name",
+        //   key: "tenant.name"
+        // },
         {
           title: "二维码规格",
           dataIndex: "specification.name",
           key: "specification.name"
+        },
+        {
+          title: "状态",
+          dataIndex: "enable",
+          key: "enable",
+          render: (v) => {
+            return v ? "开启" : "关闭"
+          }
         },
         {
           title: "操作",
@@ -344,6 +384,13 @@ export class Tenant extends React.Component {
                 }}
               >
                 绑定区域
+              </a>
+              <Divider type="vertical" />
+              <a
+                href="javascript:;"
+                onClick={() => {this.enableBox(record.id, !record.enable)}}
+              >
+                {record.enable ? "关闭" : "开启"}
               </a>
             </span>
           )

@@ -69,7 +69,25 @@ export class Evaluate extends React.Component {
         // window.location.reload();
       }
     );
-  }
+  };
+
+  banUser = (userId) => {
+    this.props.rts(
+      {
+        method: "post",
+        url: `/accountBanInPosts/switch`,
+        params: {
+          userId: userId,
+          enable: false
+        }
+      },
+      this.uuid,
+      "switch",
+      () => {
+        this.setState({ refreshTable: true });
+      }
+    );
+  };
 
   render() {
     const config = {
@@ -117,18 +135,15 @@ export class Evaluate extends React.Component {
           key: "handle",
           render: (text, record) => (
             <span>
-              {/* <a
-                href="javascript:;"
-                onClick={() => {
-                  this.setState({ curRow: record, visible: true });
-                }}
-              >
-                编辑
-              </a>
-              <Divider type="vertical" /> */}
               <Popconfirm title="确定删除此条晒单" onConfirm={()=>{this.delete(record.tid)}} okText="是" cancelText="否">
                 <a href="javascript:;">
                   删除
+                </a>
+              </Popconfirm>
+              <Divider type="vertical" />
+              <Popconfirm title="确定禁止该用户晒单" onConfirm={()=>{this.banUser(record.user.id)}} okText="是" cancelText="否">
+                <a href="javascript:;">
+                  禁止晒图
                 </a>
               </Popconfirm>
             </span>

@@ -147,6 +147,14 @@ export class PrizeCoupon extends React.Component {
           type: "day"
         },
         {
+          title: "是否参与活动",
+          dataIndex: "joinRoll",
+          key: "joinRoll",
+          render: (v) => {
+            return v ? "是" : "否"
+          }
+        },
+        {
           title: "操作",
           key: "handle",
           render: (text, record) => (
@@ -265,6 +273,16 @@ export class PrizeCoupon extends React.Component {
                   rules: [{required: true, message: "必填项"}]
                 }
               },
+              {
+                label: "是否参与活动",
+                field: "joinRoll",
+                type: "select",
+                options: [{title: "是", value: true}, {title: "否", value: false}],
+                params: {
+                  initialValue: this.state.curRow && this.state.curRow.type,
+                  rules: [{ required: true, message: "必填项" }]
+                }
+              }
             ]}
             onSubmit={values => {
               // console.log(values);
