@@ -130,8 +130,8 @@ export class AwardSetting extends React.Component {
         },
         {
           title: "状态",
-          dataIndex: "boxStock.enabled",
-          key: "boxStock.enabled",
+          dataIndex: "boxStock.enable",
+          key: "boxStock.enable",
           render: text => (text ? "开启" : "关闭")
         },
         {
