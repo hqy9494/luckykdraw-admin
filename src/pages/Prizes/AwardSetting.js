@@ -151,17 +151,17 @@ export class AwardSetting extends React.Component {
                 </a>
                 <Divider type="vertical" />
                 <Popconfirm
-                  title={`是否${boxStock.enabled ? "关闭" : "开启"}${
+                  title={`是否${boxStock.enable ? "关闭" : "开启"}${
                     record.name
                   }奖项设置`}
                   onConfirm={() => {
-                    this.submitEnabled(record.id, !boxStock.enabled);
+                    this.submitEnabled(record.id, !boxStock.enable);
                   }}
                   okText="是"
                   cancelText="否"
                 >
                   <a href="javascript:;">
-                    {boxStock.enabled ? "关闭" : "开启"}
+                    {boxStock.enable ? "关闭" : "开启"}
                   </a>
                 </Popconfirm>
               </span>
