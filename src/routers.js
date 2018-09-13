@@ -65,7 +65,15 @@ export default {
         path: 'prizes/awardSetting',
         module: 'Prizes',
         component: 'AwardSetting',
-        title: '设备奖项设置'
+        title: '设备奖项设置',
+        subs: {
+          stockAward: {
+            path: '/:id',
+            module: 'Prizes',
+            component: 'StockAward',
+            title: '现派奖列表'
+          }
+        }
       },
       prizeBase: {
         path: 'prizes/base',

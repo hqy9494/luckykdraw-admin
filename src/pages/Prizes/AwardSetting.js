@@ -93,7 +93,8 @@ export class AwardSetting extends React.Component {
       api: {
         rts: this.props.rts,
         uuid: this.uuid,
-        data: "/boxStock"
+        data: "/boxStock",
+        total: "/boxes/count"
       },
       buttons: [],
       search: [],
@@ -164,6 +165,10 @@ export class AwardSetting extends React.Component {
                     {boxStock.enable ? "关闭" : "开启"}
                   </a>
                 </Popconfirm>
+                <Divider type="vertical" />
+                <a href="javascript:;" onClick={() => {this.props.to(`/prizes/awardSetting/${record.id}`)}}>
+                  现派奖列表
+                </a>
               </span>
             );
           }

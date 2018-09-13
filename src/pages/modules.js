@@ -50,6 +50,7 @@ import Award from "./BuyTimesAward/Award"
 import AwardRecord from "./BuyTimesAward/AwardRecord"
 
 import PostActive from "./Settings/PostActive"
+import StockAward from "./Prizes/StockAward"
 
 const modules = {
   Index,
@@ -94,7 +95,8 @@ const modules = {
   UserBuyList,
   Award,
   AwardRecord,
-  PostActive
+  PostActive,
+  StockAward
 };
 
 export default modules;
