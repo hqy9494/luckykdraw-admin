@@ -262,6 +262,12 @@ export class Evaluate extends React.Component {
                   {enable ? "禁止晒图" : "恢复晒图"}
                 </a>
               </Popconfirm>
+              <Divider type="vertical" />
+              <Popconfirm title={"设置该主题翻牌"} onConfirm={()=>{this.setPostLucky(record.tid)}} okText="是" cancelText="否">
+                <a href="javascript:;">
+                  {"设置该主题翻牌"}
+                </a>
+              </Popconfirm>
             </span>
           }
         }
@@ -324,6 +330,12 @@ export class Evaluate extends React.Component {
               <Popconfirm title={enable ? "确定禁止该用户晒单" : "确定恢复该用户晒单"} onConfirm={()=>{this.banUser(record.user.id, enable)}} okText="是" cancelText="否">
                 <a href="javascript:;">
                   {enable ? "禁止晒图" : "恢复晒图"}
+                </a>
+              </Popconfirm>
+              <Divider type="vertical" />
+              <Popconfirm title={"设置该主题热门"} onConfirm={()=>{this.setPostHot(record.tid)}} okText="是" cancelText="否">
+                <a href="javascript:;">
+                  {"设置该主题热门"}
                 </a>
               </Popconfirm>
             </span>
