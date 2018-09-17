@@ -264,7 +264,6 @@ export class Record extends React.Component {
             <Row>
               <Col lg={12}>
                 <TableExpand
-                  tab="1"
                   {...config1}
                   path={`${this.props.match.path}`}
                   replace={this.props.replace}
@@ -272,6 +271,7 @@ export class Record extends React.Component {
                   onRefreshEnd={() => {
                     this.setState({refreshTable1: false});
                   }}
+                  defaultTab
                 />
               </Col>
             </Row>
@@ -338,7 +338,6 @@ export class Record extends React.Component {
               <Col lg={12}>
                 <TableExpand
                   {...config2}
-                  tab="2"
                   path={`${this.props.match.path}`}
                   replace={this.props.replace}
                   refresh={this.state.refreshTable2}

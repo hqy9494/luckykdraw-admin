@@ -129,6 +129,7 @@ export class Evaluate extends React.Component {
 
   render() {
     const config = {
+      tab: 1,
       api: {
         rts: this.props.rts,
         uuid: this.uuid,
@@ -205,6 +206,7 @@ export class Evaluate extends React.Component {
     };
 
     const config2 = {
+      tab: 2,
       api: {
         rts: this.props.rts,
         uuid: this.uuid,
@@ -281,6 +283,7 @@ export class Evaluate extends React.Component {
     };
 
     const config3 = {
+      tab: 3,
       api: {
         rts: this.props.rts,
         uuid: this.uuid,
@@ -370,6 +373,7 @@ export class Evaluate extends React.Component {
                   onRefreshEnd={() => {
                     this.setState({ refreshTable: false });
                   }}
+                  defaultTab
                 />
               </Col>
             </Row>
