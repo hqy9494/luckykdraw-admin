@@ -265,12 +265,6 @@ export class Evaluate extends React.Component {
                 </a>
               </Popconfirm>
               <Divider type="vertical" />
-              <Popconfirm title={"设置该主题热门"} onConfirm={()=>{this.setPostHot(record.tid)}} okText="是" cancelText="否">
-                <a href="javascript:;">
-                  {"设置该主题热门"}
-                </a>
-              </Popconfirm>
-              <Divider type="vertical" />
               <Popconfirm title={"设置该主题翻牌"} onConfirm={()=>{this.setPostLucky(record.tid)}} okText="是" cancelText="否">
                 <a href="javascript:;">
                   {"设置该主题翻牌"}
@@ -345,12 +339,6 @@ export class Evaluate extends React.Component {
               <Popconfirm title={"设置该主题热门"} onConfirm={()=>{this.setPostHot(record.tid)}} okText="是" cancelText="否">
                 <a href="javascript:;">
                   {"设置该主题热门"}
-                </a>
-              </Popconfirm>
-              <Divider type="vertical" />
-              <Popconfirm title={"设置该主题翻牌"} onConfirm={()=>{this.setPostLucky(record.tid)}} okText="是" cancelText="否">
-                <a href="javascript:;">
-                  {"设置该主题翻牌"}
                 </a>
               </Popconfirm>
             </span>
