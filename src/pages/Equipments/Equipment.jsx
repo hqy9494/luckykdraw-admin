@@ -260,7 +260,8 @@ export class Tenant extends React.Component {
       api: {
         rts: this.props.rts,
         uuid: this.uuid,
-        data: "/boxes"
+        data: "/boxes",
+        total: "/boxes/count"
       },
       buttons: [
         {
