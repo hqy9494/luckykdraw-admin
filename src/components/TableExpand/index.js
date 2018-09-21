@@ -159,34 +159,36 @@ export default class TableExpand extends React.Component {
     searchs.map(s => {
       let curSearch = search.find(ss => s.f === ss.field);
       if (curSearch.type === 'field') {
-        where[s.f] = { like: `%${s.v}%` };
+        if (curSearch.allMatch) {
+          where[s.f] = s.v;
+        } else {
+          where[s.f] = { like: `%${s.v}%` };
+        }
       } else if (curSearch.type === 'relevance') {
         where[s.f] = s.v.value;
       } else if (curSearch.type === 'option') {
         where[s.f] = s.v;
       } else if (curSearch.type === 'number') {
         if (s.v && s.v.constructor === Array) {
-          where[s.f] = Object.assign(
-            {},
-            s.v[0] && { gt: s.v[0] },
-            s.v[1] && { lt: s.v[1] }
-          );
+          if (s.v[0] && s.v[1]) {
+            where[s.f] = { between: [s.v[0], s.v[1]] };
+          } else if (s.v[0]) {
+            where[s.f] = { gt: s.v[0] };
+          } else if (s.v[1]) {
+            where[s.f] = { lt: s.v[0] };
+          }
         }
       } else if (curSearch.type === 'date') {
         if (s.v && s.v.constructor === Object) {
-          where[s.f] = Object.assign(
-            {},
-            s.v.s && {
-              gt: moment(s.v.s)
-                .startOf('day')
-                .toDate()
-            },
-            s.v.e && {
-              lt: moment(s.v.e)
-                .startOf('day')
-                .toDate()
-            }
-          );
+          if (s.v.s && s.v.e) {
+            where[s.f] = {
+              between: [s.v.s, s.v.e]
+            };
+          } else if (s.v.s) {
+            where[s.f] = { gt: s.v.s };
+          } else if (s.values.endDate) {
+            where[s.f] = { lt: s.v.e };
+          }
         }
       }
     });

@@ -86,7 +86,8 @@ export class Tenant extends React.Component {
         {
           type: "field",
           field: "batchNo",
-          title: "批次号"
+          title: "批次号",
+          allMatch: true
         },
         {
           type: "relevance",
