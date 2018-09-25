@@ -135,7 +135,7 @@ export class Evaluate extends React.Component {
         uuid: this.uuid,
         data: `/posts`,
         total: "/posts/count",
-        filter: {type: 1}
+        where: {type: 1}
       },
       search: [],
       columns: [
@@ -154,7 +154,8 @@ export class Evaluate extends React.Component {
         {
             title: "内容",
             dataIndex: "title",
-            key: "title"
+            key: "title",
+            width: 500
         },
         {
             title: "微信昵称",
@@ -212,7 +213,7 @@ export class Evaluate extends React.Component {
         uuid: this.uuid,
         data: `/posts`,
         total: "/posts/count",
-        filter: {type: 2}
+        where: {type: 2}
       },
       search: [],
       columns: [
@@ -231,7 +232,8 @@ export class Evaluate extends React.Component {
         {
           title: "内容",
           dataIndex: "title",
-          key: "title"
+          key: "title",
+          width: 500
         },
         {
           title: "微信昵称",
@@ -283,7 +285,7 @@ export class Evaluate extends React.Component {
         uuid: this.uuid,
         data: `/posts`,
         total: "/posts/count",
-        filter: {type: 3}
+        where: {type: 3}
       },
       search: [],
       columns: [
@@ -302,7 +304,8 @@ export class Evaluate extends React.Component {
         {
           title: "内容",
           dataIndex: "title",
-          key: "title"
+          key: "title",
+          width: 500
         },
         {
           title: "微信昵称",
