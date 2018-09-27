@@ -5,6 +5,9 @@ import moment from "moment";
 import uuid from "uuid";
 import { Grid, Row, Col } from "react-bootstrap";
 import { Select, Table, Pagination, Modal } from "antd"
+import { Input } from 'antd';
+
+const Search = Input.Search;
 
 export class UserList extends React.Component {
   constructor(props) {
@@ -22,12 +25,13 @@ export class UserList extends React.Component {
 
   componentWillReceiveProps(nextProps) {}
 
-  getStaff = (page) => {
+  getStaff = (page, nickname) => {
     page = page || 0;
+    let url = nickname ? `/accounts/getUserByBuyTimes?page=${page}&limit=10&nickname=${nickname}` : `/accounts/getUserByBuyTimes?page=${page}&limit=10`;
     this.props.rts(
       {
         method: "get",
-        url: `/accounts/getUserByBuyTimes?page=${page}&limit=10`
+        url: url
       },
       this.uuid,
       "users",
@@ -113,6 +117,11 @@ export class UserList extends React.Component {
     awards = awards || [];
     return (
       <Grid fluid>
+        <Search
+          placeholder="请输入用户昵称"
+          onSearch={value => this.getStaff(0, value)}
+          style={{ width: 200, float: "right", margin: 10 }}
+        />
         <Row>
           <Col lg={12}>
             <div className="statistic-box-with-title-bar" style={{width: "100%"}}>
