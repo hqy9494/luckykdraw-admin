@@ -94,6 +94,22 @@ export class AwardRecord extends React.Component {
         return v ? "是" : "否"
       }
     }, {
+      title: '邮寄地址',
+      dataIndex: 'record',
+      key: 'record',
+      align: "center",
+      render: v => {
+        return v && v.city + v.address
+      }
+    }, {
+      title: '电话',
+      dataIndex: 'birthday2',
+      key: 'birthday2',
+      align: "center",
+      render: (v, r) => {
+        return r.record && r.record.userContactMobile
+      }
+    }, {
       title: '操作',
       dataIndex: 'birthday',
       key: 'birthday',
