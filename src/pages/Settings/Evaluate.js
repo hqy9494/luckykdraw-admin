@@ -135,7 +135,7 @@ export class Evaluate extends React.Component {
         uuid: this.uuid,
         data: `/posts`,
         total: "/posts/count",
-        where: {type: 1}
+        filter: {type: 1}
       },
       search: [],
       columns: [
@@ -213,7 +213,7 @@ export class Evaluate extends React.Component {
         uuid: this.uuid,
         data: `/posts`,
         total: "/posts/count",
-        where: {type: 2}
+        filter: {type: 2}
       },
       search: [],
       columns: [
@@ -285,7 +285,7 @@ export class Evaluate extends React.Component {
         uuid: this.uuid,
         data: `/posts`,
         total: "/posts/count",
-        where: {type: 3}
+        filter: {type: 3}
       },
       search: [],
       columns: [
