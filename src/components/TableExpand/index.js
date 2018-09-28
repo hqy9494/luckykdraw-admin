@@ -139,7 +139,7 @@ export default class TableExpand extends React.Component {
             where: Object.assign(
               {},
               this.searchsToWhere(this.params.s),
-              api.where
+              api.where||api.filter||{}
             )
           }
         },
