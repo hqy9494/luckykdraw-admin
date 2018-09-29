@@ -110,6 +110,14 @@ export class AwardRecord extends React.Component {
         return r.record && r.record.userContactMobile
       }
     }, {
+      title: '姓名',
+      dataIndex: 'birthday4',
+      key: 'birthday4',
+      align: "center",
+      render: (v, r) => {
+        return r.record && r.record.userFullname
+      }
+    }, {
       title: '操作',
       dataIndex: 'birthday',
       key: 'birthday',
