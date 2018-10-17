@@ -40,7 +40,7 @@ export class PrizeShiwu extends React.Component {
         {
           method: "patch",
           url: `/MaterialAwards/${this.state.curRow.id}`,
-          data: {...values,img: values.img[0]}
+          data: { ...values, img: values.img[0] }
         },
         this.uuid,
         "submitFix",
@@ -54,7 +54,7 @@ export class PrizeShiwu extends React.Component {
         {
           method: "post",
           url: `/MaterialAwards`,
-          data: {...values,img: values.img[0]}
+          data: { ...values, img: values.img[0] }
         },
         this.uuid,
         "submitNew",
@@ -112,6 +112,20 @@ export class PrizeShiwu extends React.Component {
           dataIndex: "img",
           key: "img",
           render: text => <img src={text} alt="商品图片" height="80" />
+        },
+        {
+          title: "性别",
+          dataIndex: "gender",
+          key: "gender",
+          render: text => {
+            if (text === 1) {
+              return "通用";
+            } else if (text === 2) {
+              return "男";
+            } else if (text === 3) {
+              return "女";
+            }
+          }
         },
         {
           title: "名称",
@@ -172,7 +186,9 @@ export class PrizeShiwu extends React.Component {
         </Row>
         <Modal
           visible={this.state.visible}
-          title={(this.state.curRow && this.state.curRow.name) || "添加实物奖品"}
+          title={
+            (this.state.curRow && this.state.curRow.name) || "添加实物奖品"
+          }
           onCancel={() => {
             this.setState({ visible: false });
             window.location.reload();
@@ -196,9 +212,7 @@ export class PrizeShiwu extends React.Component {
                 label: "图片",
                 params: {
                   initialValue: this.state.curRow &&
-                    this.state.curRow.img && [
-                      this.state.curRow.img
-                    ],
+                    this.state.curRow.img && [this.state.curRow.img],
                   rules: [{ required: true, message: "必填项" }]
                 },
                 upload: "/api/files/upload"
@@ -209,6 +223,29 @@ export class PrizeShiwu extends React.Component {
                 label: "面额",
                 params: {
                   initialValue: this.state.curRow && this.state.curRow.price,
+                  rules: [{ required: true, message: "必填项" }]
+                }
+              },
+              {
+                label: "性别",
+                field: "gender",
+                type: "select",
+                options: [
+                  {
+                    title: "通用",
+                    value: 1
+                  },
+                  {
+                    title: "男",
+                    value: 2
+                  },
+                  {
+                    title: "女",
+                    value: 3
+                  }
+                ],
+                params: {
+                  initialValue: this.state.curRow && this.state.curRow.gender,
                   rules: [{ required: true, message: "必填项" }]
                 }
               },
@@ -259,4 +296,7 @@ const mapStateToProps = createStructuredSelector({
   type
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(PrizeShiwu);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PrizeShiwu);
