@@ -150,10 +150,10 @@ export class QrTemplateDetail extends React.Component {
           })(
             <InputNumber style={{ width: '60%', marginRight: 8 }} />
           )}
-          {this.props.params.type==="box" && <Icon
-            type="minus-circle-o"
-            onClick={() => this.remove(k.id)}
-          />}
+          {/*{this.props.params.type==="box" && <Icon*/}
+            {/*type="minus-circle-o"*/}
+            {/*onClick={() => this.remove(k.id)}*/}
+          {/*/>}*/}
         </FormItem>
       );
     });
@@ -208,9 +208,6 @@ export class QrTemplateDetail extends React.Component {
             </Select>
           </FormItem>
           <FormItem wrapperCol={{ span: 12, offset: 6 }}>
-            <Button type="primary" disabled={this.state.newAward?false:true} onClick={()=>{
-              this.setState({visible:false},()=>{this.add()})
-            }}>添加</Button>
           </FormItem>
         </Modal>
       </Panel>
