@@ -136,7 +136,7 @@ export class QrBatchNo extends React.Component {
                   href="javascript:;"
                   onClick={() => {
                     window.open(
-                      `${Config.apiUrl}/api/qrbatchs/${record.id}/download`
+                      `${Config.downloadUrl}/api/qrbatchs/${record.id}/download`
                     );
                   }}
                 >
