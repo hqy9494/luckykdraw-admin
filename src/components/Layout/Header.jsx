@@ -49,7 +49,7 @@ class Header extends React.Component {
                     lineHeight: "35px"
                   }}
                 >
-                  幸运先生
+                  幸运抽奖
                 </span>
               </div>
               <div className="brand-logo-collapsed">
