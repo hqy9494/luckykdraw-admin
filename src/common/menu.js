@@ -197,11 +197,11 @@ const menu = [
     name: "多次购买",
     component: "buyTimesAward",
     children: [
-      // {
-      //   id: "userList",
-      //   name: "用户列表",
-      //   component: "userList"
-      // },
+      {
+        id: "userList",
+        name: "用户列表",
+        component: "userList"
+      },
       {
         id: "awards",
         name: "奖品列表",

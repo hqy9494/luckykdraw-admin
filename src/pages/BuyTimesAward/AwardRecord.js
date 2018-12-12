@@ -5,11 +5,16 @@ import moment from "moment";
 import uuid from "uuid";
 import { Grid, Row, Col } from "react-bootstrap";
 import { Select, Table, Pagination } from "antd"
+import { Input } from 'antd';
+
+const Search = Input.Search;
 
 export class AwardRecord extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      filter: {}
+    };
     this.uuid = uuid.v1();
   }
 
@@ -19,17 +24,20 @@ export class AwardRecord extends React.Component {
 
   componentWillReceiveProps(nextProps) {}
 
-  getRecords = (page) => {
-    page = page || 0;
+  getRecords = (filter) => {
+    filter = filter || {};
     this.props.rts(
       {
         method: "get",
-        url: `/BuyTimesAwardRecords?page=${page}&limit=10`
+        url: '/BuyTimesAwardRecords',
+        params: {
+          filter
+        }
       },
       this.uuid,
       "records",
       records => {
-        this.setState({ records });
+        this.setState({ records, filter });
       }
     );
   };
@@ -94,6 +102,15 @@ export class AwardRecord extends React.Component {
         return v ? "是" : "否"
       }
     }, {
+      title: '中奖时间',
+      dataIndex: 'updatedAt',
+      key: 'updatedAt',
+      align: "center",
+      render: v => {
+        console.log(v);
+        return moment(v).format("YYYY-MM-DD HH:mm:ss")
+      }
+    }, {
       title: '邮寄地址',
       dataIndex: 'record',
       key: 'record',
@@ -139,11 +156,29 @@ export class AwardRecord extends React.Component {
     let { records } = this.state;
     return (
       <Grid fluid>
+        <Search
+          placeholder="是否领奖(是／否)"
+          onSearch={value => this.getRecords({where: value ? {received: value === "是" ? true : false} : {}, page: 0})}
+          style={{ width: 200, float: "right", margin: 10 }}
+          enterButton
+        />
+        <Search
+          placeholder="领取设备名称"
+          onSearch={value => this.getRecords({where: {boxname: value}, page: 0})}
+          style={{ width: 200, float: "right", margin: 10 }}
+          enterButton
+        />
+        <Search
+          placeholder="微信昵称"
+          onSearch={value => this.getRecords({where: {nickname: value}, page: 0})}
+          style={{ width: 200, float: "right", margin: 10 }}
+          enterButton
+        />
         <Row>
           <Col lg={12}>
             <div className="statistic-box-with-title-bar" style={{width: "100%"}}>
               <Table columns={columns} dataSource={records && records.records || []} pagination={false} />
-              <Pagination className="pagination-statistic" defaultPageSize={10} onChange={(page) => {this.getRecords(page-1)}} total={records && records.count} />
+              <Pagination className="pagination-statistic" defaultPageSize={10} onChange={(page) => {this.getRecords(Object.assign({}, this.state.filter, {page: page-1}))}} total={records && records.count} />
             </div>
           </Col>
         </Row>

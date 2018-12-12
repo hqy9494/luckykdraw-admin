@@ -13,25 +13,37 @@ export class UserList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      visible: false
+      visible: false,
     };
     this.uuid = uuid.v1();
   }
 
   componentWillMount() {
-    this.getStaff();
+    // this.getStaff();
     this.getAwards();
   }
 
   componentWillReceiveProps(nextProps) {}
 
-  getStaff = (page, nickname) => {
+  getStaff = (value, page) => {
+    if (!value) {
+      this.setState({ users: [] });
+      return
+    }
     page = page || 0;
-    let url = nickname ? `/accounts/getUserByBuyTimes?page=${page}&limit=10&nickname=${nickname}` : `/accounts/getUserByBuyTimes?page=${page}&limit=10`;
+    let key = "nickname";
+    if (value.length === 28) {
+      key = "openid"
+    }
+    let where = {};
+    where[key] = value;
+    this.setState({ value });
+
     this.props.rts(
       {
         method: "get",
-        url: url
+        url: "/accounts/getUserByBuyTimes",
+        params: {filter: { where, skip: page*10 }}
       },
       this.uuid,
       "users",
@@ -85,6 +97,14 @@ export class UserList extends React.Component {
         return v || "未关注用户"
       }
     }, {
+      title: '性别',
+      dataIndex: 'gender',
+      key: 'gender',
+      align: "center",
+      render: (v) => {
+        return v === "1" ? "男" : (v === "2" ? "女" : "未知")
+      }
+    }, {
       title: '购买盒数',
       dataIndex: 'count',
       key: 'count',
@@ -105,9 +125,9 @@ export class UserList extends React.Component {
       render: (v, a) => {
         return (
           <div>
-            <a href="javascript:;" onClick={() => {this.props.to(`/buyTimesAward/userList/${a.userId}`)}}>购买列表</a>
+            <a href="javascript:;" onClick={() => {this.props.to(`/buyTimesAward/userList/${a.id}`)}}>购买列表</a>
             <div class="ant-divider ant-divider-vertical"></div>
-            <a href="javascript:;" onClick={() => {this.setState({visible: true, data: {userId: a.userId, userName: a.nickname}})}}>设置大奖</a>
+            <a href="javascript:;" onClick={() => {this.setState({visible: true, data: {userId: a.id, userName: a.nickname}})}}>设置大奖</a>
           </div>
         )
       }
@@ -118,15 +138,16 @@ export class UserList extends React.Component {
     return (
       <Grid fluid>
         <Search
-          placeholder="请输入用户昵称"
-          onSearch={value => this.getStaff(0, value)}
-          style={{ width: 200, float: "right", margin: 10 }}
+          placeholder="微信昵称/openid"
+          onSearch={value => this.getStaff(value)}
+          style={{ width: 300, float: "right", margin: 10 }}
+          enterButton
         />
         <Row>
           <Col lg={12}>
             <div className="statistic-box-with-title-bar" style={{width: "100%"}}>
               <Table columns={columns} dataSource={users && users.users || []} pagination={false} />
-              <Pagination className="pagination-statistic" defaultPageSize={10} onChange={(page) => {this.getStaff(page-1)}} total={users && users.count} />
+              <Pagination className="pagination-statistic" defaultPageSize={10} onChange={(page) => {this.getStaff(this.state.value, page-1)}} total={users && users.count} />
             </div>
           </Col>
         </Row>
@@ -139,17 +160,26 @@ export class UserList extends React.Component {
           onOk={() => {
             this.sendAward()
           }}
+          cancelText="取消"
+          okText="确认派发"
         >
+          <span>
+            你确定要设置用户{this.state.data && this.state.data.userName}中奖吗？<br/>
+            请注意：设置后，用户将会在下次抽奖中获得如下奖品，请慎重设置。
+            <br/>
+            <br/>
+          </span>
           <Select
+            showSearch
             style={{ width: 200, marginBottom: 10 }}
             defaultValue={awardId}
-            onChange={value => {
-              this.setState({awardId: value})
+            onChange={(value, t) => {
+              this.setState({awardId: t.key})
             }}
             placeholder={"请选择大奖奖品"}
           >
             {awards.map(o => (
-              <Option key={o.id} value={o.id}>
+              <Option key={o.id} value={o.name}>
                 {o.name}
               </Option>
             ))}
