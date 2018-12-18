@@ -219,7 +219,30 @@ const menu = [
     icon: "sound",
     name: "活动",
     component: "PostActive"
-  }
+  },
+  {
+    id: "award",
+    icon: "coffee",
+    name: "奖项管理",
+    component: "Award",
+    children: [
+      {
+        id: "AwardList",
+        name: "奖项列表",
+        component: "AwardList"
+      },
+      {
+        id: "WinningList",
+        name: "中奖列表",
+        component: "WinningList"
+      },
+      {
+        id: "AwardManagement",
+        name: "奖品管理",
+        component: "AwardManagement"
+      }
+    ]
+  },
 ];
 
 export default menu;

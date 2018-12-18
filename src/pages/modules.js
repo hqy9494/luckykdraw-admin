@@ -52,6 +52,14 @@ import AwardRecord from "./BuyTimesAward/AwardRecord"
 import PostActive from "./Settings/PostActive"
 import StockAward from "./Prizes/StockAward"
 
+// Award
+import AwardList from "./Award/AwardList"
+import AwardListSetting from "./Award/AwardListSetting"
+import AwardManagement from "./Award/AwardManagement"
+import AwardManagementSetting from "./Award/AwardManagementSetting"
+import WinningList from "./Award/WinningList"
+import WinningSetting from "./Award/WinningSetting"
+
 const modules = {
   Index,
   Tenant,
@@ -96,7 +104,14 @@ const modules = {
   Award,
   AwardRecord,
   PostActive,
-  StockAward
+  StockAward,
+
+  AwardList,
+  AwardListSetting,
+  AwardManagement,
+  AwardManagementSetting,
+  WinningList,
+  WinningSetting,
 };
 
 export default modules;

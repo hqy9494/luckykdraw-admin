@@ -318,7 +318,58 @@ export default {
             title: "派发列表"
           }
         }
-      }
+      },
+      // 奖项
+      Award: {
+        path: 'Award',
+        module: 'Award',
+        component: 'Award',
+        title: '奖项管理',
+        subs: {
+          AwardList: {
+            path: '/AwardList',
+            module: 'Award',
+            component: 'AwardList',
+            title: '奖项列表',
+            subs: {
+              AwardListSetting: {
+                path: '/detail/:id',
+                module: 'Award',
+                component: 'AwardListSetting',
+                title: '奖项列表设置',
+              }
+            }
+          },
+          AwardManagement: {
+            path: '/AwardManagement',
+            module: 'Award',
+            component: 'AwardManagement',
+            title: '奖品管理',
+            subs: {
+              AwardManagementSetting: {
+                path: '/detail/:id',
+                module: 'Award',
+                component: 'AwardManagementSetting',
+                title: '奖品管理设置',
+              }
+            }
+          },
+          WinningList: {
+            path: '/WinningList',
+            module: 'Award',
+            component: 'WinningList',
+            title: '中奖列表',
+            subs: {
+              WinningSetting: {
+                path: '/detail/:id',
+                module: 'Award',
+                component: 'WinningSetting',
+                title: '中奖列表设置',
+              }
+            }
+          },
+        }
+      },
     }
   }
 };
