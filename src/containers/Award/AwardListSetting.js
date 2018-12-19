@@ -1,6 +1,6 @@
 export default {
     initialState: {
-      title: "奖项列表设置",
+      title: "奖品列表设置",
       subtitle: "",
       breadcrumb: true
     },

@@ -1,6 +1,6 @@
 export default {
     initialState: {
-      title: "奖品管理",
+      title: "奖项管理",
       subtitle: "",
       breadcrumb: true
     },
