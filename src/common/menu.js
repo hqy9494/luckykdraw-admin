@@ -228,7 +228,7 @@ const menu = [
     children: [
       {
         id: "AwardList",
-        name: "奖项列表",
+        name: "奖品列表",
         component: "AwardList"
       },
       {
@@ -238,7 +238,7 @@ const menu = [
       },
       {
         id: "AwardManagement",
-        name: "奖品管理",
+        name: "奖项管理",
         component: "AwardManagement"
       },
       {

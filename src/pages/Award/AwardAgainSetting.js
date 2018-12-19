@@ -54,6 +54,7 @@ export class AwardAgainSetting extends React.Component {
     }, this.uuid, 'getVoucherAwards', (data) => {
       this.setState({
         drawSettingDetail: data,
+        switchChecked: data && data.enable || false
       })
     })
   }
@@ -89,7 +90,7 @@ export class AwardAgainSetting extends React.Component {
             continue
           }
           if(i === 'duration' ) {
-            params[i] = values[i] * 24
+            params[i] = values[i]
             continue
           }
           params[i] = values[i]
