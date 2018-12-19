@@ -319,61 +319,61 @@ export default {
           }
         }
       },
-      // 奖项
-      Award: {
-        path: 'Award',
+      // Award: {
+      //   path: 'Award',
+      //   module: 'Award',
+      //   component: 'Award',
+      //   title: '奖品管理',
+      //   subs: {
+          
+      //   }
+      // },
+      AwardList: {
+        path: 'Award/AwardList',
         module: 'Award',
-        component: 'Award',
-        title: '奖品管理',
+        component: 'AwardList',
+        title: '奖品列表',
         subs: {
-          AwardList: {
-            path: '/AwardList',
+          AwardListSetting: {
+            path: '/detail/:id',
             module: 'Award',
-            component: 'AwardList',
-            title: '奖品列表',
-            subs: {
-              AwardListSetting: {
-                path: '/detail/:id',
-                module: 'Award',
-                component: 'AwardListSetting',
-                title: '奖项列表设置',
-              }
-            }
-          },
-          AwardManagement: {
-            path: '/AwardManagement',
+            component: 'AwardListSetting',
+            title: '奖项列表设置',
+          }
+        }
+      },
+      AwardManagement: {
+        path: 'Award/AwardManagement',
+        module: 'Award',
+        component: 'AwardManagement',
+        title: '奖项管理',
+        subs: {
+          AwardManagementSetting: {
+            path: '/detail/:id',
             module: 'Award',
-            component: 'AwardManagement',
-            title: '奖项管理',
-            subs: {
-              AwardManagementSetting: {
-                path: '/detail/:id',
-                module: 'Award',
-                component: 'AwardManagementSetting',
-                title: '奖项管理设置',
-              }
-            }
-          },
-          WinningList: {
-            path: '/WinningList',
+            component: 'AwardManagementSetting',
+            title: '奖项管理设置',
+          }
+        }
+      },
+      WinningList: {
+        path: 'Award/WinningList',
+        module: 'Award',
+        component: 'WinningList',
+        title: '中奖列表',
+      },
+      AwardAgainList: {
+        path: 'Award/AwardAgainList',
+        module: 'Award',
+        component: 'AwardAgainList',
+        title: '再来一盒管理',
+        subs: {
+          AwardAgainSetting: {
+            path: '/detail/:id',
             module: 'Award',
-            component: 'WinningList',
-            title: '中奖列表',
-          },
-          AwardAgainList: {
-            path: '/AwardAgainList',
-            module: 'Award',
-            component: 'AwardAgainList',
-            title: '再来一盒管理',
-            subs: {
-              AwardAgainSetting: {
-                path: '/detail/:id',
-                module: 'Award',
-                component: 'AwardAgainSetting',
-                title: '再来一盒设置',
-              }
-            }
-          },
+            component: 'AwardAgainSetting',
+            title: '再来一盒设置',
+          }
         }
       },
     }

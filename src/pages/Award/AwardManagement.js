@@ -112,10 +112,6 @@ export class AwardManagement extends React.Component {
         field: "name",
         title: "奖品级别",
       },{
-        type: "field",
-        field: "dividend",
-        title: "中奖机制"
-      },{
         type: "option",
         field: "enable",
         title: "机制状态",
