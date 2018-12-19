@@ -71,7 +71,7 @@ export class AwardAgainSetting extends React.Component {
     })
   }
  
-  // handleCancel = () => this.props.to(`/Activity/AwardAgainSetting`)
+  handleCancel = () => this.props.goBack()
   
   handleSubmit = (e) => {
     const { drawSettingDetail } = this.state

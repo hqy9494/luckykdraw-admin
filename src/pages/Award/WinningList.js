@@ -225,6 +225,9 @@ export class WinningList extends React.Component {
           render: (text, record) => (
             <span>
             {
+              record.classAwardRecord &&
+              record.classAwardRecord.classAward &&
+              record.classAwardRecord.classAward.type === "METARIAL" &&
               record.hasAddress ? (
                 record.fahuoed ? (
                   <div>
@@ -248,6 +251,15 @@ export class WinningList extends React.Component {
                     }}
                   >
                     发货
+                  </a>
+                  <Divider type="vertical"/>
+                  <a
+                    href="javascript:;"
+                    onClick={() => {
+                      this.setState({ curRow: record, show: true });
+                    }}
+                  >
+                    物流信息
                   </a>
                 </div>
                 )
@@ -338,7 +350,7 @@ export class WinningList extends React.Component {
             />
           </Modal>
           {/*更改物流*/}
-          {/* <Modal
+          <Modal
             visible={this.state.show}
             title={`${ orderRecord && orderRecord.id || ''}-物流信息`}
             okText="确定"
@@ -347,13 +359,13 @@ export class WinningList extends React.Component {
             // onOk={() => {
             //   getData && this.deliverCheck(getData.orderId);
             // }}
-            loading={this.state.loading}
+            // loading={this.state.loading}
             onCancel={() => {
               this.setState({
                 show: false,
                 isOrderEdit: false,
               }, () => {
-                this.props.form.resetFields()
+                // this.props.form.resetFields()
               });
             }}
 
@@ -426,7 +438,7 @@ export class WinningList extends React.Component {
                 </Steps> :
               <div style={{width: '100%', margin: '40px auto', color: 'grey', textAlign: 'center'}}>暂无物流信息</div>
             }
-          </Modal> */}
+          </Modal>
         </Grid>
       </section>
     );
