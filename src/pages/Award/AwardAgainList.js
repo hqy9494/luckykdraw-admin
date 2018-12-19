@@ -19,21 +19,10 @@ export class AwardAgainList extends React.Component {
   }
 
   componentWillMount() {
-    this.getLevels();
+    
   }
 
   componentWillReceiveProps(nextProps) {}
-
-  getType = () => {
-    this.props.rts(
-      {
-        method: "get",
-        url: `/awards/types`
-      },
-      this.uuid,
-      "type"
-    );
-  };
 
   putClassLevels = (id, params) => {
     this.props.rts({
@@ -58,24 +47,6 @@ export class AwardAgainList extends React.Component {
     });
   }
 
-  getClassLevels = (id, value) => {
-    this.props.rts({
-      url: `/ClassLevels/${id}`,
-      method: 'get',
-    }, this.uuid, 'getClassLevels', (v) => {
-      let params = v
-      params.enable = value
-      this.putClassLevels(id, params)
-    })
-  }
-
-  getOneClassLevels = (id) => {
-    let {levelList} = this.state
-    levelList = levelList.filter(v => v.id === id)
-
-    return levelList[0].name
-  }
-
   handleEnable = (id, value) => {
     this.getClassLevels(id, !value)
   }
@@ -84,88 +55,29 @@ export class AwardAgainList extends React.Component {
 
   render() {
     
-
-    const bpStatus = {
-      'ALL': '全屏爆屏',
-      'BANNER': 'Banner爆屏',
-      'SUBTITLE': '弹幕'
-    }
-
     const config = {
       api: {
         rts: this.props.rts,
         uuid: this.uuid,
-        data: "/ClassLevels",
-        total: "/ClassLevels/count"
+        data: "/VoucherAwards",
+        total: "/VoucherAwards/count"
       },
       search: [{
         type: "field",
         field: "name",
-        title: "奖品级别",
-      },{
-        type: "field",
-        field: "dividend",
-        title: "中奖机制"
-      },{
-        type: "option",
-        field: "enable",
-        title: "机制状态",
-        options:[
-          {title: "开启", value: true},
-          {title: "禁用", value: false}
-        ]
-      },{
-        type: "option",
-        field: "bpStatus",
-        title: "爆屏状态",
-        options:[
-          {title: "弹幕", value: 'SUBTITLE'},
-          {title: "Banner爆屏", value: 'BANNER'},
-          {title: "全屏爆屏", value: 'ALL'},
-        ]
+        title: "活动名称",
       }],
       columns: [
         {
-          title: "奖品级别",
+          title: "活动名称",
           dataIndex: "name",
           key: "name",
-          // render: text => <img src={text} alt="商品图片" height="80" />
         },
         {
-          title: "中奖机制",
-          dataIndex: "base",
-          key: "base",
-          render: text => <span>{text}盒/轮</span>
-        },
-        {
-          title: "机制状态",
-          dataIndex: "enable",
-          key: "enable",
-          render: text => {
-            if (text) {
-              return "开启";
-            } else {
-              return "禁用";
-            }
-          }
-        },
-        {
-          title: "爆屏状态",
-          dataIndex: "bpStatus",
-          key: "bpStatus",
-          render: text => <span> {bpStatus[text]}</span>
-        },
-        {
-          title: "创建时间",
-          dataIndex: "createdAt",
-          key: "createdAt",
+          title: "活动时间",
+          dataIndex: "startTime",
+          key: "startTime",
           type: 'date',
-          sort: true
-        },
-        {
-          title: "排序",
-          dataIndex: "order",
-          key: "order",
           sort: true
         },
         {
@@ -174,30 +86,6 @@ export class AwardAgainList extends React.Component {
           render: (text, record) => (
             <span>
               <Button type="primary" size="small" onClick={()=> this.handleEdit(record.id)}>编辑</Button>
-                <Divider type="vertical" />
-              <Popconfirm
-                title={`是否${record.enable ? "禁用" : "开启"}${
-                  record.name
-                }奖项设置`}
-                onConfirm={() => { this.handleEnable(record.id, record.enable) }}
-                okText="是"
-                cancelText="否"
-              >
-                 {
-                   record.enable ? 
-                  <Button style={{background: '#c9c9c9', color: '#fff'}} size="small">禁用</Button> :
-                  <Button style={{background: '#FF6699', color: '#fff'}} size="small">开启</Button>
-                 }
-              </Popconfirm>
-                <Divider type="vertical" />
-              {/* <Popconfirm
-                title={`确认删除${record.name || ''}奖品?`}
-                onConfirm={() => { this.isDelete(record.id) }}
-                okText="是"
-                cancelText="否"
-              >
-                <Button type="danger" size="small">删除</Button>
-              </Popconfirm> */}
             </span>
           )
         }
