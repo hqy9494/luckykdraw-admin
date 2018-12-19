@@ -359,12 +359,18 @@ export default {
             module: 'Award',
             component: 'WinningList',
             title: '中奖列表',
+          },
+          AwardAgainList: {
+            path: '/AwardAgainList',
+            module: 'Award',
+            component: 'AwardAgainList',
+            title: '再来一盒管理',
             subs: {
-              WinningSetting: {
+              AwardAgainSetting: {
                 path: '/detail/:id',
                 module: 'Award',
-                component: 'WinningSetting',
-                title: '中奖列表设置',
+                component: 'AwardAgainSetting',
+                title: '再来一盒设置',
               }
             }
           },

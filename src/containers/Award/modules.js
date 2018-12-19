@@ -5,6 +5,8 @@ import AwardManagement from './AwardManagement';
 import AwardManagementSetting from './AwardManagementSetting';
 import WinningList from './WinningList';
 import WinningSetting from './WinningSetting';
+import AwardAgainList from './AwardAgainList';
+import AwardAgainSetting from './AwardAgainSetting';
 
 
 const Award = {
@@ -14,6 +16,8 @@ const Award = {
   AwardManagementSetting,
   WinningList,
   WinningSetting,
+  AwardAgainList,
+  AwardAgainSetting,
 };
 
 export default Award;

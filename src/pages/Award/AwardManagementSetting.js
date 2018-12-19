@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
-import { Col, Row, Divider, Form, Input, Checkbox, Radio, Select, Button, Switch, Upload, Modal, message } from "antd";
+import { Col, Row, Divider, Form, Input, Checkbox, Radio, Select, Button, Switch, Upload, Modal, message, InputNumber } from "antd";
 import moment from "moment";
 import uuid from "uuid";
 import config from "../../config"
@@ -11,6 +11,7 @@ import zh_CN from 'antd/lib/locale-provider/zh_CN';
 const FormItem = Form.Item
 const RadioGroup = Radio.Group
 const Option = Select.Option
+// const CheckboxGroup = Checkbox.Group;
 
 const formItemLayout = {
   labelCol: { span: 12 },
@@ -82,6 +83,7 @@ export class AwardManageSetting extends React.Component {
           if (values[i] == null) continue
           params[i] = values[i]
         }
+        // console.log(params, 85)
         if(!id) return
         this.putClassLevels(id, params)
       }
@@ -127,7 +129,7 @@ export class AwardManageSetting extends React.Component {
                   rules: [{message: '请输入中奖基数', required: true}],
                   initialValue: drawSettingDetail && drawSettingDetail.base || 0
                 })(
-                  <Input placeholder="最少一盒"/>
+                  <InputNumber style={{width: '100%'}} min={1} placeholder="请设置奖品排序"/>
                 )}
               </FormItem>
             </Col>
@@ -144,12 +146,9 @@ export class AwardManageSetting extends React.Component {
                   rules: [{message: '请输入奖品数量', required: true}],
                   initialValue: drawSettingDetail && drawSettingDetail.dividend || 0
                 })(
-                  <Input placeholder="最少一盒"/>
+                  <InputNumber style={{width: '100%'}} min={1} placeholder="请设置奖品排序"/>
                 )}
               </FormItem>
-            </Col>
-            <Col sm={3}>
-              <div>盒/轮</div>
             </Col>
           </Row>
           <Row gutter={24} style={{lineHeight: '35px'}}>
@@ -161,7 +160,7 @@ export class AwardManageSetting extends React.Component {
                   rules: [{ message: '请输入奖品排序', required: true}],
                   initialValue: drawSettingDetail && drawSettingDetail.order || 0
                 })(
-                  <Input placeholder="请设置奖品排序"/>
+                  <InputNumber style={{width: '100%'}} min={0} placeholder="请设置奖品排序"/>
                 )}
               </FormItem>
             </Col>
@@ -195,18 +194,18 @@ export class AwardManageSetting extends React.Component {
                   rules: [{ message: '请选择弹幕类型', required: true}],
                   initialValue: drawSettingDetail && drawSettingDetail.bpStatus || ''
                 })(
-                  <RadioGroup>
+                  <Checkbox.Group>
                     {
                       typeList &&
                       typeList.length ?
                       typeList.map((v, i) => {
                         return (
-                          <Radio value={v.type} key={i}>{v.name}</Radio>
+                          <Checkbox value={v.type} key={i}>{v.name}</Checkbox>
                         )
                       }) :
                       null
                     }
-                  </RadioGroup>
+                  </Checkbox.Group>
                 )}
               </FormItem>
             </Col>

@@ -48,7 +48,9 @@ export class AwardListSetting extends React.Component {
     this.getAwardTypes()
     this.getClassLevels()
   }
-  componentWillReceiveProps(nextProps) {}
+  componentWillReceiveProps(nextProps) {
+    
+  }
 
 
   putClassAwards = (id, params) => {
@@ -70,6 +72,15 @@ export class AwardListSetting extends React.Component {
     }, this.uuid, 'getClassAwards', (data) => {
       this.setState({
         defaultDetail: data
+      })
+      this.handleChange('picture', {
+        fileList: [{
+          uid: -1,
+          name: '1.png',
+          status: 'done',
+          url: data['picture'],
+          thumbUrl: data['picture']
+        }]
       })
     })
   }
@@ -118,24 +129,10 @@ export class AwardListSetting extends React.Component {
     }
   }
 
-  getOptions = () => {
-    const optionList = [
-      { name: "优惠券", value: "COUPON"},
-      { name: "读书卡", value: "BOOK_CARD"},
-      { name: "红包", value: "RED_PACKET"},
-      { name: "实物", value: "METARIAL"}
-    ]
-    this.setState({ prizeType: optionList })
+  removeChange = (name, value) => {
+    this.props.form.setFieldsValue({[name]: []})
   }
-  // postUpdatePrize = params => {  // ** 添加奖品
-  //   this.props.rts({
-  //     url: '/drawSettings/updatePrizeContent',
-  //     method: 'put',
-  //     data: params
-  //   }, this.uuid, 'postUpdatePrize', () => {
-  //     this.props.goBack()
-  //   })
-  // }
+
   handleCancel = () => this.setState({ previewVisible: false })
 
   handlePreview = (file) => {
@@ -167,8 +164,7 @@ export class AwardListSetting extends React.Component {
           }
 
           if (i === 'picture') {
-            console.log(values[i].file, 170)
-            if (values[i]['file']) {
+            if (values[i]['file'] && values[i]['file']['status']) {
               params[i] = values[i]['file']['response'] && values[i]['file']['response'].url
             }else{
               params[i] = values[i][0]['url']
@@ -177,9 +173,16 @@ export class AwardListSetting extends React.Component {
           }
           params[i] = values[i]
         }
-        console.log(id, params,179)
-        // if(!id) return
-        this.putClassAwards(id, params)
+        
+        if(this.props.form.getFieldValue('picture').file && 
+          this.props.form.getFieldValue('picture').file.status === 'removed') {
+            message.info('图片不能为空', 1 , () => {
+              return
+            })
+          } else {
+            if(!id) return
+            this.putClassAwards(id, params)
+          }
       }
     })
   }
@@ -227,6 +230,9 @@ export class AwardListSetting extends React.Component {
                       onPreview={this.handlePreview}
                       onChange={(fileList) => {
                         this.handleChange('picture', fileList)
+                      }}
+                      onRemove={(fileList) => {
+                        this.removeChange('picture', fileList)
                       }}
                       accept="image/*"
                       fileList={this.state.picture || []}

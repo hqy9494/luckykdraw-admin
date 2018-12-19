@@ -1,12 +1,12 @@
 export default {
     initialState: {
-      title: "再来一盒设置",
+      title: "再来一盒管理",
       subtitle: "",
       breadcrumb: true
     },
     component: [
       {
-        module: "WinningSetting",
+        module: "AwardAgainList",
         getProps: ["rts"]
       }
     ]

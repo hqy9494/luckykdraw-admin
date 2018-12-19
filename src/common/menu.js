@@ -240,6 +240,11 @@ const menu = [
         id: "AwardManagement",
         name: "奖品管理",
         component: "AwardManagement"
+      },
+      {
+        id: "AwardAgainList",
+        name: "再来一盒管理",
+        component: "AwardAgainList"
       }
     ]
   },

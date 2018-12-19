@@ -7,7 +7,7 @@ import { Modal, Divider, Button, Popconfirm, message } from "antd";
 import TableExpand from "../../components/TableExpand";
 import FormExpand from "../../components/FormExpand";
 
-export class AwardManagement extends React.Component {
+export class AwardAgainList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -79,27 +79,18 @@ export class AwardManagement extends React.Component {
   handleEnable = (id, value) => {
     this.getClassLevels(id, !value)
   }
+  
+  handleEdit = (id) => this.props.to(`${this.props.match.url}/detail/${id}`)
 
-  handleBanner = (text) => {
+  render() {
+    
+
     const bpStatus = {
       'ALL': '全屏爆屏',
       'BANNER': 'Banner爆屏',
       'SUBTITLE': '弹幕'
     }
 
-    if(!Array.isArray(text)) return
-
-    const rest = text.reduce((a, c) =>{
-      return a + bpStatus[c] + '/'
-    },'')
-    
-    return rest.substring(0, rest.length-1)
-  }
-  
-  handleEdit = (id) => this.props.to(`${this.props.match.url}/detail/${id}`)
-
-  render() {
-    
     const config = {
       api: {
         rts: this.props.rts,
@@ -122,6 +113,15 @@ export class AwardManagement extends React.Component {
         options:[
           {title: "开启", value: true},
           {title: "禁用", value: false}
+        ]
+      },{
+        type: "option",
+        field: "bpStatus",
+        title: "爆屏状态",
+        options:[
+          {title: "弹幕", value: 'SUBTITLE'},
+          {title: "Banner爆屏", value: 'BANNER'},
+          {title: "全屏爆屏", value: 'ALL'},
         ]
       }],
       columns: [
@@ -153,7 +153,7 @@ export class AwardManagement extends React.Component {
           title: "爆屏状态",
           dataIndex: "bpStatus",
           key: "bpStatus",
-          render: text => <span> {this.handleBanner(text)}</span>
+          render: text => <span> {bpStatus[text]}</span>
         },
         {
           title: "创建时间",
@@ -231,12 +231,12 @@ const mapDispatchToProps = dispatch => {
   return {};
 };
 
-const AwardManagementuuid = state => state.get("rts").get("uuid");
+const AwardAgainListuuid = state => state.get("rts").get("uuid");
 const getLevels = state => state.get("rts").get("getLevels");
 
 const mapStateToProps = createStructuredSelector({
-  AwardManagementuuid,
+  AwardAgainListuuid,
   getLevels
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AwardManagement);
+export default connect(mapStateToProps, mapDispatchToProps)(AwardAgainList);

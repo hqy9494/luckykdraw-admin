@@ -6,7 +6,7 @@ export default {
     },
     component: [
       {
-        module: "WinningSetting",
+        module: "AwardAgainSetting",
         getProps: ["rts"]
       }
     ]

@@ -59,6 +59,8 @@ import AwardManagement from "./Award/AwardManagement"
 import AwardManagementSetting from "./Award/AwardManagementSetting"
 import WinningList from "./Award/WinningList"
 import WinningSetting from "./Award/WinningSetting"
+import AwardAgainList from "./Award/AwardAgainList"
+import AwardAgainSetting from "./Award/AwardAgainSetting"
 
 const modules = {
   Index,
@@ -112,6 +114,8 @@ const modules = {
   AwardManagementSetting,
   WinningList,
   WinningSetting,
+  AwardAgainList,
+  AwardAgainSetting,
 };
 
 export default modules;
