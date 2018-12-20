@@ -179,10 +179,10 @@ export class AwardListSetting extends React.Component {
             message.info('图片不能为空', 1 , () => {
               return
             })
-          } else {
-            if(!id) return
-            this.putClassAwards(id, params)
-          }
+        } else {
+          if(!id) return
+          this.putClassAwards(id, params)
+        }
       }
     })
   }
@@ -275,9 +275,9 @@ export class AwardListSetting extends React.Component {
                 >
                   {getFieldDecorator(`price`, {
                     rules: [{message: '请输入奖品价格', required: true}],
-                    initialValue: defaultDetail && defaultDetail.price || ''
+                    initialValue: defaultDetail && defaultDetail.price || 0
                   })(
-                    <Input placeholder="请输入奖品价格"/>
+                    <InputNumber style={{width: '100%'}} min={0} placeholder="请输入奖品价格" />
                   )}
                 </FormItem>
               </Col>
@@ -289,7 +289,7 @@ export class AwardListSetting extends React.Component {
                 >
                   {getFieldDecorator(`cost`, {
                     rules: [{ message: '请输入奖品成本', required: true}],
-                    initialValue: defaultDetail && defaultDetail.cost || ''
+                    initialValue: defaultDetail && defaultDetail.cost || 0
                   })(
                     <InputNumber style={{width: '100%'}} min={0} placeholder="请输入奖品成本" />
                   )}

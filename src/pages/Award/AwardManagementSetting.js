@@ -131,7 +131,7 @@ export class AwardManageSetting extends React.Component {
                   rules: [{message: '请输入中奖基数', required: true}],
                   initialValue: drawSettingDetail && drawSettingDetail.base || 0
                 })(
-                  <InputNumber style={{width: '100%'}} min={1} placeholder="请设置奖品排序"/>
+                  <InputNumber style={{width: '100%'}} min={1} placeholder="请设置中奖基数"/>
                 )}
               </FormItem>
             </Col>
@@ -148,7 +148,7 @@ export class AwardManageSetting extends React.Component {
                   rules: [{message: '请输入奖品数量', required: true}],
                   initialValue: drawSettingDetail && drawSettingDetail.dividend || 0
                 })(
-                  <InputNumber style={{width: '100%'}} min={1} placeholder="请设置奖品排序"/>
+                  <InputNumber style={{width: '100%'}} min={1} placeholder="请设置奖品数量"/>
                 )}
               </FormItem>
             </Col>
@@ -194,7 +194,7 @@ export class AwardManageSetting extends React.Component {
               >
                 {getFieldDecorator(`bpStatus`, {
                   rules: [{ message: '请选择弹幕类型', required: false}],
-                  initialValue: drawSettingDetail && drawSettingDetail.bpStatus || ''
+                  initialValue: drawSettingDetail && drawSettingDetail.bpStatus || []
                 })(
                   <Checkbox.Group>
                     {

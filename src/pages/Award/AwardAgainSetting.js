@@ -232,7 +232,7 @@ export class AwardAgainSetting extends React.Component {
               >
                 {getFieldDecorator(`duration`, {
                   rules: [{ message: '请输入优惠券有效时间', required: true}],
-                  initialValue: drawSettingDetail && drawSettingDetail.duration / 24 || ''
+                  initialValue: drawSettingDetail && drawSettingDetail.duration / 24 || 0
                 })(
                   <InputNumber min={1} style={{ width: '100%'}}/>
                 )}
