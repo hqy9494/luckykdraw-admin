@@ -87,6 +87,11 @@ export class AwardAgainSetting extends React.Component {
             params[i] = moment(values[i]).format('YYYY-MM-DD HH:mm:ss')
             continue
           }
+          if(i === 'highPrice' || i === 'lowPrice') {
+            params[i] = values[i] * 100
+            continue
+          }
+          
           if(i === 'duration' ) {
             params[i] = values[i] * 24
             continue
@@ -136,9 +141,9 @@ export class AwardAgainSetting extends React.Component {
               >
                 {getFieldDecorator(`lowPrice`, {
                   rules: [{ message: '请输入面额', required: true}],
-                  initialValue: drawSettingDetail && drawSettingDetail.lowPrice || 1
+                  initialValue: drawSettingDetail && !isNaN(drawSettingDetail.lowPrice) ? (drawSettingDetail.lowPrice / 100).toFixed(2) : 0
                 })(
-                  <InputNumber min={1} style={{ width: '100%'}}/>
+                  <InputNumber min={0} style={{ width: '100%'}}/>
                 )}
               </FormItem>
             </Col>
@@ -148,10 +153,10 @@ export class AwardAgainSetting extends React.Component {
             <Col sm={10}>
               <FormItem wrapperCol={{ span: 6 }}>
                 {getFieldDecorator(`highPrice`, {
-                  rules: [{message: '请输入面额范围', required: true}],
-                  initialValue: drawSettingDetail && drawSettingDetail.highPrice || 1
+                  rules: [{message: '请输入面额', required: true}],
+                  initialValue: drawSettingDetail && !isNaN(drawSettingDetail.highPrice) ? (drawSettingDetail.highPrice / 100).toFixed(2) : 0
                 })(
-                  <InputNumber min={1} style={{ width: '100%'}}/>
+                  <InputNumber min={0} style={{ width: '100%'}}/>
                 )}
               </FormItem>
             </Col>
