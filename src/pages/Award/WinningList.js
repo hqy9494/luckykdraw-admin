@@ -131,6 +131,12 @@ export class WinningList extends React.Component {
           this.setState({refreshTable: true, visible: false});
         }
       );
+      message.success('发货成功', 1, () => {
+        this.setState({refreshTable: true, visible: false});
+      })
+      // setTimeout(() => {
+      //   this.setState({refreshTable: true, visible: false});
+      // }, 2001)
     }
   };
 
