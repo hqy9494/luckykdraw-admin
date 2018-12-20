@@ -101,21 +101,18 @@ export class AwardManageSetting extends React.Component {
   resetData = () => {
     const data = {
       name: "",
-      base: "",
-      dividend: "",
-      order: "",
       enable: false,
       bpStatus: []
     }
     this.setState({
-      drawSettingDetail: data,
+      // drawSettingDetail: data,
       switchChecked: false,
       showReset: false
     }, () => {
-      this.props.form.resetFields()
-      // message.success('重置成功', 1, () => {
-      //   this.props.form.resetFields()
-      // })
+      // this.props.form.resetFields()
+      message.success('重置成功', 1, () => {
+        // this.props.form.resetFields(['name', 'enable', 'bpStatus'])
+      })
     })
     
   }
