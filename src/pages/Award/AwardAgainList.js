@@ -62,6 +62,17 @@ export class AwardAgainList extends React.Component {
   
   handleEdit = (id) => this.props.to(`${this.props.match.url}/detail/${id}`)
 
+  handleDelete = (id) => {
+    this.props.rts({
+      url: `/VoucherAwards/${id}`,
+      method: 'delete',
+    }, this.uuid, 'handleDelete', () => {
+      message.success('删除成功', 2, () => {
+        window.location.reload()
+      })
+    })
+  }
+
   render() {
     
     const config = {
@@ -123,6 +134,17 @@ export class AwardAgainList extends React.Component {
                   <Button style={{background: '#c9c9c9', color: '#fff'}} size="small">禁用</Button> :
                   <Button style={{background: '#FF6699', color: '#fff'}} size="small">开启</Button>
                  }
+              </Popconfirm>
+              <Divider type="vertical" />
+              <Popconfirm
+                title={`是否删除${
+                  record.name
+                }奖项设置`}
+                onConfirm={() => { this.handleDelete(record.id) }}
+                okText="是"
+                cancelText="否"
+              >
+                <Button type="danger" size="small">删除</Button>
               </Popconfirm>
             </span>
           )

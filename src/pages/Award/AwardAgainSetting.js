@@ -141,9 +141,9 @@ export class AwardAgainSetting extends React.Component {
               >
                 {getFieldDecorator(`lowPrice`, {
                   rules: [{ message: '请输入面额', required: true}],
-                  initialValue: drawSettingDetail && !isNaN(drawSettingDetail.lowPrice) ? (drawSettingDetail.lowPrice / 100).toFixed(2) : 0
+                  initialValue: drawSettingDetail && !isNaN(drawSettingDetail.lowPrice) ? (drawSettingDetail.lowPrice / 100).toFixed(2) : 0.01
                 })(
-                  <InputNumber min={0} style={{ width: '100%'}}/>
+                  <InputNumber min={0.01} max={29.99} style={{ width: '100%'}}/>
                 )}
               </FormItem>
             </Col>
@@ -151,12 +151,12 @@ export class AwardAgainSetting extends React.Component {
               <div>至</div>
             </Col>
             <Col sm={10}>
-              <FormItem wrapperCol={{ span: 6 }}>
+              <FormItem wrapperCol={{ span: 8 }} extra="最多只能输入到(29.99)元">
                 {getFieldDecorator(`highPrice`, {
                   rules: [{message: '请输入面额', required: true}],
-                  initialValue: drawSettingDetail && !isNaN(drawSettingDetail.highPrice) ? (drawSettingDetail.highPrice / 100).toFixed(2) : 0
+                  initialValue: drawSettingDetail && !isNaN(drawSettingDetail.highPrice) ? (drawSettingDetail.highPrice / 100).toFixed(2) : 0.01
                 })(
-                  <InputNumber min={0} style={{ width: '100%'}}/>
+                  <InputNumber min={0.01} max={29.99} style={{ width: '100%'}}/>
                 )}
               </FormItem>
             </Col>

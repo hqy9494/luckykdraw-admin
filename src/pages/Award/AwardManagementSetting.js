@@ -31,6 +31,8 @@ export class AwardManageSetting extends React.Component {
       optionType: null,
       drawSettingDetail: {},
       switchChecked: false,
+      classLevelsName: [],
+      levelName: ''
     };
     this.uuid = uuid.v1();
     this.fetchNum = 0
@@ -43,7 +45,7 @@ export class AwardManageSetting extends React.Component {
     if(id && id !== 'add') {
       this.getClassLevels(id)
     }
- 
+    this.getClassLevelsName()
   }
 
   componentWillReceiveProps(nextProps) {}
@@ -56,6 +58,38 @@ export class AwardManageSetting extends React.Component {
       this.setState({
         drawSettingDetail: data,
         switchChecked: data && data.enable || false,
+        levelName: data && data.name || ''
+      })
+    })
+  }
+
+  getClassLevelsName = () => {
+    this.props.rts({
+      method: 'get',
+      url: `/ClassLevels`
+    }, this.uuid, 'getClassLevels', (data) => {
+      if(!data || !Array.isArray(data)) return
+
+      let classLevelsName = data.reduce((a, c) => {
+        c && c.name && a.push(c.name)
+        return a
+      }, [])
+
+      classLevelsName = [...new Set(classLevelsName)]
+
+      this.setState({ classLevelsName: classLevelsName || [] })
+
+    })
+  }
+
+  putClassLevels = (id, params) => {
+    this.props.rts({
+      url: id && id === 'add' ? `/ClassLevels` : `/ClassLevels/${id}`,
+      method: id && id === 'add' ? `post` : 'put',
+      data: params
+    }, this.uuid, 'putClassLevels', () => {
+      message.success('保存成功', 1, () => {
+        this.props.goBack()
       })
     })
   }
@@ -71,13 +105,57 @@ export class AwardManageSetting extends React.Component {
       })
     })
   }
+
   handleCancel = () => this.setState({ previewVisible: false })
+
+  resetData = () => {
+    const data = {
+      name: "",
+      base: "",
+      dividend: "",
+      order: "",
+      enable: false,
+      bpStatus: []
+    }
+    this.setState({
+      drawSettingDetail: data,
+      switchChecked: false,
+    }, () => {
+      message.success('重置成功', 1, () => {
+        this.props.form.resetFields()
+      })
+    })
+    
+  }
+
+  onBlurName = () => {
+    const value = this.props.form.getFieldValue('name')
+    let {classLevelsName, drawSettingDetail, levelName} = this.state
+
+    drawSettingDetail.name = ''
+
+    if(levelName === value) return
+
+    if(classLevelsName.includes(value)) {
+      message.error('已经存在的名称', 1, () => {
+        this.setState({
+          drawSettingDetail,
+        })
+      })
+      this.props.form.setFieldsValue({ 
+        'name' : '' 
+      })
+    }
+    
+    
+  }
   
   handleSubmit = (e) => {
     const { match } = this.props
     const id = match.params.id 
 
     e.preventDefault();
+
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         let params = {}
@@ -117,7 +195,7 @@ export class AwardManageSetting extends React.Component {
                   rules: [{ required: true, message: '请输入奖品级别' }],
                   initialValue: drawSettingDetail && drawSettingDetail.name || ''
                 })(
-                  <Input placeholder="请设置奖品级别"/>
+                  <Input placeholder="请设置奖品级别" onBlur={() => {this.onBlurName()}} />
                 )}
               </FormItem>
             </Col>
@@ -131,7 +209,7 @@ export class AwardManageSetting extends React.Component {
                   rules: [{message: '请输入中奖基数', required: true}],
                   initialValue: drawSettingDetail && drawSettingDetail.base || 0
                 })(
-                  <InputNumber style={{width: '100%'}} min={1} placeholder="请设置中奖基数"/>
+                  <InputNumber style={{width: '100%'}} min={0} placeholder="请设置中奖基数"/>
                 )}
               </FormItem>
             </Col>
@@ -148,7 +226,7 @@ export class AwardManageSetting extends React.Component {
                   rules: [{message: '请输入奖品数量', required: true}],
                   initialValue: drawSettingDetail && drawSettingDetail.dividend || 0
                 })(
-                  <InputNumber style={{width: '100%'}} min={1} placeholder="请设置奖品数量"/>
+                  <InputNumber style={{width: '100%'}} min={0} placeholder="请设置奖品数量"/>
                 )}
               </FormItem>
             </Col>
@@ -215,8 +293,11 @@ export class AwardManageSetting extends React.Component {
           <div className="ta-c mt-20">
             <Button onClick={() => this.props.goBack()}>返回</Button>
               <Divider type="vertical" />
+            <Button onClick={() => this.resetData()}>重置数据</Button>
+              <Divider type="vertical" />
             <Button type="primary" htmlType="submit">确定</Button>
           </div>
+          <div className="ta-c mt-20" style={{color: 'red'}}>注意：重置数据点击确定后，之前设置的中奖机制将失效，请谨慎</div>
         </Form>
       </section>
     )

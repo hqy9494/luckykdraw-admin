@@ -9,6 +9,7 @@ import TableExpand from "../../components/TableExpand";
 import FormExpand from "../../components/FormExpand";
 import configDevUrl from '../../config/dev'
 import configProdUrl from "../../config/prod"
+import { getUrlParams } from "../../utils/utils"
 
 const configUrl =  process.env.NODE_ENV === 'prod' || process.env.NODE_ENV === 'production' ? configProdUrl : configDevUrl
 
@@ -51,48 +52,30 @@ export class WinningList extends React.Component {
     });
   }
 
-  searchsToWhere = (searchs = []) => {
-    const { search } = this.props;
+  searchsToWhere = (search = {}) => {
     let where = {};
 
-    searchs.map(s => {
-      let curSearch = search.find(ss => s.f === ss.field);
-      if (curSearch.type === 'field') {
-        if (curSearch.like) {
-          where[s.f] = { like: `%${s.v}%` };
-        } else {
-           where[s.f] = s.v;
+    if(!Object.keys(search).length) return where
+
+    where = search.s && search.s.reduce((a, c) => {
+      if(c.v && c.v.constructor === Array) {
+        if (c.v[0] && c.v[1]) {
+          a[c.f] = { between: [c.v[0], c.v[1]] };
+        } else if (c.v[0]) {
+          a[c.f] = { gt: c.v[0] };
+        } else if (c.v[1]) {
+          a[c.f] = { lt: c.v[1] };
         }
-      } else if (curSearch.type === 'relevance') {
-        where[s.f] = s.v.value;
-      } else if (curSearch.type === 'option') {
-        where[s.f] = s.v;
-      } else if (curSearch.type === 'number') {
-        if (s.v && s.v.constructor === Array) {
-          if (s.v[0] && s.v[1]) {
-            where[s.f] = { between: [s.v[0], s.v[1]] };
-          } else if (s.v[0]) {
-            where[s.f] = { gt: s.v[0] };
-          } else if (s.v[1]) {
-            where[s.f] = { lt: s.v[0] };
-          }
-        }
-      } else if (curSearch.type === 'date') {
-        if (s.v && s.v.constructor === Object) {
-          if (s.v.s && s.v.e) {
-            where[s.f] = {
-              between: [s.v.s, s.v.e]
-            };
-          } else if (s.v.s) {
-            where[s.f] = { gt: s.v.s };
-          } else if (s.values.endDate) {
-            where[s.f] = { lt: s.v.e };
-          }
-        }
+      } else {
+        a[c.f] = c.v;
       }
-    });
+      return a
+    },{})
+
+    where = Object.assign({}, {where: where}, {skip: search.skip})
+  
     return where;
-  }
+  };
 
   
 
@@ -111,7 +94,11 @@ export class WinningList extends React.Component {
 
   render() {
     const {orderRecord, getData} = this.state
-    const filter = Object.assign({}, { order: "createdAt DESC" })
+
+    const urlParams =  getUrlParams()
+    
+    const where = urlParams && urlParams.q && this.searchsToWhere(JSON.parse(decodeURIComponent(urlParams.q))) || {}
+    const filter = Object.assign({}, {...where}, { order: "createdAt DESC" })
 
     const config = {
       api: {
@@ -167,16 +154,21 @@ export class WinningList extends React.Component {
         //   },
         //   title: "奖品级别"
         // },
-        // {
-        //   type: "field",
-        //   field: "userFullname",
-        //   title: "收货人名称"
-        // },
-        // {
-        //   type: "field",
-        //   field: "userContactMobile",
-        //   title: "收货人电话"
-        // }
+        {
+          type: "field",
+          field: "userFullname",
+          title: "姓名"
+        },
+        {
+          type: "field",
+          field: "userContactMobile",
+          title: "联系方式"
+        },
+        {
+          type: "field",
+          field: "city",
+          title: "邮寄地址"
+        }
       ],
       columns: [
         {
