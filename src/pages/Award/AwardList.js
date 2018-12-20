@@ -9,6 +9,7 @@ import OutPutExcel from "../../components/OutPutExcel";
 import FormExpand from "../../components/FormExpand";
 import configDevUrl from '../../config/dev'
 import configProdUrl from "../../config/prod"
+import { getUrlParams } from "../../utils/utils"
 
 const configUrl =  process.env.NODE_ENV === 'prod' || process.env.NODE_ENV === 'production' ? configProdUrl : configDevUrl
 
@@ -41,6 +42,74 @@ export class AwardList extends React.Component {
     });
   };
 
+  // searchsToWhere = (searchs = []) => {
+  //   const { search } = this.props;
+  //   let where = {};
+
+  //   searchs.map(s => {
+  //     let curSearch = search.find(ss => s.f === ss.field);
+  //     if (curSearch.type === 'field') {
+  //       if (curSearch.like) {
+  //         where[s.f] = { like: `%${s.v}%` };
+  //       } else {
+  //          where[s.f] = s.v;
+  //       }
+  //     } else if (curSearch.type === 'relevance') {
+  //       where[s.f] = s.v.value;
+  //     } else if (curSearch.type === 'option') {
+  //       where[s.f] = s.v;
+  //     } else if (curSearch.type === 'number') {
+  //       if (s.v && s.v.constructor === Array) {
+  //         if (s.v[0] && s.v[1]) {
+  //           where[s.f] = { between: [s.v[0], s.v[1]] };
+  //         } else if (s.v[0]) {
+  //           where[s.f] = { gt: s.v[0] };
+  //         } else if (s.v[1]) {
+  //           where[s.f] = { lt: s.v[1] };
+  //         }
+  //       }
+  //     } else if (curSearch.type === 'date') {
+  //       if (s.v && s.v.constructor === Object) {
+  //         if (s.v.s && s.v.e) {
+  //           where[s.f] = {
+  //             between: [s.v.s, s.v.e]
+  //           };
+  //         } else if (s.v.s) {
+  //           where[s.f] = { gt: s.v.s };
+  //         } else if (s.values.endDate) {
+  //           where[s.f] = { lt: s.v.e };
+  //         }
+  //       }
+  //     }
+  //   });
+  //   return where;
+  // };
+
+  searchsToWhere = (search = {}) => {
+    let where = {};
+
+    if(!Object.keys(search).length) return where
+
+    where = search.s && search.s.reduce((a, c) => {
+      if(c.v && c.v.constructor === Array) {
+        if (c.v[0] && c.v[1]) {
+          a[c.f] = { between: [c.v[0], c.v[1]] };
+        } else if (c.v[0]) {
+          a[c.f] = { gt: c.v[0] };
+        } else if (c.v[1]) {
+          a[c.f] = { lt: c.v[1] };
+        }
+      } else {
+        a[c.f] = c.v;
+      }
+      return a
+    },{})
+
+    where = Object.assign({}, {where: where}, {skip: search.skip})
+  
+    return where;
+  };
+
   turnType = (type) => {
     if(!type) return ''
     
@@ -70,7 +139,13 @@ export class AwardList extends React.Component {
     const {outPut} = this.state;
     
     let typeList = [];
-    const filter = Object.assign({}, { include: "classLevel", order: "createdAt DESC" })
+
+    const urlParams =  getUrlParams()
+    const where = this.searchsToWhere(JSON.parse(decodeURIComponent(urlParams.q)))
+    const filter = Object.assign({}, {...where}, { include: "classLevel", order: "createdAt DESC" })
+    
+
+    console.log()
 
     if (type && type[this.uuid]) {
       typeList = type[this.uuid].map(t => {
@@ -159,7 +234,6 @@ export class AwardList extends React.Component {
           type: 'date',
           dataIndex: "createdAt",
           key: "createdAt",
-          sort: true
         },
         {
           title: "操作",

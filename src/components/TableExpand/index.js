@@ -175,7 +175,7 @@ export default class TableExpand extends React.Component {
           } else if (s.v[0]) {
             where[s.f] = { gt: s.v[0] };
           } else if (s.v[1]) {
-            where[s.f] = { lt: s.v[0] };
+            where[s.f] = { lt: s.v[1] };
           }
         }
       } else if (curSearch.type === 'date') {

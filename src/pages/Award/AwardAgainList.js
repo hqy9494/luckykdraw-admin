@@ -66,6 +66,14 @@ export class AwardAgainList extends React.Component {
         type: "field",
         field: "name",
         title: "活动名称",
+      },{
+        type: "options",
+        field: "enable",
+        title: "状态",
+        option: [
+          {title: '开启', value: true},
+          {title: '禁用', value: false}
+        ]
       }],
       columns: [
         {
@@ -79,6 +87,12 @@ export class AwardAgainList extends React.Component {
           key: "startTime",
           type: 'date',
           sort: true
+        },
+        {
+          title: "状态",
+          dataIndex: "enable",
+          key: "enable",
+          render: text => <span>{text ? '开启' : '禁用'}</span>
         },
         {
           title: "操作",
