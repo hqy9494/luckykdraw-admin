@@ -43,9 +43,7 @@ export class AwardAgainSetting extends React.Component {
     
   }
 
-  componentWillReceiveProps(nextProps) {
-    
-  }
+  componentWillReceiveProps(nextProps) {}
 
   getVoucherAwards = (id) => {
     this.props.rts({
@@ -54,7 +52,7 @@ export class AwardAgainSetting extends React.Component {
     }, this.uuid, 'getVoucherAwards', (data) => {
       this.setState({
         drawSettingDetail: data,
-        switchChecked: data && data.enable || false
+        switchChecked: data && data.enable || false,
       })
     })
   }
@@ -63,7 +61,7 @@ export class AwardAgainSetting extends React.Component {
     
     this.props.rts({
       url: id && id === 'add' ? `/VoucherAwards` : `/VoucherAwards/${id}`,
-      method: id && id === 'add' ? `post` : 'put',
+      method: id && id === 'add' ? `post` : 'patch',
       data: params
     }, this.uuid, 'putVoucherAwards', () => {
       message.success('保存成功', 1, () => {
@@ -90,7 +88,7 @@ export class AwardAgainSetting extends React.Component {
             continue
           }
           if(i === 'duration' ) {
-            params[i] = values[i]
+            params[i] = values[i] * 24
             continue
           }
           params[i] = values[i]
@@ -138,7 +136,7 @@ export class AwardAgainSetting extends React.Component {
               >
                 {getFieldDecorator(`lowPrice`, {
                   rules: [{ message: '请输入面额', required: true}],
-                  initialValue: drawSettingDetail && drawSettingDetail.lowPrice || ''
+                  initialValue: drawSettingDetail && drawSettingDetail.lowPrice || 1
                 })(
                   <InputNumber min={1} style={{ width: '100%'}}/>
                 )}
@@ -151,7 +149,7 @@ export class AwardAgainSetting extends React.Component {
               <FormItem wrapperCol={{ span: 6 }}>
                 {getFieldDecorator(`highPrice`, {
                   rules: [{message: '请输入面额范围', required: true}],
-                  initialValue: drawSettingDetail && drawSettingDetail.highPrice || 0
+                  initialValue: drawSettingDetail && drawSettingDetail.highPrice || 1
                 })(
                   <InputNumber min={1} style={{ width: '100%'}}/>
                 )}
@@ -229,7 +227,7 @@ export class AwardAgainSetting extends React.Component {
               >
                 {getFieldDecorator(`duration`, {
                   rules: [{ message: '请输入优惠券有效时间', required: true}],
-                  initialValue: drawSettingDetail && drawSettingDetail.duration || ''
+                  initialValue: drawSettingDetail && drawSettingDetail.duration / 24 || ''
                 })(
                   <InputNumber min={1} style={{ width: '100%'}}/>
                 )}

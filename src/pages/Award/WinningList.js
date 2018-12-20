@@ -229,7 +229,7 @@ export class WinningList extends React.Component {
               record.classAwardRecord.classAward &&
               record.classAwardRecord.classAward.type === "METARIAL" &&
               record.hasAddress ? (
-                !record.fahuoed ? (
+                record.fahuoed ? (
                   <div>
                     <span>已发货</span>
                     <Divider type="vertical"/>
