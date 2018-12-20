@@ -32,7 +32,8 @@ export class AwardManageSetting extends React.Component {
       drawSettingDetail: {},
       switchChecked: false,
       classLevelsName: [],
-      levelName: ''
+      levelName: '',
+      showReset: false
     };
     this.uuid = uuid.v1();
     this.fetchNum = 0
@@ -58,7 +59,8 @@ export class AwardManageSetting extends React.Component {
       this.setState({
         drawSettingDetail: data,
         switchChecked: data && data.enable || false,
-        levelName: data && data.name || ''
+        levelName: data && data.name || '',
+        showReset: true
       })
     })
   }
@@ -94,18 +96,6 @@ export class AwardManageSetting extends React.Component {
     })
   }
 
-  putClassLevels = (id, params) => {
-    this.props.rts({
-      url: id && id === 'add' ? `/ClassLevels` : `/ClassLevels/${id}`,
-      method: id && id === 'add' ? `post` : 'put',
-      data: params
-    }, this.uuid, 'putClassLevels', () => {
-      message.success('保存成功', 1, () => {
-        this.props.goBack()
-      })
-    })
-  }
-
   handleCancel = () => this.setState({ previewVisible: false })
 
   resetData = () => {
@@ -120,10 +110,12 @@ export class AwardManageSetting extends React.Component {
     this.setState({
       drawSettingDetail: data,
       switchChecked: false,
+      showReset: false
     }, () => {
-      message.success('重置成功', 1, () => {
-        this.props.form.resetFields()
-      })
+      this.props.form.resetFields()
+      // message.success('重置成功', 1, () => {
+      //   this.props.form.resetFields()
+      // })
     })
     
   }
@@ -153,6 +145,7 @@ export class AwardManageSetting extends React.Component {
   handleSubmit = (e) => {
     const { match } = this.props
     const id = match.params.id 
+    const {showReset} = this.state
 
     e.preventDefault();
 
@@ -163,7 +156,12 @@ export class AwardManageSetting extends React.Component {
           if (values[i] == null) continue
           params[i] = values[i]
         }
-        // console.log(params, 85)
+        if(id && id !== 'add' && !showReset) {
+          params['resetting'] = true
+        } else if( id && id !== 'add' && showReset) {
+          params['resetting'] = false
+        }
+        
         if(!id) return
         this.putClassLevels(id, params)
       }
@@ -172,7 +170,8 @@ export class AwardManageSetting extends React.Component {
   render() {
     
     const { getFieldDecorator } = this.props.form
-    const { product, prizeType, optionType, drawSettingDetail, switchChecked } = this.state
+    const { product, prizeType, optionType, drawSettingDetail, switchChecked, showReset } = this.state
+    
     const typeList = [{
       type: 'SUBTITLE', 
       name: '弹幕'
@@ -293,7 +292,7 @@ export class AwardManageSetting extends React.Component {
           <div className="ta-c mt-20">
             <Button onClick={() => this.props.goBack()}>返回</Button>
               <Divider type="vertical" />
-            <Button onClick={() => this.resetData()}>重置数据</Button>
+            <Button onClick={() => this.resetData()} disabled={!showReset}>重置数据</Button>
               <Divider type="vertical" />
             <Button type="primary" htmlType="submit">确定</Button>
           </div>

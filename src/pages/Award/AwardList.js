@@ -10,6 +10,7 @@ import FormExpand from "../../components/FormExpand";
 import configDevUrl from '../../config/dev'
 import configProdUrl from "../../config/prod"
 import { getUrlParams } from "../../utils/utils"
+import redbao from "../../assets/img/redbao.png"
 
 const configUrl =  process.env.NODE_ENV === 'prod' || process.env.NODE_ENV === 'production' ? configProdUrl : configDevUrl
 
@@ -226,7 +227,7 @@ export class AwardList extends React.Component {
           title: "奖品图片",
           dataIndex: "picture",
           key: "picture",
-          render: text => <img src={text} alt="商品图片" height="80" />
+          render: (text, record) => <img src={record.type === 'RED_PACKET' ? redbao : text} alt="商品图片" height="80" />
         },
         {
           title: "奖品级别",

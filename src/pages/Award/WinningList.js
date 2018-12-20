@@ -4,12 +4,21 @@ import {createStructuredSelector} from "reselect";
 import moment from "moment";
 import uuid from "uuid";
 import {Col, Grid, Row} from "react-bootstrap";
-import { Modal, Divider,Button } from "antd";
+import { Modal, Divider,Button, Form, Input, Select, message, Steps } from "antd";
 import TableExpand from "../../components/TableExpand";
 import FormExpand from "../../components/FormExpand";
 import configDevUrl from '../../config/dev'
 import configProdUrl from "../../config/prod"
 import { getUrlParams } from "../../utils/utils"
+
+const FormItem = Form.Item
+const Option = Select.Option
+const Step = Steps.Step
+
+const formItemLayout = {
+  labelCol: {span: 6},
+  wrapperCol: {span: 14}
+};
 
 const configUrl =  process.env.NODE_ENV === 'prod' || process.env.NODE_ENV === 'production' ? configProdUrl : configDevUrl
 
@@ -18,7 +27,9 @@ export class WinningList extends React.Component {
     super(props);
     this.state = {
       visible: false,
-      refreshTable: false
+      refreshTable: false,
+      isOrderEdit: false,
+      getData:[],
     };
     this.uuid = uuid.v1();
   }
@@ -28,6 +39,12 @@ export class WinningList extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    const { getLogisticsDetail } = nextProps;
+    if (getLogisticsDetail && getLogisticsDetail[this.uuid]) {
+      this.setState({
+        getData: getLogisticsDetail[this.uuid].logistics,
+      })
+    }
   }
 
   getOneClassLevels = (id) => {
@@ -77,7 +94,32 @@ export class WinningList extends React.Component {
     return where;
   };
 
-  
+  // 获取物流信息
+  getLogisticsDetail = (id) => {
+    this.props.rts({
+        method: "get",
+        url: `/awardrecords/${id}/logistics`,
+      }, this.uuid, "getLogisticsDetail")
+  };
+
+  isShowDeliver = ( record = {}) => {
+    if(record.expressNo) {
+      this.getLogisticsDetail(record.id)
+      this.setState({
+        show: true,
+        isOrderEdit: true,
+        orderRecord: record,
+        curRow: record,
+      })
+    } else {
+      this.setState({
+        show: true,
+        isOrderEdit: true,
+        orderRecord: record,
+        curRow: record,
+      })
+    }
+  }
 
   submitNew = values => {
     if (this.state.curRow && this.state.curRow.classAwardRecord && this.state.curRow.classAwardRecord.awardRecordId) {
@@ -92,10 +134,44 @@ export class WinningList extends React.Component {
     }
   };
 
+  deliverCheck = (orderId) => {
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        let params = {}
+        for(let i of Object.keys(values)) {
+          if(values[i] == null) continue
+
+          if(i === 'deliverExpressNo') {
+            params['no'] = values[i]
+            continue
+          }
+          if(i === 'deliverCompany') {
+            params['company'] = values[i]
+            continue
+          }
+        }
+        if(!orderId) return;
+        this.putLogistics(orderId, params)
+      }
+      // this.props.form.resetFields()
+    });
+  };
+
   render() {
     const {orderRecord, getData} = this.state
+    const {getFieldDecorator} = this.props.form;
+
+    const { isEdit, isOrderEdit } = this.state;
 
     const urlParams =  getUrlParams()
+    
+    let deliverMsg = [
+      { value: 'ems', name: 'EMS快递'},
+      { value: 'shunfeng', name: '顺丰快递'},
+      { value: 'yuantong', name: '圆通快递'},
+      { value: 'zhongtong', name: '中通快递'},
+      { value: 'yunda', name: '韵达快递'}
+    ]
     
     const where = urlParams && urlParams.q && this.searchsToWhere(JSON.parse(decodeURIComponent(urlParams.q))) || {}
     const filter = Object.assign({}, {...where}, { order: "createdAt DESC" })
@@ -134,26 +210,6 @@ export class WinningList extends React.Component {
       //   ]
       // }],
       search: [
-        // {
-        //   type: "relevance",
-        //   field: "classAwardRecord.classAwardId",
-        //   model: {
-        //     name: "classAwardId",
-        //     api: "/classAwards",
-        //     field: "name"
-        //   },
-        //   title: "奖品名称"
-        // },
-        // {
-        //   type: "relevance",
-        //   field: "classAwardRecord.classAward.classLevelId",
-        //   model: {
-        //     name: "classLevelId",
-        //     api: "/ClassLevels",
-        //     field: "name"
-        //   },
-        //   title: "奖品级别"
-        // },
         {
           type: "field",
           field: "userFullname",
@@ -228,10 +284,20 @@ export class WinningList extends React.Component {
                     <a
                       href="javascript:;"
                       onClick={() => {
-                        this.setState({ curRow: record, show: true });
+                        this.isShowDeliver(record)
+                        
                       }}
                     >
                       物流信息
+                    </a>
+                    <Divider type="vertical"/>
+                    <a
+                      href="javascript:;"
+                      onClick={() => {
+                        this.setState({ curRow: record, visible: true });
+                      }}
+                    >
+                      修改物流
                     </a>
                   </div>
                 ) : (
@@ -255,7 +321,7 @@ export class WinningList extends React.Component {
                   </a>
                 </div>
                 )
-              ): '--'
+              ): '---'
             }
             </span>
           )
@@ -351,7 +417,6 @@ export class WinningList extends React.Component {
             // onOk={() => {
             //   getData && this.deliverCheck(getData.orderId);
             // }}
-            // loading={this.state.loading}
             onCancel={() => {
               this.setState({
                 show: false,
@@ -360,21 +425,11 @@ export class WinningList extends React.Component {
                 // this.props.form.resetFields()
               });
             }}
-
           >
             {
-              orderRecord && orderRecord.expressNo ?
-                <Form layout="vertical">
-                  <FormItem {...formItemLayout} label="订单号：">
-                    {( getFieldDecorator("deliverOrderId", {
-                        rules: [{message: '必填项', required: isOrderEdit ? true : false}],
-                        initialValue: getData && getData.orderId || ''
-                      })(
-                        <Input disabled={true}/>
-                      )
-                    )}
-                  </FormItem>
-                  <FormItem {...formItemLayout} label="请输入发货单号：">
+              // orderRecord && orderRecord.expressNo ?
+                <Form>
+                  <FormItem {...formItemLayout} label="快递单号">
                     {getFieldDecorator(`deliverExpressNo`, {
                       rules: [{message: '请输入发货单号', required: isOrderEdit ? true : false}],
                       initialValue: getData && getData.no || ''
@@ -382,7 +437,7 @@ export class WinningList extends React.Component {
                       <Input disabled={true}/>
                     )}
                   </FormItem>
-                  <FormItem {...formItemLayout} label="请输入快递公司：">
+                  <FormItem {...formItemLayout} label="快递公司">
                     {getFieldDecorator(`deliverCompany`, {
                       rules: [{message: '请输入快递公司', required: isOrderEdit ? true : false}],
                       initialValue: getData && getData.company || ''
@@ -401,8 +456,8 @@ export class WinningList extends React.Component {
                       </Select>
                     )}
                   </FormItem>
-                </Form> :
-              null
+                </Form>
+              // : null
             }
             {
               getData && getData.details && getData.details.length > 0 ?
@@ -442,9 +497,12 @@ const mapDispatchToProps = dispatch => {
 };
 
 const WinningListuuid = state => state.get("rts").get("uuid");
+const getLogisticsDetail = state => state.get("rts").get("getLogisticsDetail");
 
 const mapStateToProps = createStructuredSelector({
-  WinningListuuid
+  WinningListuuid,
+  getLogisticsDetail,
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(WinningList);
+export default connect(mapStateToProps, mapDispatchToProps)(Form.create()(WinningList));
+

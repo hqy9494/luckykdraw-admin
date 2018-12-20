@@ -71,7 +71,8 @@ export class AwardListSetting extends React.Component {
       url: `/classAwards/${id}`
     }, this.uuid, 'getClassAwards', (data) => {
       this.setState({
-        defaultDetail: data
+        defaultDetail: data,
+        optionType: data && data.type || null
       })
       this.handleChange('picture', {
         fileList: [{
@@ -145,6 +146,8 @@ export class AwardListSetting extends React.Component {
 
   onSelectChange = (val) => this.setState({ optionType: val })
 
+  onClassSelectChange = (val) => {}
+
   handleSubmit = (e) => {
     e.preventDefault();
 
@@ -152,9 +155,12 @@ export class AwardListSetting extends React.Component {
     const { match } = this.props
     const { id } = match.params
 
+    const { optionType } = this.state
+
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         let params = {}
+      
         for(let i of Object.keys(values)){
           if (values[i] == null) continue
 
@@ -174,22 +180,21 @@ export class AwardListSetting extends React.Component {
           params[i] = values[i]
         }
         
-        if(this.props.form.getFieldValue('picture').file && 
+        if(optionType !== 'RED_PACKET' && this.props.form.getFieldValue('picture').file && 
           this.props.form.getFieldValue('picture').file.status === 'removed') {
+            
             message.info('图片不能为空', 1 , () => {
               return
             })
-        } else {
-          if(!id) return
-          this.putClassAwards(id, params)
         }
+        this.putClassAwards(id, params)
       }
     })
   }
   render() {
 
     const { getFieldDecorator } = this.props.form
-    const { product, prizeType, typeList, defaultDetail, levelsList } = this.state
+    const { optionType, prizeType, typeList, defaultDetail, levelsList } = this.state
 
     const uploadButton = (<div> <Icon type="upload" /> 添加 </div>)
     
@@ -210,39 +215,67 @@ export class AwardListSetting extends React.Component {
                 </FormItem>
               </Col>
             </Row>
-            <Row gutter={24}>
-              <Col sm={12}>
-                <FormItem
-                  label={`奖品图片`}
-                  {...formItemLayout}
-                >
-                  {getFieldDecorator(`picture`, {
-                    rules: [{message: '请上传图片', required: true}],
-                    initialValue: this.state.picture || []
-                  })(
-                    <Upload
-                      name="file"
-                      action={`${configURL.apiUrl}${configURL.apiBasePath}/files/upload`}
-                      listType="picture-card"
-                      headers={{
-                        Authorization: localStorage.token
-                      }}
-                      onPreview={this.handlePreview}
-                      onChange={(fileList) => {
-                        this.handleChange('picture', fileList)
-                      }}
-                      onRemove={(fileList) => {
-                        this.removeChange('picture', fileList)
-                      }}
-                      accept="image/*"
-                      fileList={this.state.picture || []}
-                    >
-                      {this.state.picture.length === 1 ? null : uploadButton}
-                    </Upload>
-                  )}
-                </FormItem>
-              </Col>
-            </Row>
+           
+              <Row gutter={24}>
+                <Col sm={12}>
+                  <FormItem label={`奖品类型`}
+                    {...formItemLayout}
+                  >
+                    {getFieldDecorator(`type`, {
+                      rules: [{message: '请选择奖品类型', required: true}],
+                      initialValue: defaultDetail && defaultDetail.type || ''
+                    })(
+                      <Select placeholder="请选择" onChange={this.onSelectChange} locale={zh_CN}>
+                        {
+                          typeList &&
+                          typeList.length ?
+                          typeList.map((v, i) => {
+                            return (
+                              <Option value={v.type} key={i}>{v.name}</Option>
+                            )
+                          }) :
+                          null
+                        }
+                      </Select>
+                    )}
+                  </FormItem>
+                </Col>
+              </Row>
+            {optionType && optionType !== 'RED_PACKET' ?
+              <Row gutter={24}>
+                <Col sm={12}>
+                  <FormItem
+                    label={`奖品图片`}
+                    {...formItemLayout}
+                  >
+                    {getFieldDecorator(`picture`, {
+                      rules: [{message: '请上传图片', required: true}],
+                      initialValue: this.state.picture || []
+                    })(
+                      <Upload
+                        name="file"
+                        action={`${configURL.apiUrl}${configURL.apiBasePath}/files/upload`}
+                        listType="picture-card"
+                        headers={{
+                          Authorization: localStorage.token
+                        }}
+                        onPreview={this.handlePreview}
+                        onChange={(fileList) => {
+                          this.handleChange('picture', fileList)
+                        }}
+                        onRemove={(fileList) => {
+                          this.removeChange('picture', fileList)
+                        }}
+                        accept="image/*"
+                        fileList={this.state.picture || []}
+                      >
+                        {this.state.picture.length === 1 ? null : uploadButton}
+                      </Upload>
+                    )}
+                  </FormItem>
+                </Col>
+              </Row>: null
+            }
             <Row gutter={24}>
               <Col sm={12}>
                 <FormItem label={`奖品级别`}
@@ -252,7 +285,7 @@ export class AwardListSetting extends React.Component {
                     rules: [{message: '请选择奖品级别', required: true}],
                     initialValue: defaultDetail && defaultDetail.classLevelId || ''
                   })(
-                    <Select placeholder="请选择" onChange={this.onSelectChange} locale={zh_CN}>
+                    <Select placeholder="请选择" onChange={this.onClassSelectChange} locale={zh_CN}>
                       {
                         levelsList &&
                         levelsList.length ?
@@ -292,31 +325,6 @@ export class AwardListSetting extends React.Component {
                     initialValue: defaultDetail && defaultDetail.cost || 0
                   })(
                     <InputNumber style={{width: '100%'}} min={0} placeholder="请输入奖品成本" />
-                  )}
-                </FormItem>
-              </Col>
-            </Row>
-            <Row gutter={24}>
-              <Col sm={12}>
-                <FormItem label={`奖品类型`}
-                  {...formItemLayout}
-                >
-                  {getFieldDecorator(`type`, {
-                    rules: [{message: '请选择奖品类型', required: true}],
-                    initialValue: defaultDetail && defaultDetail.type || ''
-                  })(
-                    <Select placeholder="请选择" onChange={this.onSelectChange} locale={zh_CN}>
-                      {
-                        typeList &&
-                        typeList.length ?
-                        typeList.map((v, i) => {
-                          return (
-                            <Option value={v.type} key={i}>{v.name}</Option>
-                          )
-                        }) :
-                        null
-                      }
-                    </Select>
                   )}
                 </FormItem>
               </Col>
