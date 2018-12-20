@@ -18,18 +18,16 @@ export class AwardAgainList extends React.Component {
     this.uuid = uuid.v1();
   }
 
-  componentWillMount() {
-    
-  }
+  componentWillMount() {}
 
   componentWillReceiveProps(nextProps) {}
 
-  putClassLevels = (id, params) => {
+  putVoucherAwards = (id, params) => {
     this.props.rts({
-      url: `/ClassLevels/${id}`,
-      method: 'put',
+      url: `/VoucherAwards/${id}`,
+      method: 'patch',
       data: params
-    }, this.uuid, 'putClassLevels', () => {
+    }, this.uuid, 'putVoucherAwards', () => {
       message.success('修改成功', 2, () => {
         window.location.reload()
       })
@@ -48,7 +46,18 @@ export class AwardAgainList extends React.Component {
   }
 
   handleEnable = (id, value) => {
-    this.getClassLevels(id, !value)
+    this.getVoucherAwards(id, !value)
+  }
+
+  getVoucherAwards = (id, value) => {
+    this.props.rts({
+      url: `/VoucherAwards/${id}`,
+      method: 'get',
+    }, this.uuid, 'getVoucherAwards', (v) => {
+      let params = v
+      params.enable = value
+      this.putVoucherAwards(id, params)
+    })
   }
   
   handleEdit = (id) => this.props.to(`${this.props.match.url}/detail/${id}`)
@@ -100,6 +109,21 @@ export class AwardAgainList extends React.Component {
           render: (text, record) => (
             <span>
               <Button type="primary" size="small" onClick={()=> this.handleEdit(record.id)}>编辑</Button>
+              <Divider type="vertical" />
+              <Popconfirm
+                title={`是否${record.enable ? "禁用" : "开启"}${
+                  record.name
+                }奖项设置`}
+                onConfirm={() => { this.handleEnable(record.id, record.enable) }}
+                okText="是"
+                cancelText="否"
+              >
+                 {
+                   record.enable ? 
+                  <Button style={{background: '#c9c9c9', color: '#fff'}} size="small">禁用</Button> :
+                  <Button style={{background: '#FF6699', color: '#fff'}} size="small">开启</Button>
+                 }
+              </Popconfirm>
             </span>
           )
         }

@@ -105,6 +105,8 @@ export class AwardList extends React.Component {
       return a
     },{})
 
+    where.enable = true
+
     where = Object.assign({}, {where: where}, {skip: search.skip})
   
     return where;
@@ -117,6 +119,33 @@ export class AwardList extends React.Component {
     const typeName = typeList.filter(v => v.type == type)
 
     return typeName[0].name
+  }
+
+  handleEnable = (id, value) => {
+    this.getClassAwards(id, !value)
+  }
+
+  getClassAwards = (id, value) => {
+    this.props.rts({
+      url: `/classAwards/${id}`,
+      method: 'get',
+    }, this.uuid, 'getClassAwards', (v) => {
+      let params = v
+      params.enable = value
+      this.putClassAwards(id, params)
+    })
+  }
+
+  putClassAwards = (id, params) => {
+    this.props.rts({
+      url: `/classAwards/${id}`,
+      method: 'patch',
+      data: params
+    }, this.uuid, 'putClassAwards', () => {
+      message.success('修改成功', 2, () => {
+        window.location.reload()
+      })
+    })
   }
 
   handleEdit = (id) => {
@@ -160,7 +189,10 @@ export class AwardList extends React.Component {
         uuid: this.uuid,
         data: "/classAwards",
         total: "/classAwards/count",
-        include: "classLevel"
+        include: "classLevel",
+        where: {
+          enable: true
+        }
       },
       search: [{
         type: "field",
@@ -241,15 +273,21 @@ export class AwardList extends React.Component {
             return (
               <span>
                 <Button type="primary" size="small" onClick={()=> this.handleEdit(record.id)}>编辑</Button>
-                {/* <Divider type="vertical" />
+                <Divider type="vertical" />
                 <Popconfirm
-                  title={`确认删除${record.name || ''}奖品?`}
-                  onConfirm={() => { this.isDelete(record.id) }}
+                  title={`是否${record.enable ? "禁用" : "开启"}${
+                    record.name
+                  }奖项设置`}
+                  onConfirm={() => { this.handleEnable(record.id, record.enable) }}
                   okText="是"
                   cancelText="否"
                 >
-                  <Button type="danger" size="small">删除</Button>
-                </Popconfirm> */}
+                  {
+                    record.enable ? 
+                    <Button style={{background: '#FF6699', color: '#fff'}} size="small">禁用</Button> :
+                    <Button style={{background: '#FF6699', color: '#fff'}} size="small">开启</Button>
+                  }
+                </Popconfirm>
               </span>
             );
           }
