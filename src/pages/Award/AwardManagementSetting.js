@@ -29,7 +29,8 @@ export class AwardManageSetting extends React.Component {
       prizeType: null,
       showType: false,
       optionType: null,
-      drawSettingDetail: {}
+      drawSettingDetail: {},
+      switchChecked: false,
     };
     this.uuid = uuid.v1();
     this.fetchNum = 0
@@ -53,7 +54,8 @@ export class AwardManageSetting extends React.Component {
       url: `/ClassLevels/${id}`
     }, this.uuid, 'getClassLevels', (data) => {
       this.setState({
-        drawSettingDetail: data
+        drawSettingDetail: data,
+        switchChecked: data && data.enable || false,
       })
     })
   }
@@ -191,7 +193,7 @@ export class AwardManageSetting extends React.Component {
                 {...formItemLayout}
               >
                 {getFieldDecorator(`bpStatus`, {
-                  rules: [{ message: '请选择弹幕类型', required: true}],
+                  rules: [{ message: '请选择弹幕类型', required: false}],
                   initialValue: drawSettingDetail && drawSettingDetail.bpStatus || ''
                 })(
                   <Checkbox.Group>

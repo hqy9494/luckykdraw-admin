@@ -93,6 +93,10 @@ export class AwardManagement extends React.Component {
       return a + bpStatus[c] + '/'
     },'')
     
+    if(rest === '') {
+      return '---'
+    }
+    
     return rest.substring(0, rest.length-1)
   }
   
