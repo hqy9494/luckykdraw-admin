@@ -141,12 +141,10 @@ export class AwardList extends React.Component {
     let typeList = [];
 
     const urlParams =  getUrlParams()
-    const where = this.searchsToWhere(JSON.parse(decodeURIComponent(urlParams.q)))
+    
+    const where = urlParams && urlParams.q && this.searchsToWhere(JSON.parse(decodeURIComponent(urlParams.q))) || {}
     const filter = Object.assign({}, {...where}, { include: "classLevel", order: "createdAt DESC" })
     
-
-    console.log()
-
     if (type && type[this.uuid]) {
       typeList = type[this.uuid].map(t => {
         return {
