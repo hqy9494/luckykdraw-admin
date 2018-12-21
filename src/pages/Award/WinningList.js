@@ -230,7 +230,12 @@ export class WinningList extends React.Component {
           type: "field",
           field: "city",
           title: "邮寄地址"
-        }
+        },
+        {
+          type: "field",
+          field: "address",
+          title: "详细地址"
+        },
       ],
       columns: [
         {
@@ -259,6 +264,12 @@ export class WinningList extends React.Component {
           title: "邮寄地址",
           dataIndex: "city",
           key: "city",
+          render: (text) => <span>{text ? text : '---'}</span>
+        },
+        {
+          title: "详细地址",
+          dataIndex: "address",
+          key: "address",
           render: (text) => <span>{text ? text : '---'}</span>
         },
         {

@@ -4,8 +4,11 @@ import { createStructuredSelector } from "reselect";
 import { Col, Row, Icon, Card, Form, Input, InputNumber, message, Radio, Select, Button, Cascader, Upload, Modal } from "antd";
 import moment from "moment";
 import uuid from "uuid";
-import configURL from "../../config/dev"
 import zh_CN from 'antd/lib/locale-provider/zh_CN';
+import configDevUrl from '../../config/dev'
+import configProdUrl from "../../config/prod"
+
+const configURL =  process.env.NODE_ENV === 'prod' || process.env.NODE_ENV === 'production' ? configProdUrl : configDevUrl
 
 const FormItem = Form.Item
 const RadioGroup = Radio.Group
