@@ -136,7 +136,12 @@ const menu = [
         id: "consume/2",
         name: "大奖池消耗",
         component: "consume/2"
-      }
+      },
+      {
+        id: "PrizeList",
+        name: "惊喜奖列表",
+        component: "PrizeList"
+      },
     ]
   },
   {

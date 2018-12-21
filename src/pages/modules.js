@@ -17,6 +17,7 @@ import Clue from './Prizes/Clue';
 import PrizeAward from './Prizes/PrizeAward';
 import AwardSetting from './Prizes/AwardSetting';
 import StockAwardConsume from './Prizes/StockAwardConsume';
+import PrizeList from './Prizes/PrizeList';
 //
 import Balance from './Balances/Balance';
 //
@@ -107,6 +108,7 @@ const modules = {
   AwardRecord,
   PostActive,
   StockAward,
+  PrizeList,
 
   AwardList,
   AwardListSetting,

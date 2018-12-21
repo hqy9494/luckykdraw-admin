@@ -9,7 +9,8 @@ import QrTemplateDetail from './QrTemplateDetail';
 import Specification from './Specification';
 import Clue from './Clue';
 import StockAwardConsume from './StockAwardConsume';
-import StockAward from "./StockAward"
+import StockAward from "./StockAward";
+import PrizeList from './PrizeList';
 
 const Prizes = {
   PrizeSuper,
@@ -23,7 +24,8 @@ const Prizes = {
   Specification,
   Clue,
   StockAwardConsume,
-  StockAward
+  StockAward,
+  PrizeList,
 };
 
 export default Prizes;

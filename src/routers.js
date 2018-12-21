@@ -125,6 +125,12 @@ export default {
         component: 'Specification',
         title: '商品规格'
       },
+      PrizeList: {
+        path: 'prizes/PrizeList',
+        module: 'Prizes',
+        component: 'PrizeList',
+        title: '惊喜奖列表',
+      },
       // 库存
       balance: {
         path: 'balance',
