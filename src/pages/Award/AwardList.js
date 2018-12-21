@@ -106,7 +106,11 @@ export class AwardList extends React.Component {
       return a
     },{})
 
-    where.enable = true
+    
+    if(where) {
+      where.enable = true
+    }
+    // where && where.enable = true
 
     where = Object.assign({}, {where: where}, {skip: search.skip})
   
