@@ -187,7 +187,7 @@ export class PrizeList extends React.Component {
         rts: this.props.rts,
         uuid: this.uuid,
         data: "/stockAwardRecords/all",
-        // total: "/classAwardRecords/getCount",
+        total: "/stockAwardRecords/getCount",
       },
       buttons: [],
       // search: [{
