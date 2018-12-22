@@ -295,45 +295,49 @@ export class PrizeList extends React.Component {
               record.awardRecord.hasAddress ? (
                 record.awardRecord.fahuoed ? (
                   <div>
-                    <span>已发货</span>
+                    <Button className="unUseButton" size="small">已发货</Button>
                     <Divider type="vertical"/>
-                    <a
-                      href="javascript:;"
+                    <Button
+                      className="successMoreButton"
+                      size="small"
                       onClick={() => {
                         this.isShowDeliver(record)
                       }}
                     >
                       物流信息
-                    </a>
+                    </Button>
                     <Divider type="vertical"/>
-                    <a
-                      href="javascript:;"
+                    <Button
+                      className="purpleMoreButton"
+                      size="small"
                       onClick={() => {
                         this.setState({ curRow: record, visible: true });
                       }}
                     >
                       修改物流
-                    </a>
+                    </Button>
                   </div>
                 ) : (
                 <div>
-                  <a
-                    href="javascript:;"
+                  <Button
+                    className="infoButton"
+                    size="small"
                     onClick={() => {
                       this.setState({curRow: record, visible: true});
                     }}
                   >
                     发货
-                  </a>
+                  </Button>
                   <Divider type="vertical"/>
-                  <a
-                    href="javascript:;"
+                  <Button
+                    className="orangeButton"
+                    size="small"
                     onClick={() => {
                       this.setState({ curRow: record, show: true });
                     }}
                   >
                     物流信息
-                  </a>
+                  </Button>
                 </div>
                 )
               ): '---'
@@ -425,7 +429,7 @@ export class PrizeList extends React.Component {
           {/*更改物流*/}
           <Modal
             visible={this.state.show}
-            title={`${ orderRecord && orderRecord.id || ''}-物流信息`}
+            title={`物流信息`}
             okText="确定"
             cancelText="取消"
             footer={null}
