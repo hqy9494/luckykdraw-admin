@@ -469,9 +469,9 @@ export class WinningList extends React.Component {
               <FormItem {...formItemLayout} label="时间">
                 {getFieldDecorator(`time`, {
                   rules: [{message: '请选择时间范围', required: true}],
-                  initialValue: []
+                  initialValue: null
                 })(
-                  <RangePicker
+                  <DatePicker
                     locale={locale}
                     dateRender={(current) => {
                       const style = {};
@@ -512,13 +512,12 @@ export class WinningList extends React.Component {
                   
                   const name = getFieldValue('award')
                   const time = getFieldValue('time')
+                  console.log(time, 515)
+                  if(name && time) {
+                    const start = moment(time).format('YYYY-MM-DD')
 
-                  if(name && time && time.length > 0) {
-                    const start = moment(time[0]).format('YYYY-MM-DD')
-                    const end = moment(time[1]).format('YYYY-MM-DD')
-                    
-                    if(start && end) {
-                      return <a download={'订单列表.xlsx'} href={`${configUrl.apiUrl}${configUrl.apiBasePath}/classAwardRecords/exportAwardRecord?name=${name}&start=${start}&end=${end}&access_token=${localStorage.token}` || '#'}>
+                    if(start) {
+                      return <a download={'订单列表.xlsx'} href={`${configUrl.apiUrl}${configUrl.apiBasePath}/classAwardRecords/exportAwardRecord?name=${name}&start=${start}&end=${start}&access_token=${localStorage.token}` || '#'}>
                         <Button style={{marginBottom: '5px', marginLeft: '5px'}} type="primary" onClick={() => that.handleExcel('success')}>确定</Button>
                       </a>
                     }
