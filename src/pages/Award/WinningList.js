@@ -4,16 +4,18 @@ import {createStructuredSelector} from "reselect";
 import moment from "moment";
 import uuid from "uuid";
 import {Col, Grid, Row} from "react-bootstrap";
-import { Modal, Divider,Button, Form, Input, Select, message, Steps } from "antd";
+import { Modal, Divider,Button, Form, Input, Select, message, Steps, DatePicker } from "antd";
 import TableExpand from "../../components/TableExpand";
 import FormExpand from "../../components/FormExpand";
 import configDevUrl from '../../config/dev'
 import configProdUrl from "../../config/prod"
 import { getUrlParams } from "../../utils/utils"
+import locale from 'antd/lib/date-picker/locale/zh_CN';
 
 const FormItem = Form.Item
 const Option = Select.Option
 const Step = Steps.Step
+const { RangePicker } = DatePicker
 
 const formItemLayout = {
   labelCol: {span: 6},
@@ -30,6 +32,7 @@ export class WinningList extends React.Component {
       refreshTable: false,
       isOrderEdit: false,
       getData:[],
+      optionLevels: []
     };
     this.uuid = uuid.v1();
   }
@@ -66,7 +69,20 @@ export class WinningList extends React.Component {
       this.setState({
         levelList: v
       })
+      this.optionLevels(v)
     });
+  }
+
+  optionLevels = (option) => {
+    let optionLevels = option && Array.isArray(option) && option.map(v => {
+      return {
+        title: v.name || '',
+        value: v.name || ''
+      }
+    }) || []
+    this.setState({
+      optionLevels
+    })
   }
 
   searchsToWhere = (search = {}) => {
@@ -140,6 +156,20 @@ export class WinningList extends React.Component {
     }
   };
 
+  handleExcel = (type) => {
+    this.setState({
+      outputVisible: false,
+    }, () => {
+      if(type === 'success') {
+        message.success('导出成功', 1, () => {
+          this.props.form.resetFields(['award','time'])
+        })
+      } else {
+        this.props.form.resetFields(['award','time'])
+      }
+    })
+  }
+
   deliverCheck = (orderId) => {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
@@ -164,8 +194,10 @@ export class WinningList extends React.Component {
   };
 
   render() {
-    const {orderRecord, getData} = this.state
-    const {getFieldDecorator} = this.props.form;
+    const that = this
+    const {orderRecord, getData, optionLevels} = this.state
+    const {getFieldDecorator, getFieldValue} = this.props.form;
+    
 
     const { isEdit, isOrderEdit } = this.state;
 
@@ -348,9 +380,9 @@ export class WinningList extends React.Component {
 
     return (
       <section>
-        <a download={'订单列表.xlsx'} href={`${configUrl.apiUrl}${configUrl.apiBasePath}/classAwardRecords/exportAwardRecord?filter=${JSON.stringify(filter)}&access_token=${localStorage.token}` || '#'}>
-          <Button style={{marginBottom: '5px', marginLeft: '5px'}}> 导出EXCEL </Button>
-        </a>
+        {/* <a download={'订单列表.xlsx'} href={`${configUrl.apiUrl}${configUrl.apiBasePath}/classAwardRecords/exportAwardRecord?filter=${JSON.stringify(filter)}&access_token=${localStorage.token}` || '#'}> */}
+          <Button style={{marginBottom: '5px', marginLeft: '5px'}} onClick={() => {this.setState({ outputVisible: true })}}> 导出EXCEL </Button>
+        {/* </a> */}
         <Grid fluid>
           <Row>
             <Col lg={12}>
@@ -423,6 +455,81 @@ export class WinningList extends React.Component {
                 this.setState({visible: false});
               }}
             />
+          </Modal>
+          {/** 导出EXCEL */}
+          <Modal
+            visible={this.state.outputVisible}
+            title="导出EXCEL"
+            onCancel={() => {
+              this.setState({outputVisible: false});
+            }}
+            footer={null}
+          >
+            <Form>
+              <FormItem {...formItemLayout} label="时间">
+                {getFieldDecorator(`time`, {
+                  rules: [{message: '请选择时间范围', required: true}],
+                  initialValue: []
+                })(
+                  <RangePicker
+                    locale={locale}
+                    dateRender={(current) => {
+                      const style = {};
+                      if (current.date() === 1) {
+                        style.border = '1px solid #1890ff';
+                        style.borderRadius = '50%';
+                      }
+                      return (
+                        <div className="ant-calendar-date" style={style}>
+                          {current.date()}
+                        </div>
+                      );
+                    }}
+                  />
+                )}
+              </FormItem>
+              <FormItem {...formItemLayout} label="奖项">
+                {getFieldDecorator(`award`, {
+                  rules: [{message: '请选择奖项', required: false}],
+                  initialValue: optionLevels && optionLevels[0] && optionLevels[0].value || []
+                })(
+                  <Select placeholder="请选择奖项">
+                    {
+                      optionLevels && optionLevels.length ? optionLevels.map((v, i) =>
+                        <Option value={v.value} key={v.value}>{v.title}</Option>
+                      ) : null
+                    }
+                  </Select>
+                )}
+              </FormItem>
+              <div className="ta-c mt-20">
+                <Button style={{ marginRight: 8 }} onClick={() => {
+                  this.handleExcel('fail')
+                }}>
+                  取消
+                </Button>
+                {(function(){
+                  
+                  const name = getFieldValue('award')
+                  const time = getFieldValue('time')
+
+                  if(name && time && time.length > 0) {
+                    const start = moment(time[0]).format('YYYY-MM-DD')
+                    const end = moment(time[1]).format('YYYY-MM-DD')
+                    
+                    if(start && end) {
+                      return <a download={'订单列表.xlsx'} href={`${configUrl.apiUrl}${configUrl.apiBasePath}/classAwardRecords/exportAwardRecord?name=${name}&start=${start}&end=${end}&access_token=${localStorage.token}` || '#'}>
+                        <Button style={{marginBottom: '5px', marginLeft: '5px'}} type="primary" onClick={() => that.handleExcel('success')}>确定</Button>
+                      </a>
+                    }
+                  } else {
+                    return <Button style={{marginBottom: '5px', marginLeft: '5px'}} disabled={true} type="primary">确定</Button>
+                  }
+                }())}
+                
+              </div>
+            </Form>
+            
           </Modal>
           {/*更改物流*/}
           <Modal

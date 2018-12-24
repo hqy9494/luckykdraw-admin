@@ -227,11 +227,11 @@ export class AwardAgainSetting extends React.Component {
           </Row>
           <Row gutter={24} style={{lineHeight: '35px'}}>
             <Col sm={11}>
-              <FormItem label={`领取优惠券后`}
+              <FormItem label={`领取优惠码后`}
                 {...formItemLayout}
               >
                 {getFieldDecorator(`duration`, {
-                  rules: [{ message: '请输入优惠券有效时间', required: true}],
+                  rules: [{ message: '请输入优惠码有效时间', required: true}],
                   initialValue: drawSettingDetail && drawSettingDetail.duration / 24 || 0
                 })(
                   <InputNumber min={1} style={{ width: '100%'}}/>
