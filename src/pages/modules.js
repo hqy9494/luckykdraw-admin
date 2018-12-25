@@ -63,6 +63,8 @@ import WinningSetting from "./Award/WinningSetting"
 import AwardAgainList from "./Award/AwardAgainList"
 import AwardAgainSetting from "./Award/AwardAgainSetting"
 
+//DefineAward
+import DefineAwardList from "./DefineAward/DefineAwardList"
 const modules = {
   Index,
   Tenant,
@@ -118,6 +120,9 @@ const modules = {
   WinningSetting,
   AwardAgainList,
   AwardAgainSetting,
+
+  //定制中将
+  DefineAwardList
 };
 
 export default modules;

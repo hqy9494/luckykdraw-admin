@@ -19,6 +19,7 @@ import Statistic from "../Statistic/modules";
 import Region from "../Region/modules"
 import BuyTimesAward from "../BuyTimesAward/modules"
 import Award from "../Award/modules"
+import DefineAward from "../DefineAward/modules"
 
 const modules = {
   Indexs,
@@ -34,6 +35,7 @@ const modules = {
   Region,
   BuyTimesAward,
   Award,
+  DefineAward
 };
 
 export function mapDispatchToProps(dispatch) {
