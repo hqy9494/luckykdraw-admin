@@ -27,10 +27,17 @@ export default {
         component: 'Record',
         title: '中奖记录'
       },
-      superRecord: {
-        path: 'Record/super',
+      // 中奖记录
+      record: {
+        path: 'record/base',
         module: 'Records',
-        component: 'SuperRecord',
+        component: 'Record',
+        title: '中奖记录'
+      },
+      DefineAwardList: {
+        path: 'DefineAward/DefineAwardList',
+        module: 'DefineAward',
+        component: 'DefineAwardList',
         title: '大奖记录'
       },
       // 二维码
