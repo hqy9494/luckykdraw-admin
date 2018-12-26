@@ -9,7 +9,7 @@ export class DefineAwardSetting extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      enable:0
+      enable:undefined
     };
     this.uuid = uuid.v1();
   }
