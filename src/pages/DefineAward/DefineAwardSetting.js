@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
-import { Col, Row, Form, Input, Switch, Select, Button, message, InputNumber, DatePicker } from "antd";
+import { Col, Row, Form, Input, Switch, Select, Button, message, InputNumber, DatePicker, Checkbox, Table } from "antd";
 import uuid from "uuid";
 import moment from "moment";
 import locale from 'antd/lib/date-picker/locale/zh_CN';
@@ -28,9 +28,17 @@ export class DefineAwardSetting extends React.Component {
       optionType: null,
       drawSettingDetail: {},
       switchChecked: false,
+      classAwardList: [],
+      boxList: [],
+      boxOptionList: [],
+      userDetails: [],
+      selectedRowKeys: [],
+      selectedRows: [],
+      dataTable: [],
+      isCheckClick: false
     };
     this.uuid = uuid.v1();
-    this.reg = this.getRegular('mobile-phone')
+    this.reg = getRegular('mobile-phone')
     this.fetchNum = 0
   }
 
@@ -40,32 +48,97 @@ export class DefineAwardSetting extends React.Component {
     const id = match.params.id
     
     if(id && id !== 'add') {
-      this.getVoucherAwards(id)
+      this.getClassAppointRecords(id)
     }
-    
+    this.getClassAward()
+    this.getBoxes()
   }
 
   componentWillReceiveProps(nextProps) {}
 
-  getVoucherAwards = (id) => {
+  getClassAppointRecords = (id) => {
     this.props.rts({
-      url: `/VoucherAwards/${id}`,
+      url: `/classAppointRecords/${id}`,
       method: 'get',
     }, this.uuid, 'getVoucherAwards', (data) => {
       this.setState({
         drawSettingDetail: data,
-        switchChecked: data && data.enable || false,
       })
     })
   }
 
-  putVoucherAwards = (id, params) => {
+  getBoxes = () => {
+    this.props.rts({
+      url: `/boxes`,
+      method: 'get',
+    }, this.uuid, 'getBoxes', (data) => {
+      this.setState({
+        boxList: data,
+        boxOptionList: this.getClassOption(data),
+      })
+    })
+  }
+
+  onSelection = (selectedRowKeys, selectedRows) => {
+    this.setState({
+      selectedRowKeys,
+      selectedRows,
+    });
+  }
+
+  onSelectedRowKeysChange = (selectedRowKeys, selectedRows) => {
+    this.setState({
+      selectedRowKeys,
+      selectedRows,
+    });
+  }
+
+  getUser = (mobile) => {
+    this.props.rts({
+      url: `/accounts/getUser`,
+      method: 'get',
+      params:{
+        filter: {
+          where:{
+            mobile,
+          }
+        }
+      }
+    }, this.uuid, 'getUser', (data) => {
+      this.setState({
+        userDetails: data,
+      })
+    })
+  }
+
+  getClassAward = () => {
+    this.props.rts({
+      url: `/classAwards`,
+      method: 'get',
+    }, this.uuid, 'getClassAward', (data) => {
+      this.setState({
+        classAwardList: data,
+        classOptionList: this.getClassOption(data),
+      })
+    })
+  }
+
+  getClassOption = (data) => {
+    return data && Array.isArray(data) && data.map(v => {
+      return {
+        value: v.id,
+        title: v.name
+      }
+    }) || []
+  }
+
+  putClassAppointRecords = (id, params) => {
     
     this.props.rts({
-      url: id && id === 'add' ? `/VoucherAwards` : `/VoucherAwards/${id}`,
-      method: id && id === 'add' ? `post` : 'patch',
+      url: id === 'add' ? '/classAppointRecords' : `/classAppointRecords/${id}`,
+      method: id === 'add' ? `post`: 'patch',
       data: params
-    }, this.uuid, 'putVoucherAwards', () => {
+    }, this.uuid, 'putClassAppointRecords', () => {
       message.success('保存成功', 1, () => {
         this.props.goBack()
       })
@@ -75,7 +148,7 @@ export class DefineAwardSetting extends React.Component {
   handleCancel = () => this.props.goBack()
   
   handleSubmit = (e) => {
-    const { drawSettingDetail } = this.state
+    const { drawSettingDetail, dataTable, userDetails } = this.state
     const { match } = this.props
     const { id } = match.params
 
@@ -89,30 +162,47 @@ export class DefineAwardSetting extends React.Component {
             params[i] = moment(values[i]).format('YYYY-MM-DD HH:mm:ss')
             continue
           }
-          if(i === 'highPrice' || i === 'lowPrice') {
-            params[i] = values[i] * 100
-            continue
-          }
           
-          if(i === 'duration' ) {
-            params[i] = values[i] * 24
-            continue
-          }
           params[i] = values[i]
         }
+        params['boxIds'] = dataTable && dataTable.length && dataTable.map(v => v.value)
+        params['userId'] = userDetails && userDetails.length > 0 && userDetails[0].id || ''
         // if(drawSettingDetail && drawSettingDetail.id) params.id = drawSettingDetail.id
-
-        if(params['lowPrice'] > params['highPrice']) {
-          message.error('面额右值不行小于左值', 1)
-        } else {
-          id && this.putVoucherAwards(id, params)
-        }
+        console.log(params, 167)
+        // return
+        this.putClassAppointRecords(id, params)
+        // if(params['lowPrice'] > params['highPrice']) {
+        //   message.error('面额右值不行小于左值', 1)
+        // } else {
+        //   id && this.putVoucherAwards(id, params)
+        // }
+        
       }
     })
   }
 
   handleChange = (value) => {
-    console.log(`selected ${value}`);
+    let { dataTable, boxOptionList} = this.state;
+    
+    if(!value) return
+
+    const index = dataTable && dataTable.findIndex(v => v.value === value) >=0 ? dataTable.findIndex(v => v.value === value) : -1
+    if(index < 0) {
+      const boxs = boxOptionList && boxOptionList.length > 0 && boxOptionList.filter(v => v.value === value) || []
+      dataTable = [...dataTable , ...boxs]
+    } 
+    this.setState({
+      dataTable,
+    })
+  }
+
+  handleDelete = () => {
+    let { selectedRowKeys, dataTable } = this.state;
+    
+    dataTable = dataTable && dataTable.length > 0 && dataTable.filter(v => selectedRowKeys.includes(v.value) ? false : true) || []
+    this.setState({
+      dataTable,
+    })
   }
   
   handleBlur = () => {
@@ -123,13 +213,48 @@ export class DefineAwardSetting extends React.Component {
     console.log('focus');
   }
 
+  handleMobile = () => {
+    const mobile = this.props.form.getFieldValue('mobile')
+    if(mobile && this.reg.test(mobile)) {
+      this.getUser(mobile)
+    }
+    this.setState({
+      isCheckClick: true
+    })
+  }
+
   render() {
     
     const { getFieldDecorator } = this.props.form
-    const { drawSettingDetail, switchChecked } = this.state
+    const { drawSettingDetail, classOptionList, boxList, boxOptionList, dataTable, userDetails, selectedRowKeys, selectedRows, isCheckClick } = this.state
 
     const startTime = moment().format()
     const endTime = moment().format()
+
+    const rowSelection = {
+      selectedRowKeys,
+      hideDefaultSelections: true,
+      onChange: this.onSelectedRowKeysChange,
+      selections: true,
+      onSelection: this.onSelection,
+    };
+
+    const columns = [{
+      title: 'title',
+      dataIndex: 'title',
+      key: 'title',
+    }]
+
+    // const dataTable = [];
+    // for (let i = 1; i <= 10; i++) {
+    //   dataTable.push({
+    //     key: i,
+    //     name: 'John Brown',
+    //     age: `${i}2`,
+    //     address: `New York No. ${i} Lake Park`,
+    //     description: `My name is John Brown, I am ${i}2 years old, living in New York No. ${i} Lake Park.`,
+    //   });
+    // }
 
     return (
       <section className="DefineAwardSetting-page">
@@ -152,8 +277,28 @@ export class DefineAwardSetting extends React.Component {
               </FormItem>
             </Col>
             <Col sm={3}>
-              <Button type="primary" onClick={() => {console.log(123)}}>校验</Button>
+              <Button type="primary" onClick={() => {this.handleMobile()}}>校验</Button>
             </Col>
+          </Row>
+          <Row gutter={24} style={{lineHeight: '35px'}}>
+            <Col sm={8}></Col>
+            {
+              isCheckClick ?
+                userDetails && userDetails.length > 0 ?
+                <Col sm={14}>
+                  <div style={{display:'flex', justifyContent: 'center', alignItems: 'center'}}>
+                    <div style={{flex: 1}}>
+                      <img style={{width: '100px', height: 'auto'}} src={userDetails && userDetails[0] && userDetails[0].avatar || ''} alt="img"/>
+                    </div>
+                    <div style={{flex: 4}}>
+                      <div>微信昵称：{userDetails && userDetails[0] && userDetails[0].nickname || ''}</div>
+                      <div>微信openID：{userDetails && userDetails[0] && userDetails[0].openid || ''}</div>
+                    </div>
+                  </div>
+                </Col> :
+                <div style={{color: 'red'}}>此电话还未关联任何用户</div>
+              : null
+            }
           </Row>
           <div className="project-title">奖品信息</div>
           <Row gutter={24} style={{lineHeight: '35px'}}>
@@ -170,14 +315,13 @@ export class DefineAwardSetting extends React.Component {
                     style={{ width: 200 }}
                     placeholder="请选择奖品"
                     optionFilterProp="children"
-                    onChange={handleChange}
-                    onFocus={handleFocus}
-                    onBlur={handleBlur}
                     filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                   >
-                    <Option value="jack">Jack</Option>
-                    <Option value="lucy">Lucy</Option>
-                    <Option value="tom">Tom</Option>
+                    {
+                      classOptionList && classOptionList.length > 0 ? classOptionList.map((v, i) => {
+                        return <Option key={`option-${i}`} value={v.value}>{v.title}</Option>
+                      }) : null
+                    }
                   </Select>
                 )}
               </FormItem>
@@ -189,18 +333,25 @@ export class DefineAwardSetting extends React.Component {
               <FormItem 
                 label={`中奖概率`}
                 {...formItemLayout}
-                extra={<div style={{color: 'red'}}>最大可填数额为100，最小可填数额为0</div>}
               >
                 {getFieldDecorator(`probability`, {
-                  rules: [{ message: '请输入中奖概率', required: true}],
-                  initialValue: drawSettingDetail && drawSettingDetail.probability || ''
+                  rules: [
+                    { message: '请输入中奖概率', required: true},
+                  ],
+                  initialValue: drawSettingDetail && drawSettingDetail.probability || 0
                 })(
-                  <InputNumber min={0} max={100} style={{ width: '100%'}}/>
+                  <InputNumber 
+                    min={0} 
+                    max={100} 
+                    style={{ width: '100%'}}
+                    formatter={value => `${value}%`}
+                    parser={value => value.replace('%', '')}
+                  />
                 )}
               </FormItem>
             </Col>
-            <Col sm={1}>
-              <div>%</div>
+            <Col sm={8}>
+              <div style={{color: 'red'}}>最大可填数额为100，最小可填数额为0</div>
             </Col>
           </Row>
           <Row gutter={24} style={{lineHeight: '35px'}}>
@@ -234,12 +385,10 @@ export class DefineAwardSetting extends React.Component {
             </Col>
           </Row>
           <Row gutter={24} style={{lineHeight: '35px'}}>
-            <Col sm={24}>
+            <Col sm={11}>
               <FormItem 
                 label={`过期时间`}
-                labelCol={{ span: 8 }}
-                wrapperCol={{ span: 7 }}
-                extra={<div style={{color: 'red'}}>生效时间必须大于领取时间小于过期时间</div>}
+                {...formItemLayout}
               >
                 {getFieldDecorator(`endTime`, {
                   rules: [{ message: '请输入过期时间', required: true}],
@@ -263,38 +412,67 @@ export class DefineAwardSetting extends React.Component {
                 )}
               </FormItem>
             </Col>
+            <Col sm={7}>
+              <div style={{color: 'red'}}>生效时间必须大于领取时间小于过期时间</div>
+            </Col>
           </Row>
           <Row gutter={24} style={{lineHeight: '35px'}}>
-            <Col sm={24}>
+            <Col sm={16}>
               <FormItem 
                 label={`投放设备`}
-                labelCol={{ span: 8 }}
-                wrapperCol={{ span: 7 }}
+                labelCol={{span: 12 }}
+                wrapperCol={{ span: 12 }}
               >
-                {getFieldDecorator(`enable`, {
+                {getFieldDecorator(`boxIds`, {
                   rules: [{ message: '', required: true}],
-                  initialValue: drawSettingDetail && drawSettingDetail.enable || false
+                  initialValue: drawSettingDetail && drawSettingDetail.boxIds || []
                 })(
                   <Select
                     showSearch
-                    style={{ width: 200 }}
+                    // style={{ width: 200 }}
                     placeholder="请选择奖品"
                     optionFilterProp="children"
-                    onChange={handleChange}
-                    onFocus={handleFocus}
-                    onBlur={handleBlur}
+                    onChange={this.handleChange}
+                    onFocus={this.handleFocus}
+                    onBlur={this.handleBlur}
                     filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                   >
-                    <Option value="jack">Jack</Option>
-                    <Option value="lucy">Lucy</Option>
-                    <Option value="tom">Tom</Option>
+                    {
+                      boxOptionList && boxOptionList.length > 0 ? boxOptionList.map((v, i) => {
+                        return <Option key={`optionkey-${i}`} value={v.value}>{v.title}</Option>
+                      }) : null
+                    }
                   </Select>
                 )}
               </FormItem>
             </Col>
-            <Col sm={3}>
-              <Button type="danger" size="small">删除</Button>
+            <Col sm={2}>
+              <Button type="danger" size="small" onClick={()=>{this.handleDelete()}}>删除</Button>
             </Col>
+          </Row>
+          <Row gutter={24} style={{lineHeight: '35px'}}>
+            <Col sm={8}></Col>
+            {
+              dataTable && dataTable.length > 0 ?
+                <Col sm={8}>
+                  <Table
+                    bordered
+                    rowKey="value"
+                    size="small"
+                    rowSelection={rowSelection}
+                    showHeader={false}
+                    pagination={false}
+                    columns={columns}
+                    locale={{
+                      filterTitle: '筛选',
+                      filterConfirm: '确定',
+                      filterReset: '重置',
+                      emptyText: '暂无数据'
+                    }}
+                    dataSource={dataTable ? dataTable : []} />
+                </Col> :
+              null
+            }
           </Row>
           <div className="ta-c mt-20">
             <Button style={{marginRight: 10}} onClick={this.handleCancel}>取消</Button>

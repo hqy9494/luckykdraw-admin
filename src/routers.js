@@ -38,7 +38,15 @@ export default {
         path: 'DefineAward/DefineAwardList',
         module: 'DefineAward',
         component: 'DefineAwardList',
-        title: '大奖记录'
+        title: '大奖记录',
+        subs: {
+          DefineAwardSetting: {
+            path: "/detail/:id",
+            module: "DefineAward",
+            component: "DefineAwardSetting",
+            title: "新建定向中奖"
+          }
+        }
       },
       // 二维码
       qrCode: {
