@@ -46,12 +46,16 @@ export class DefineAwardSetting extends React.Component {
   componentDidMount() {
     const { match } = this.props
     const id = match.params.id
+
+    
     
     if(id && id !== 'add') {
       this.getClassAppointRecords(id)
     }
     this.getClassAward()
-    this.getBoxes()
+    if(id && id == 'add') {
+      this.getBoxes()
+    }
   }
 
   componentWillReceiveProps(nextProps) {}
@@ -63,11 +67,21 @@ export class DefineAwardSetting extends React.Component {
     }, this.uuid, 'getVoucherAwards', (data) => {
       this.setState({
         drawSettingDetail: data,
+      }, () => {
+        this.getBoxes()
       })
     })
   }
 
+  setBoxes = (data) => {
+    let { boxOptionList } = this.state;
+    let boxIds = data && data.boxIds || []
+    return boxOptionList && boxOptionList.length > 0 && boxOptionList.filter(v => boxIds.includes(v.value) ? true : false) || []
+    
+  }
+
   getBoxes = () => {
+    const { drawSettingDetail } = this.state
     this.props.rts({
       url: `/boxes`,
       method: 'get',
@@ -75,6 +89,12 @@ export class DefineAwardSetting extends React.Component {
       this.setState({
         boxList: data,
         boxOptionList: this.getClassOption(data),
+      }, () => {
+        if(drawSettingDetail && Object.keys(drawSettingDetail).length > 0) {
+          this.setState({
+            dataTable: drawSettingDetail && this.setBoxes(drawSettingDetail) || []
+          })
+        }
       })
     })
   }
@@ -124,6 +144,7 @@ export class DefineAwardSetting extends React.Component {
   }
 
   getClassOption = (data) => {
+    
     return data && Array.isArray(data) && data.map(v => {
       return {
         value: v.id,
