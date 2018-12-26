@@ -6,7 +6,7 @@ import { Col, Grid, Row } from "react-bootstrap";
 import { Modal, Divider, Button, message,Form,Input,Popover } from "antd";
 import TableExpand from "../../components/AsyncTable";
 import "./DefineAwardList.scss";
-import { isArray } from "util";
+import moment from "../../components/Moment";
 let timer = null; 
 export class DefineAwardList extends React.Component {
   constructor(props) {
@@ -74,15 +74,15 @@ export class DefineAwardList extends React.Component {
     if(editable){
       if(enable){
         if(received){
-          return {name:"已中奖",value:"award"};
+          return {name:"已中奖",value:"award",color:"#3BD7B6"};
         }else{
-          return {name:"待领取",value:"unReceive"};
+          return {name:"待领取",value:"unReceive",color:"#459BFC"};
         }
       }else{
-        return {name:"待发布",value:"unPost"};
+        return {name:"待发布",value:"unPost",color:"#3CBCE5"};
       }
     }else{
-      return {name:"已取消",value:"cancel"};
+      return {name:"已取消",value:"cancel",color:"#999"};
     }
   }
   getButton = (type,id) => {
@@ -165,6 +165,15 @@ export class DefineAwardList extends React.Component {
           }
         },
         {
+          type: "option",
+          field: "userId",
+          title: "是否注册",
+          options: [
+            {title: '是', value: "YES",searchValue:{userId:{neq:[null]}}},
+            {title: '否', value: "No",searchValue:{userId:null}}
+          ]
+        },
+        {
           type: "field",
           field: "mobile",
           title: "定向人"
@@ -189,7 +198,8 @@ export class DefineAwardList extends React.Component {
           {title: '待发布', value: "unPost",searchValue:{enable:false,editable:true}},
           {title: '已取消', value: "cancel",searchValue:{editable:false}}
         ]
-      }],
+      }
+    ],
       columns: [
         {
           title: "奖品名称",
@@ -200,8 +210,8 @@ export class DefineAwardList extends React.Component {
           title: "定向人手机号",
           dataIndex: "mobile",
           key: "mobile",
-          render:(test)=>{
-            return test || "未绑定";
+          render:(test,list)=>{
+            return <span style={{color:list.userId?"#3BD7B6":"#ff0000"}}>{test}<br/>{list.userId?"已注册":"未注册"}</span>;
           }
         },
         {
@@ -247,13 +257,18 @@ export class DefineAwardList extends React.Component {
           title: "开始时间",
           dataIndex: "startTime",
           key: "startTime",
-          type: 'date',
+          render:(time)=>{
+            return time? moment(time).format('YYYY-MM-DD') : "--";
+          }
         },
         {
           title: "结束时间",
           dataIndex: "endTime",
           key: "endTime",
-          type: 'date',
+          render:(time)=>{
+            return time? moment(time).format('YYYY-MM-DD') : "--";
+          }
+          
         },
         {
           title: "出奖概率",
@@ -268,7 +283,8 @@ export class DefineAwardList extends React.Component {
           title: "状态",
           key: "enable",
           render: (text,list) => {
-           return  <span>{this.returnStatus(list).name}</span>
+            const result = this.returnStatus(list)
+            return  <span style={{color:result.color}}>{result.name}</span>
         }
         },
         {
