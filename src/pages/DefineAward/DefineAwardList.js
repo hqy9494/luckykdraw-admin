@@ -88,11 +88,11 @@ export class DefineAwardList extends React.Component {
   getButton = (type,id) => {
     const statusContent = {
       unPost:<div>
-        <Button type="primary" size="small" onClick={()=>this.showModal("remove",id)}>撤销</Button>
-        <Divider type="vertical" />
         <Button type="primary" size="small" onClick={()=>this.showModal("add",id)}>发布</Button>
         <Divider type="vertical" />
-        <Button type="primary" size="small" onClick={()=>this.props.to(`${this.props.match.url}/detail/${id}`)}>编辑</Button>
+        <Button size="small" onClick={()=>this.props.to(`${this.props.match.url}/detail/${id}`)}>编辑</Button>
+        <Divider type="vertical" />
+        <Button type="danger" size="small" onClick={()=>this.showModal("remove",id)}>撤销</Button>
       </div>,
       unReceive:<div><Button type="primary" size="small" onClick={()=>this.showModal("remove",id)}>撤销</Button></div>,
       award:<div>--</div>,
@@ -183,9 +183,11 @@ export class DefineAwardList extends React.Component {
         type: "option",
         field: "enable",
         title: "状态",
-        option: [
-          {title: '开启', value: true},
-          {title: '禁用', value: false}
+        options: [
+          {title: '已中奖', value: "award",searchValue:{enable:true,received:true,editable:true}},
+          {title: '待领取', value: "unReceive",searchValue:{enable:true,received:false,editable:true}},
+          {title: '待发布', value: "unPost",searchValue:{enable:false,editable:true}},
+          {title: '已取消', value: "cancel",searchValue:{editable:false}}
         ]
       }],
       columns: [

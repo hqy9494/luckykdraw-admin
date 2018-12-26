@@ -1,4 +1,8 @@
 .AsyncTableContainer{
+  .ant-table-thead > tr > th, .ant-table-tbody > tr > td{
+    font-size: 12px;
+    .ant-btn{font-size: 13px;}
+  }
   .row{margin-left:0;margin-right: 0;}
   .AsyncTable{padding: 6px 26px 6px 34px;background: #fff;
     .HeaderNav{margin: 0!important;}

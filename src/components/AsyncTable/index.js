@@ -367,7 +367,10 @@ export default class TableExpand extends React.Component {
 								where.or.push({[s.field]:arr[i]});
 							}
 						}
-					}else if(s.isValueArray){
+					}else if(s.values.searchValue){
+						where = Object.assign(where,s.values.searchValue);
+					}
+					else if(s.isValueArray){
 						where[s.field] = [s.values.value];					
 					}else{
 						where[s.field] = s.values.value;	

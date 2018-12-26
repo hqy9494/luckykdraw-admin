@@ -404,11 +404,11 @@ class AsyncSearch extends React.Component {
 	//field字段搜索，option选择器搜索，date时间搜索，number数量搜索，relevance，字段关联表搜索，主要关联,默认为id,用fieldName可以改变关联值，
 	//unrelevance字段在表中的对象中关联查询表,默认为id,用fieldName可以改变关联值,
 	searchClick =()=>{
-		const {api} = this.props;
+		const {api,changeLoading} = this.props;
 		let search  =	JSON.parse(JSON.stringify(this.props.search));
 		let searchArr = [];
 		this.props.form.validateFields(async (err, values) => {
-			this.props.changeLoading(true);
+			changeLoading(true);
 			for(let i in search){
 				delete	search[i].values;
 				switch(search[i].type){
@@ -552,6 +552,7 @@ class AsyncSearch extends React.Component {
 							const min = parseFloat(values[search[i].field+'min']);
 							const max = parseFloat(values[search[i].field+'max']);
 							if(min>max){
+								changeLoading(false);
 								return message.error(search[i].title+'最小值不能大于最大值！');
 							}
 							search[i].values = [!isNaN(min)?min:null,!isNaN(max)?max:null];

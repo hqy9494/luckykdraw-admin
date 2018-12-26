@@ -54,7 +54,7 @@ export class DefineAwardSetting extends React.Component {
       <section className="DefineAwardSetting">
         <Panel>
         <Form.Item
-              label="修改奖项后是否添加进当天的预估奖池"
+              label="取消定向中奖后是否影响预估显示"
             >
               {getFieldDecorator('enable', {
                 rules: [{
