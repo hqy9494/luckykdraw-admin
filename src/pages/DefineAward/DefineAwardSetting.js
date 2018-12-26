@@ -157,7 +157,7 @@ export class DefineAwardSetting extends React.Component {
   putClassAppointRecords = (id, params) => {
     
     this.props.rts({
-      url: id === 'add' ? '/classAppointRecords' : `/classAppointRecords/${id}`,
+      url: id === 'add' ? '/classAppointRecords/createClassAppointRecord' : `/classAppointRecords/${id}`,
       method: id === 'add' ? `post`: 'patch',
       data: params
     }, this.uuid, 'putClassAppointRecords', () => {
