@@ -9,6 +9,7 @@ import { getRegular } from '../../components/CheckInput';
 
 const FormItem = Form.Item
 const Option = Select.Option
+const RadioGroup = Radio.Group
 
 const formItemLayout = {
   labelCol: { span: 18 },
@@ -47,12 +48,12 @@ export class DefineAwardSetting extends React.Component {
     const { match } = this.props
     const id = match.params.id
 
-    
+    this.getClassAward()
     
     if(id && id !== 'add') {
       this.getClassAppointRecords(id)
     }
-    this.getClassAward()
+    
     if(id && id == 'add') {
       this.getBoxes()
     }
@@ -215,7 +216,7 @@ export class DefineAwardSetting extends React.Component {
         // console.log(params, 167)
         // return
         if(isCheckClick)  {
-          // this.putClassAppointRecords(id, params)
+          this.putClassAppointRecords(id, params)
         } else {
           message.info("请校验一下中奖人电话信息", 1)
         }
@@ -287,16 +288,11 @@ export class DefineAwardSetting extends React.Component {
       key: 'title',
     }]
 
-    // const dataTable = [];
-    // for (let i = 1; i <= 10; i++) {
-    //   dataTable.push({
-    //     key: i,
-    //     name: 'John Brown',
-    //     age: `${i}2`,
-    //     address: `New York No. ${i} Lake Park`,
-    //     description: `My name is John Brown, I am ${i}2 years old, living in New York No. ${i} Lake Park.`,
-    //   });
-    // }
+    const radioStyle = {
+      display: 'block',
+      height: '30px',
+      lineHeight: '30px',
+    };
 
     return (
       <section className="DefineAwardSetting-page">
@@ -469,6 +465,10 @@ export class DefineAwardSetting extends React.Component {
                   rules: [{ message: '请选择投放设备', required: false}],
                   initialValue: drawSettingDetail && drawSettingDetail.boxIds || []
                 })(
+                  // <RadioGroup onChange={this.handleChange} value={this.state.value}>
+                  //   <Radio style={radioStyle} value={1}>全部投放</Radio>
+                  //   <Radio style={radioStyle} value={2}>随机投放</Radio>
+                  // </RadioGroup>
                   <Select
                     showSearch
                     // style={{ width: 200 }}
