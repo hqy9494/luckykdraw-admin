@@ -165,6 +165,15 @@ export class DefineAwardList extends React.Component {
           }
         },
         {
+          type: "option",
+          field: "userId",
+          title: "是否注册",
+          options: [
+            {title: '是', value: "YES",searchValue:{userId:{neq:[null]}}},
+            {title: '否', value: "No",searchValue:{userId:null}}
+          ]
+        },
+        {
           type: "field",
           field: "mobile",
           title: "定向人"
@@ -189,7 +198,8 @@ export class DefineAwardList extends React.Component {
           {title: '待发布', value: "unPost",searchValue:{enable:false,editable:true}},
           {title: '已取消', value: "cancel",searchValue:{editable:false}}
         ]
-      }],
+      }
+    ],
       columns: [
         {
           title: "奖品名称",
@@ -200,8 +210,8 @@ export class DefineAwardList extends React.Component {
           title: "定向人手机号",
           dataIndex: "mobile",
           key: "mobile",
-          render:(test)=>{
-            return test || "未绑定";
+          render:(test,list)=>{
+            return <span>{test}<br/>{list.userId?"已注册":"未注册"}</span>;
           }
         },
         {
