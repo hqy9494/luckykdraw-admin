@@ -15,26 +15,41 @@ export class DefineAwardList extends React.Component {
       visible: false,
       refreshTable: false,
       status:"add",
-      sendSecond:120
+      sendSecond:120,
+      setPhone:"",
+      selectAllId:[]
     };
     this.uuid = uuid.v1();
   }
-  /*componentWillMount(){
-    this.
-  }*/
+  componentWillMount(){
+    this.getPhone();
+  }
+  //获取手机号码
+  getPhone = () => {
+    this.props.rts(
+      {
+        method: 'get',
+        url: "/classAppointRecords/getAppointAwardCheckPhone"
+      },
+      this.uuid,
+      'searchData',
+      (res = {}) => {
+        this.setState({setPhone:res});
+      });
+    
+  }
   //显示弹窗
-  showModal = (type) => {
-    this.setState({visible:true,status:type});
+  showModal = (type,id) => {
+    this.setState({visible:true,status:type,changeAwardId:Array.isArray(id)?id:[id]});
   }
   
   sendVerification = () =>{
     this.props.form.validateFields((err, values) => {
-      if(values.phone){
+      if(values.mobile){
         this.props.rts(
           {
-            method: 'post',
-            url: "/systems/switchAddPredict",
-            params: values
+            method: 'get',
+            url: "/verifications/code/send?mobile="+values.mobile,
           },
           this.uuid,
           'searchData',
@@ -70,32 +85,66 @@ export class DefineAwardList extends React.Component {
       return {name:"已取消",value:"cancel"};
     }
   }
+  getButton = (type,id) => {
+    const statusContent = {
+      unPost:<div>
+        <Button type="primary" size="small" onClick={()=>this.showModal("remove",id)}>撤销</Button>
+        <Divider type="vertical" />
+        <Button type="primary" size="small" onClick={()=>this.showModal("add",id)}>发布</Button>
+        <Divider type="vertical" />
+        <Button type="primary" size="small" onClick={()=>this.props.to(`${this.props.match.url}/detail/${id}`)}>编辑</Button>
+      </div>,
+      unReceive:<div><Button type="primary" size="small" onClick={()=>this.showModal("remove",id)}>撤销</Button></div>,
+      award:<div>--</div>,
+      cancel:<div>--</div>,
+    }
+    return statusContent[type];
+  }
+  //切换中奖
+  changeAward = () =>{
+    this.props.form.validateFields((err, values) => {
+      const { changeAwardId,status } = this.state;
+      if(values.vscode){
+        let postData = {
+          code:values.vscode,
+          ids: JSON.stringify(changeAwardId)
+        };
+        if(status==="add"){
+          postData.enable = true;
+        }else{
+          postData.enable = false;
+        }
+        this.props.rts(
+          {
+            method: 'post',
+            url: "/classAppointRecords/switch",
+            params:postData
+          },
+          this.uuid,
+          'searchData',
+          (res = {}) => {
+            this.setState({ refreshTable: true,visible:false});
+            message.success(status==="add"?"发布成功！":"撤销成功！");
+          });
+      }else{
+        message.error("请输入验证码！");
+      }
+    });
+  }
   render() {
     const rowSelection = {
       onChange: (selectedRowKeys, selectedRows) => {
-        console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+        this.setState({selectAllId:selectedRowKeys});
       },
       getCheckboxProps: record => ({
-        disabled: record.name === 'Disabled User', // Column configuration not to be checked
+        disabled:!(record.editable === true && record.enable === false), // Column configuration not to be checked
         name: record.name,
       }),
     };
     const { getFieldDecorator } = this.props.form;
-    const { visible,status,sendSecond } = this.state;
+    const { visible,status,sendSecond,setPhone } = this.state;
     // const statusTitle = {1:"待发布",2:"待领取",3:"已中奖",4:"已取消"}
     const statusTitle = {add:"发布",remove:"撤销"}
-    const statusContent = {
-      unPost:<div>
-        <Button type="primary" size="small" onClick={()=>this.showModal("remove")}>撤销</Button>
-        <Divider type="vertical" />
-        <Button style={{background: '#c9c9c9', color: '#fff'}} size="small" onClick={()=>this.showModal("add")}>发布</Button>
-        <Divider type="vertical" />
-        <Button type="danger" size="small">编辑</Button>
-      </div>,
-      unReceive:<div><Button type="primary" size="small" onClick={()=>this.showModal("remove")}>撤销</Button></div>,
-      award:<div>--</div>,
-      cancel:<div>--</div>,
-    }
     const config = {
       rowSelection:rowSelection,
       api: {
@@ -107,10 +156,30 @@ export class DefineAwardList extends React.Component {
       },
       search: [
         {
-        type: "field",
-        field: "name",
-        title: "奖品名称",
-      },{
+          type: "relevance",
+          field: "classAwardId",
+          title: "奖品名称",
+          model: {
+            api: "/classAwards",
+            field: "name"
+          }
+        },
+        {
+          type: "field",
+          field: "mobile",
+          title: "定向人"
+        },
+        {
+          type: "date",
+          field: "startTime",
+          title: "开始时间"
+        },
+        {
+          type: "date",
+          field: "endTime",
+          title: "结束时间"
+        },
+      {
         type: "option",
         field: "enable",
         title: "状态",
@@ -206,7 +275,7 @@ export class DefineAwardList extends React.Component {
           render: (text, record) => {
             const value = this.returnStatus(record).value;
             return <span>
-              {statusContent[value]}
+              {this.getButton(value,record.id)}
             </span>
           }
         }
@@ -218,6 +287,7 @@ export class DefineAwardList extends React.Component {
           <Row>
             <Col lg={12}>
               <Button onClick={() => {this.props.to(`${this.props.match.url}/detail/add`)}} style={{marginBottom: '5px'}}>新建</Button>
+              <Button onClick={() => {const { selectAllId } = this.state;this.showModal("add",selectAllId)}} style={{marginBottom: '5px',marginLeft:"15px"}}>发布</Button>
               <TableExpand
                 {...config}
                 path={`${this.props.match.path}`}
@@ -235,7 +305,7 @@ export class DefineAwardList extends React.Component {
           className="DefineAwardList"
           title={statusTitle[status]}
           visible={visible}
-          onOk={()=>console.log("success")}
+          onOk={this.changeAward}
           cancelText="取消"
           okText="确定"
           onCancel={()=>this.setState({visible:false})}
@@ -244,8 +314,8 @@ export class DefineAwardList extends React.Component {
             <Form.Item
               label="手机号"
             >
-              {getFieldDecorator('phone', {
-                initialValue:"17875512017"
+              {getFieldDecorator('mobile', {
+                initialValue:setPhone
               })(
                 <Input disabled/>
               )}

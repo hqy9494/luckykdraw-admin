@@ -31,7 +31,15 @@ export default {
         path: 'DefineAward/DefineAwardList',
         module: 'DefineAward',
         component: 'DefineAwardList',
-        title: '定向中奖'
+        title: '定向中奖',
+        subs: {
+          DefineAwardDetail: {
+            path: "/detail/:id",
+            module: "DefineAward",
+            component: "DefineAwardDetail",
+            title: "新建定向中奖"
+          }
+        }
       },
       DefineAwardSetting: {
         path: 'DefineAward/DefineAwardSetting',
