@@ -192,9 +192,10 @@ export class DefineAwardSetting extends React.Component {
           params[i] = values[i]
         }
         params['boxIds'] = dataTable && dataTable.length && dataTable.map(v => v.value)
-        if(userDetails && userDetails.length > 0 && userDetails[0].id) {
-          params['userId'] = userDetails[0].id
-        }
+
+        // if(userDetails && userDetails.length > 0 && userDetails[0].id) {
+        //   params['userId'] = userDetails[0].id
+        // }
         
         // if(drawSettingDetail && drawSettingDetail.id) params.id = drawSettingDetail.id
         // console.log(params, 167)
@@ -204,7 +205,6 @@ export class DefineAwardSetting extends React.Component {
         } else {
           message.info("请校验一下中奖人电话信息", 1)
         }
-        
       }
     })
   }
