@@ -113,7 +113,7 @@ export class DefineAwardSetting extends React.Component {
     });
   }
 
-  getUser = (mobile) => {
+  getUser = (mobile = "") => {
     this.props.rts({
       url: `/accounts/getUser`,
       method: 'get',
@@ -127,6 +127,7 @@ export class DefineAwardSetting extends React.Component {
     }, this.uuid, 'getUser', (data) => {
       this.setState({
         userDetails: data,
+        isCheckClick: true
       })
     })
   }
@@ -169,7 +170,7 @@ export class DefineAwardSetting extends React.Component {
   handleCancel = () => this.props.goBack()
   
   handleSubmit = (e) => {
-    const { drawSettingDetail, dataTable, userDetails } = this.state
+    const { drawSettingDetail, dataTable, userDetails, isCheckClick } = this.state
     const { match } = this.props
     const { id } = match.params
 
@@ -179,24 +180,27 @@ export class DefineAwardSetting extends React.Component {
         let params = {}
         for(let i of Object.keys(values)){
           if (values[i] == null) continue
-          if(i === 'startTime' || i === 'endTime') {
-            params[i] = moment(values[i]).format('YYYY-MM-DD HH:mm:ss')
+          if(i === 'startTime') {
+            params[i] = moment(values[i]).startOf('day').format('YYYY-MM-DD HH:mm:ss')
+            continue
+          }
+          if(i === 'endTime') {
+            params[i] = moment(values[i]).endOf('day').format('YYYY-MM-DD HH:mm:ss')
             continue
           }
           
           params[i] = values[i]
         }
         params['boxIds'] = dataTable && dataTable.length && dataTable.map(v => v.value)
-        params['userId'] = userDetails && userDetails.length > 0 && userDetails[0].id || ''
+        params['userId'] = userDetails && userDetails.length > 0 && userDetails[0].id
         // if(drawSettingDetail && drawSettingDetail.id) params.id = drawSettingDetail.id
-        console.log(params, 167)
+        // console.log(params, 167)
         // return
-        this.putClassAppointRecords(id, params)
-        // if(params['lowPrice'] > params['highPrice']) {
-        //   message.error('面额右值不行小于左值', 1)
-        // } else {
-        //   id && this.putVoucherAwards(id, params)
-        // }
+        if(isCheckClick)  {
+          this.putClassAppointRecords(id, params)
+        } else {
+          message.info("请校验一下中奖人电话信息", 1)
+        }
         
       }
     })
@@ -239,9 +243,9 @@ export class DefineAwardSetting extends React.Component {
     if(mobile && this.reg.test(mobile)) {
       this.getUser(mobile)
     }
-    this.setState({
-      isCheckClick: true
-    })
+    // this.setState({
+    //   isCheckClick: true
+    // })
   }
 
   render() {
@@ -445,13 +449,13 @@ export class DefineAwardSetting extends React.Component {
                 wrapperCol={{ span: 12 }}
               >
                 {getFieldDecorator(`boxIds`, {
-                  rules: [{ message: '', required: true}],
+                  rules: [{ message: '请选择投放设备', required: false}],
                   initialValue: drawSettingDetail && drawSettingDetail.boxIds || []
                 })(
                   <Select
                     showSearch
                     // style={{ width: 200 }}
-                    placeholder="请选择奖品"
+                    placeholder="请选择投放设备"
                     optionFilterProp="children"
                     onChange={this.handleChange}
                     onFocus={this.handleFocus}
