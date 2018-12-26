@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
-import { Col, Row, Form, Input, Switch, Select, Button, message, InputNumber, DatePicker, Checkbox, Table } from "antd";
+import { Col, Row, Form, Input, Switch, Radio, Select, Button, message, InputNumber, DatePicker, Checkbox, Table } from "antd";
 import uuid from "uuid";
 import moment from "moment";
 import locale from 'antd/lib/date-picker/locale/zh_CN';
@@ -136,6 +136,13 @@ export class DefineAwardSetting extends React.Component {
     this.props.rts({
       url: `/classAwards`,
       method: 'get',
+      params: {
+        filter: {
+          where: {
+            enable: true
+          }
+        }
+      }
     }, this.uuid, 'getClassAward', (data) => {
       this.setState({
         classAwardList: data,
@@ -191,7 +198,14 @@ export class DefineAwardSetting extends React.Component {
           
           params[i] = values[i]
         }
-        params['boxIds'] = dataTable && dataTable.length && dataTable.map(v => v.value)
+        
+        if(!moment(params['startTime']).isBefore(params['endTime'])) {
+          message.error("生效时间不能超过过期时间", 1, () => {
+            return 
+          })
+        }
+
+        params['boxIds'] = dataTable && dataTable.length && dataTable.map(v => v.value) || []
 
         // if(userDetails && userDetails.length > 0 && userDetails[0].id) {
         //   params['userId'] = userDetails[0].id
@@ -201,7 +215,7 @@ export class DefineAwardSetting extends React.Component {
         // console.log(params, 167)
         // return
         if(isCheckClick)  {
-          this.putClassAppointRecords(id, params)
+          // this.putClassAppointRecords(id, params)
         } else {
           message.info("请校验一下中奖人电话信息", 1)
         }
@@ -366,10 +380,10 @@ export class DefineAwardSetting extends React.Component {
                   rules: [
                     { message: '请输入中奖概率', required: true},
                   ],
-                  initialValue: drawSettingDetail && drawSettingDetail.probability || 0
+                  initialValue: drawSettingDetail && drawSettingDetail.probability || 100
                 })(
                   <InputNumber 
-                    min={0} 
+                    min={0.01} 
                     max={100} 
                     style={{ width: '100%'}}
                     formatter={value => `${value}%`}
@@ -379,7 +393,7 @@ export class DefineAwardSetting extends React.Component {
               </FormItem>
             </Col>
             <Col sm={8}>
-              <div style={{color: 'red'}}>最大可填数额为100，最小可填数额为0</div>
+              <div style={{color: 'red'}}>最大可填数额为100，最小可填数额为0.01</div>
             </Col>
           </Row>
           <Row gutter={24} style={{lineHeight: '35px'}}>

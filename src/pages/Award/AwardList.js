@@ -24,10 +24,13 @@ export class AwardList extends React.Component {
       levelList: [],
     };
     this.uuid = uuid.v1();
+    this.time = null
   }
 
   componentWillMount() {
-    this.getType();
+    this.time = setTimeout(() => {
+      this.getType()
+    }, 1001);
   }
 
   componentWillReceiveProps(nextProps) {}
@@ -42,6 +45,10 @@ export class AwardList extends React.Component {
       })
     });
   };
+
+  componentWillUnmount () {
+    clearTimeout(this.time)
+  }
 
   // searchsToWhere = (searchs = []) => {
   //   const { search } = this.props;
@@ -123,7 +130,7 @@ export class AwardList extends React.Component {
     const {typeList} = this.state;
     const typeName = typeList.filter(v => v.type == type)
 
-    return typeName[0].name
+    return typeName && typeName[0] && typeName[0].name || ''
   }
 
   handleEnable = (id, value) => {
@@ -165,7 +172,7 @@ export class AwardList extends React.Component {
     let {levelList} = this.state
     levelList = levelList.filter(v => v.id === id)
 
-    return levelList[0] && levelList[0].name || ''
+    return levelList && levelList[0] && levelList[0].name || ''
   }
 
   render() {
