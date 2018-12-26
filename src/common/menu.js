@@ -173,9 +173,9 @@ const menu = [
         component: "DefineAwardList"
       },
       {
-        id: "DefineAwardSetting",
+        id: "DefineAwardDetail",
         name: "定向中奖设置",
-        component: "DefineAwardSetting"
+        component: "DefineAwardDetail"
       },
       
     ]
