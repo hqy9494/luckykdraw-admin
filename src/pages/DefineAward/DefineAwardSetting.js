@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
-import { Col, Row, Form, Input, Switch, Select, Button, message, InputNumber, DatePicker, Checkbox, Table } from "antd";
+import { Col, Row, Form, Input, Switch, Radio, Select, Button, message, InputNumber, DatePicker, Checkbox, Table } from "antd";
 import uuid from "uuid";
 import moment from "moment";
 import locale from 'antd/lib/date-picker/locale/zh_CN';
@@ -136,6 +136,13 @@ export class DefineAwardSetting extends React.Component {
     this.props.rts({
       url: `/classAwards`,
       method: 'get',
+      params: {
+        filter: {
+          where: {
+            enable: true
+          }
+        }
+      }
     }, this.uuid, 'getClassAward', (data) => {
       this.setState({
         classAwardList: data,
