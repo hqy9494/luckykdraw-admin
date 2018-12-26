@@ -3,14 +3,13 @@ import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 import {  Panel } from 'react-bootstrap';
 import uuid from "uuid";
-import { Form ,Select , Button,message} from "antd";
-const { Option } = Select;
+import { Form ,Radio , Button,message} from "antd";
 import "./DefineAwardSetting.scss";
 export class DefineAwardSetting extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      enable:1
+      enable:0
     };
     this.uuid = uuid.v1();
   }
@@ -53,8 +52,8 @@ export class DefineAwardSetting extends React.Component {
     return (
       <section className="DefineAwardSetting">
         <Panel>
-        <Form.Item
-              label="取消定向中奖后是否影响预估显示"
+            <Form.Item
+              label=""
             >
               {getFieldDecorator('enable', {
                 rules: [{
@@ -62,10 +61,11 @@ export class DefineAwardSetting extends React.Component {
                 }],
                 initialValue:enable
               })(
-                <Select style={{ width: 200 }} placeholder="请选择">
-                  <Option value={1}>是</Option>
-                  <Option value={0}>否</Option>
-                </Select>
+                <Radio.Group>
+                  <Radio value={0}>撤销奖池后不影响当天预估奖池</Radio>
+                  <br/>
+                  <Radio value={1}>撤销奖池后影响当天预估奖池，预计奖池做对应数量扣减</Radio>
+                </Radio.Group>
               )}
             </Form.Item>
             <div style={{textAlign:"center"}}>
