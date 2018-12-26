@@ -496,7 +496,7 @@ export class DefineAwardSetting extends React.Component {
             }
           </Row>
           <div className="ta-c mt-20">
-            <Button style={{marginRight: 10}} onClick={this.handleCancel}>取消</Button>
+            <Button style={{marginRight: 10}} onClick={() => this.handleCancel()}>取消</Button>
             <Button type="primary" htmlType="submit">确定</Button>
           </div>
         </Form>
