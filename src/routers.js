@@ -27,19 +27,19 @@ export default {
         component: 'Record',
         title: '中奖记录'
       },
-      // 中奖记录
-      record: {
-        path: 'record/base',
-        module: 'Records',
-        component: 'Record',
-        title: '中奖记录'
-      },
       DefineAwardList: {
         path: 'DefineAward/DefineAwardList',
         module: 'DefineAward',
         component: 'DefineAwardList',
-        title: '大奖记录'
+        title: '定向中奖'
       },
+      DefineAwardSetting: {
+        path: 'DefineAward/DefineAwardSetting',
+        module: 'DefineAward',
+        component: 'DefineAwardSetting',
+        title: '定向中奖设置'
+      },
+      
       // 二维码
       qrCode: {
         path: 'qrCodes/qrCode',

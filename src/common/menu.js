@@ -164,14 +164,20 @@ const menu = [
   {
     id: "DefineAward",
     icon: "printer",
-    name: "定制中奖",
+    name: "定向中奖",
     component: "DefineAward",
     children: [
       {
         id: "DefineAwardList",
-        name: "定制中奖",
+        name: "定向中奖",
         component: "DefineAwardList"
       },
+      {
+        id: "DefineAwardSetting",
+        name: "定向中奖设置",
+        component: "DefineAwardSetting"
+      },
+      
     ]
   },
   {
