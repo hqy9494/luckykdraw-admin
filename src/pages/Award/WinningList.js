@@ -490,7 +490,7 @@ export class WinningList extends React.Component {
               </FormItem>
               <FormItem {...formItemLayout} label="奖项">
                 {getFieldDecorator(`award`, {
-                  rules: [{message: '请选择奖项', required: false}],
+                  rules: [{message: '请选择奖项', required: true}],
                   initialValue: optionLevels && optionLevels[0] && optionLevels[0].value || []
                 })(
                   <Select placeholder="请选择奖项">
