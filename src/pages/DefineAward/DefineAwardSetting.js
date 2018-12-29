@@ -9,6 +9,7 @@ import { getRegular } from '../../components/CheckInput';
 
 const FormItem = Form.Item
 const Option = Select.Option
+const RadioGroup = Radio.Group
 
 const formItemLayout = {
   labelCol: { span: 18 },
@@ -35,7 +36,10 @@ export class DefineAwardSetting extends React.Component {
       selectedRowKeys: [],
       selectedRows: [],
       dataTable: [],
-      isCheckClick: false
+      isCheckClick: false,
+      isRadioVisible: false,
+      radioValue: 'all',
+      selectValue: []
     };
     this.uuid = uuid.v1();
     this.reg = getRegular('mobile-phone')
@@ -47,12 +51,12 @@ export class DefineAwardSetting extends React.Component {
     const { match } = this.props
     const id = match.params.id
 
-    
+    this.getClassAward()
     
     if(id && id !== 'add') {
       this.getClassAppointRecords(id)
     }
-    this.getClassAward()
+    
     if(id && id == 'add') {
       this.getBoxes()
     }
@@ -92,7 +96,8 @@ export class DefineAwardSetting extends React.Component {
       }, () => {
         if(drawSettingDetail && Object.keys(drawSettingDetail).length > 0) {
           this.setState({
-            dataTable: drawSettingDetail && this.setBoxes(drawSettingDetail) || []
+            dataTable: drawSettingDetail && this.setBoxes(drawSettingDetail) || [],
+            radioValue: drawSettingDetail && drawSettingDetail.boxIds && drawSettingDetail.boxIds.length > 0 ? "random" : "all"
           })
         }
       })
@@ -151,6 +156,34 @@ export class DefineAwardSetting extends React.Component {
     })
   }
 
+  getBoxesName = (name) => {
+    const { drawSettingDetail } = this.state
+    this.props.rts({
+      url: `/boxes`,
+      method: 'get',
+      params: {
+        filter: {
+          where: {
+            name: {
+              like: `%${name}%`
+            }
+          }
+        }
+      }
+    }, this.uuid, 'getBoxesName', (data) => {
+      this.setState({
+        boxList: data,
+        boxOptionList: this.getClassOption(data),
+      }, () => {
+        if(drawSettingDetail && Object.keys(drawSettingDetail).length > 0) {
+          this.setState({
+            dataTable: drawSettingDetail && this.setBoxes(drawSettingDetail) || []
+          })
+        }
+      })
+    })
+  }
+
   getClassOption = (data) => {
     
     return data && Array.isArray(data) && data.map(v => {
@@ -177,7 +210,7 @@ export class DefineAwardSetting extends React.Component {
   handleCancel = () => this.props.goBack()
   
   handleSubmit = (e) => {
-    const { drawSettingDetail, dataTable, userDetails, isCheckClick } = this.state
+    const { drawSettingDetail, dataTable, radioValue, isCheckClick } = this.state
     const { match } = this.props
     const { id } = match.params
 
@@ -204,18 +237,21 @@ export class DefineAwardSetting extends React.Component {
             return 
           })
         }
-
-        params['boxIds'] = dataTable && dataTable.length && dataTable.map(v => v.value) || []
+        if(radioValue === 'all') {
+          params['boxIds'] = []
+        } else if(radioValue === 'random') {
+          params['boxIds'] = dataTable && dataTable.length && dataTable.map(v => v.value) || []
+        }
+        
 
         // if(userDetails && userDetails.length > 0 && userDetails[0].id) {
         //   params['userId'] = userDetails[0].id
         // }
         
         // if(drawSettingDetail && drawSettingDetail.id) params.id = drawSettingDetail.id
-        // console.log(params, 167)
         // return
         if(isCheckClick)  {
-          // this.putClassAppointRecords(id, params)
+          this.putClassAppointRecords(id, params)
         } else {
           message.info("请校验一下中奖人电话信息", 1)
         }
@@ -225,7 +261,7 @@ export class DefineAwardSetting extends React.Component {
 
   handleChange = (value) => {
     let { dataTable, boxOptionList} = this.state;
-    
+
     if(!value) return
 
     const index = dataTable && dataTable.findIndex(v => v.value === value) >=0 ? dataTable.findIndex(v => v.value === value) : -1
@@ -235,24 +271,48 @@ export class DefineAwardSetting extends React.Component {
     } 
     this.setState({
       dataTable,
+      selectValue: value
     })
   }
 
   handleDelete = () => {
     let { selectedRowKeys, dataTable } = this.state;
-    
+
     dataTable = dataTable && dataTable.length > 0 && dataTable.filter(v => selectedRowKeys.includes(v.value) ? false : true) || []
     this.setState({
       dataTable,
+      selectValue: [],
+      selectedRowKeys: [],
+    },() => {
+      // this.props.form.resetFields(['boxIds'])
     })
   }
   
   handleBlur = () => {
     console.log('blur');
   }
+  handleRadioChange = (value) => {
+    if(value) {
+      if(value.target.value === 'random') {
+        this.setState({
+          isRadioVisible: true,
+          radioValue: value.target.value
+        })
+      } else {
+        this.setState({
+          isRadioVisible: false,
+          radioValue: value.target.value
+        })
+      }
+    }
+  }
   
   handleFocus = () => {
     console.log('focus');
+  }
+
+  handleSearch = (value) => {
+    this.getBoxesName(value)
   }
 
   handleMobile = () => {
@@ -260,16 +320,13 @@ export class DefineAwardSetting extends React.Component {
     if(mobile && this.reg.test(mobile)) {
       this.getUser(mobile)
     }
-    // this.setState({
-    //   isCheckClick: true
-    // })
   }
 
   render() {
     
     const { getFieldDecorator } = this.props.form
-    const { drawSettingDetail, classOptionList, boxList, boxOptionList, dataTable, userDetails, selectedRowKeys, selectedRows, isCheckClick } = this.state
-
+    const { drawSettingDetail, classOptionList, boxList, boxOptionList, dataTable, userDetails, selectedRowKeys, selectedRows, isCheckClick, isRadioVisible } = this.state
+    
     const startTime = moment().format()
     const endTime = moment().format()
 
@@ -287,16 +344,19 @@ export class DefineAwardSetting extends React.Component {
       key: 'title',
     }]
 
-    // const dataTable = [];
-    // for (let i = 1; i <= 10; i++) {
-    //   dataTable.push({
-    //     key: i,
-    //     name: 'John Brown',
-    //     age: `${i}2`,
-    //     address: `New York No. ${i} Lake Park`,
-    //     description: `My name is John Brown, I am ${i}2 years old, living in New York No. ${i} Lake Park.`,
-    //   });
-    // }
+    const radioGroup = [{
+      name: '全部投放', 
+      value: 'all',
+    },{
+      name: '随机投放', 
+      value: 'random',
+    }]
+
+    const radioStyle = {
+      display: 'block',
+      height: '30px',
+      lineHeight: '30px',
+    };
 
     return (
       <section className="DefineAwardSetting-page">
@@ -356,6 +416,7 @@ export class DefineAwardSetting extends React.Component {
                     showSearch
                     style={{ width: 200 }}
                     placeholder="请选择奖品"
+                    notFoundContent="暂无数据"
                     optionFilterProp="children"
                     filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                   >
@@ -465,57 +526,82 @@ export class DefineAwardSetting extends React.Component {
                 labelCol={{span: 12 }}
                 wrapperCol={{ span: 12 }}
               >
-                {getFieldDecorator(`boxIds`, {
+                <RadioGroup onChange={this.handleRadioChange} value={this.state.radioValue}>
+                  {
+                    radioGroup && radioGroup.map((v, i) => (
+                      <Radio key={`radio-${i}`} style={radioStyle} value={v.value}>{v.name}</Radio>
+                    ))
+                  }
+                </RadioGroup>
+                {/* {getFieldDecorator(`boxIds`, {
                   rules: [{ message: '请选择投放设备', required: false}],
                   initialValue: drawSettingDetail && drawSettingDetail.boxIds || []
-                })(
-                  <Select
-                    showSearch
-                    // style={{ width: 200 }}
-                    placeholder="请选择投放设备"
-                    optionFilterProp="children"
-                    onChange={this.handleChange}
-                    onFocus={this.handleFocus}
-                    onBlur={this.handleBlur}
-                    filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                  >
+                })( */}
+                  <div>
                     {
-                      boxOptionList && boxOptionList.length > 0 ? boxOptionList.map((v, i) => {
-                        return <Option key={`optionkey-${i}`} value={v.value}>{v.title}</Option>
-                      }) : null
+                      isRadioVisible ? 
+                      <Select
+                        showSearch
+                        // style={{ width: 200 }}
+                        placeholder="请选择投放设备"
+                        dropdownMatchSelectWidth
+                        notFoundContent="暂无数据"
+                        value={this.state.selectValue}
+                        optionFilterProp="children"
+                        onChange={this.handleChange}
+                        onSearch={this.handleSearch}
+                        onFocus={this.handleFocus}
+                        onBlur={this.handleBlur}
+                        filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                      >
+                        {
+                          boxOptionList && boxOptionList.length > 0 ? boxOptionList.map((v, i) => {
+                            return <Option key={`optionkey-${i}`} value={v.value}>{v.title}</Option>
+                          }) : null
+                        }
+                      </Select> :
+                      null
                     }
-                  </Select>
-                )}
+                  </div>
+                {/* )} */}
               </FormItem>
             </Col>
-            <Col sm={2}>
-              <Button type="danger" size="small" onClick={()=>{this.handleDelete()}}>删除</Button>
-            </Col>
-          </Row>
-          <Row gutter={24} style={{lineHeight: '35px'}}>
-            <Col sm={8}></Col>
             {
-              dataTable && dataTable.length > 0 ?
-                <Col sm={8}>
-                  <Table
-                    bordered
-                    rowKey="value"
-                    size="small"
-                    rowSelection={rowSelection}
-                    showHeader={false}
-                    pagination={false}
-                    columns={columns}
-                    locale={{
-                      filterTitle: '筛选',
-                      filterConfirm: '确定',
-                      filterReset: '重置',
-                      emptyText: '暂无数据'
-                    }}
-                    dataSource={dataTable ? dataTable : []} />
-                </Col> :
-              null
+              isRadioVisible ?
+              <Col sm={2}>
+                <Button type="danger" size="small" onClick={()=>{this.handleDelete()}}>删除</Button>
+              </Col> : null
             }
+              
           </Row>
+          {
+            isRadioVisible ? 
+            <Row gutter={24} style={{lineHeight: '35px'}}>
+              <Col sm={8}></Col>
+              {
+                dataTable && dataTable.length > 0 ?
+                  <Col sm={8}>
+                    <Table
+                      bordered
+                      rowKey="value"
+                      size="small"
+                      rowSelection={rowSelection}
+                      showHeader={false}
+                      pagination={false}
+                      columns={columns}
+                      locale={{
+                        filterTitle: '筛选',
+                        filterConfirm: '确定',
+                        filterReset: '重置',
+                        emptyText: '暂无数据'
+                      }}
+                      dataSource={dataTable ? dataTable : []} />
+                  </Col> :
+                null
+              }
+            </Row> : null
+          }
+            
           <div className="ta-c mt-20">
             <Button style={{marginRight: 10}} onClick={() => this.handleCancel()}>取消</Button>
             <Button type="primary" htmlType="submit">确定</Button>
