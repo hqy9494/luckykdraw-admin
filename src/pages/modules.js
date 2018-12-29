@@ -62,6 +62,8 @@ import WinningList from "./Award/WinningList"
 import WinningSetting from "./Award/WinningSetting"
 import AwardAgainList from "./Award/AwardAgainList"
 import AwardAgainSetting from "./Award/AwardAgainSetting"
+import AwardWeight from "./Award/AwardWeight"
+
 
 //DefineAward
 import DefineAwardList from "./DefineAward/DefineAwardList";
@@ -123,6 +125,7 @@ const modules = {
   WinningSetting,
   AwardAgainList,
   AwardAgainSetting,
+  AwardWeight,
 
   //定制中将
   DefineAwardList,

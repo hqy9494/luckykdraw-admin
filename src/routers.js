@@ -360,7 +360,7 @@ export default {
             module: 'Award',
             component: 'AwardListSetting',
             title: '奖项列表设置',
-          }
+          },
         }
       },
       AwardManagement: {
@@ -374,7 +374,13 @@ export default {
             module: 'Award',
             component: 'AwardManagementSetting',
             title: '奖项管理设置',
-          }
+          },
+          AwardWeight: {
+            path: '/management/:id',
+            module: 'Award',
+            component: 'AwardWeight',
+            title: '奖项权重',
+          },
         }
       },
       WinningList: {

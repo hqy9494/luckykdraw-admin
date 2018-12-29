@@ -31,7 +31,7 @@ export class WinningList extends React.Component {
       visible: false,
       refreshTable: false,
       isOrderEdit: false,
-      getData:[],
+      getData:{},
       optionLevels: []
     };
     this.uuid = uuid.v1();
@@ -45,7 +45,7 @@ export class WinningList extends React.Component {
     const { getLogisticsDetail } = nextProps;
     if (getLogisticsDetail && getLogisticsDetail[this.uuid]) {
       this.setState({
-        getData: getLogisticsDetail[this.uuid].logistics,
+        getData: getLogisticsDetail[this.uuid].awardLogistics,
       })
     }
   }
@@ -112,6 +112,7 @@ export class WinningList extends React.Component {
 
   // 获取物流信息
   getLogisticsDetail = (id) => {
+    console.log(id, 115)
     this.props.rts({
         method: "get",
         url: `/awardrecords/${id}/logistics`,
@@ -119,7 +120,7 @@ export class WinningList extends React.Component {
   };
 
   isShowDeliver = ( record = {}) => {
-    if(record.expressNo) {
+    if(record.fahuoed) {
       this.getLogisticsDetail(record.id)
       this.setState({
         show: true,
@@ -198,6 +199,7 @@ export class WinningList extends React.Component {
     const {orderRecord, getData, optionLevels} = this.state
     const {getFieldDecorator, getFieldValue} = this.props.form;
     
+    console.log(getData, 201)
 
     const { isEdit, isOrderEdit } = this.state;
 
@@ -493,7 +495,10 @@ export class WinningList extends React.Component {
                   rules: [{message: '请选择奖项', required: true}],
                   initialValue: optionLevels && optionLevels[0] && optionLevels[0].value || []
                 })(
-                  <Select placeholder="请选择奖项">
+                  <Select 
+                    placeholder="请选择奖项"
+                    notFoundContent="暂无数据"
+                  >
                     {
                       optionLevels && optionLevels.length ? optionLevels.map((v, i) =>
                         <Option value={v.value} key={v.value}>{v.title}</Option>
@@ -512,7 +517,6 @@ export class WinningList extends React.Component {
                   
                   const name = getFieldValue('award')
                   const time = getFieldValue('time')
-                  console.log(time, 515)
                   if(name && time) {
                     const start = moment(time).format('YYYY-MM-DD')
 
@@ -592,14 +596,14 @@ export class WinningList extends React.Component {
                         key={i}
                         title={
                           <div>
-                            <div>{v.operateTime && v.operateTime[0]}</div>
+                            <div>{v.AcceptTime}</div>
                           </div>
                         }
                         status={getData.state === 4 && i === 0 ? 'finish' : i === 0 ? 'process' : 'wait'}
                         description={
                           <div>
-                            <p>{v.operateContent && v.operateContent[0]}</p>
-                            <p>{v.opcode && v.opcode[0]}</p>
+                            <p>{v.AcceptStation}</p>
+                            {/* <p>{v.opcode && v.opcode[0]}</p> */}
                           </div>
                         }
                       />
