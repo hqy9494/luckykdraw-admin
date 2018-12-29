@@ -1,6 +1,6 @@
 export default {
   initialState: {
-    title: "新建定向中奖",
+    title: "定向中奖设置",
     subtitle: "",
     breadcrumb: true
   },
