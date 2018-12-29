@@ -121,12 +121,14 @@ export class WinningList extends React.Component {
 
   isShowDeliver = ( record = {}) => {
     if(record.fahuoed) {
-      this.getLogisticsDetail(record.id)
       this.setState({
         show: true,
         isOrderEdit: true,
         orderRecord: record,
         curRow: record,
+        getData: {}
+      },() => {
+        this.getLogisticsDetail(record.id)
       })
     } else {
       this.setState({
@@ -134,6 +136,7 @@ export class WinningList extends React.Component {
         isOrderEdit: true,
         orderRecord: record,
         curRow: record,
+        getData: {}
       })
     }
   }
@@ -341,7 +344,7 @@ export class WinningList extends React.Component {
                     >
                       物流信息
                     </a>
-                    <Divider type="vertical"/>
+                    {/* <Divider type="vertical"/>
                     <a
                       href="javascript:;"
                       onClick={() => {
@@ -349,7 +352,7 @@ export class WinningList extends React.Component {
                       }}
                     >
                       修改物流
-                    </a>
+                    </a> */}
                   </div>
                 ) : (
                 <div>
@@ -365,7 +368,7 @@ export class WinningList extends React.Component {
                   <a
                     href="javascript:;"
                     onClick={() => {
-                      this.setState({ curRow: record, show: true });
+                      this.setState({ curRow: record, getData: {}, show: true });
                     }}
                   >
                     物流信息
@@ -537,7 +540,7 @@ export class WinningList extends React.Component {
           {/*更改物流*/}
           <Modal
             visible={this.state.show}
-            title={`${ orderRecord && orderRecord.id || ''}-物流信息`}
+            title={`${getData && getData.no || ''} 物流信息`}
             okText="确定"
             cancelText="取消"
             footer={null}

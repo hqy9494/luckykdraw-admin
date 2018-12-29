@@ -29,7 +29,7 @@ export class PrizeList extends React.Component {
       visible: false,
       refreshTable: false,
       isOrderEdit: false,
-      getData:[],
+      getData:{},
     };
     this.uuid = uuid.v1();
   }
@@ -42,7 +42,7 @@ export class PrizeList extends React.Component {
     const { getLogisticsDetail } = nextProps;
     if (getLogisticsDetail && getLogisticsDetail[this.uuid]) {
       this.setState({
-        getData: getLogisticsDetail[this.uuid].logistics,
+        getData: getLogisticsDetail[this.uuid].awardLogistics,
       })
     }
   }
@@ -103,13 +103,17 @@ export class PrizeList extends React.Component {
   };
 
   isShowDeliver = ( record = {}) => {
-    if(record.expressNo) {
-      this.getLogisticsDetail(record.awardRecordId)
+    
+    if(record && record.awardRecord && record.awardRecord.fahuoed) {
+      
       this.setState({
         show: true,
         isOrderEdit: true,
         orderRecord: record,
         curRow: record,
+        getData: {},
+      },() => {
+        this.getLogisticsDetail(record.awardRecordId)
       })
     } else {
       this.setState({
@@ -117,6 +121,7 @@ export class PrizeList extends React.Component {
         isOrderEdit: true,
         orderRecord: record,
         curRow: record,
+        getData: {},
       })
     }
   }
@@ -306,7 +311,7 @@ export class PrizeList extends React.Component {
                     >
                       物流信息
                     </Button>
-                    <Divider type="vertical"/>
+                    {/* <Divider type="vertical"/>
                     <Button
                       className="purpleMoreButton"
                       size="small"
@@ -315,7 +320,7 @@ export class PrizeList extends React.Component {
                       }}
                     >
                       修改物流
-                    </Button>
+                    </Button> */}
                   </div>
                 ) : (
                 <div>
@@ -333,7 +338,7 @@ export class PrizeList extends React.Component {
                     className="orangeButton"
                     size="small"
                     onClick={() => {
-                      this.setState({ curRow: record, show: true });
+                      this.setState({ curRow: record, getData: {}, show: true });
                     }}
                   >
                     物流信息
@@ -488,14 +493,14 @@ export class PrizeList extends React.Component {
                         key={i}
                         title={
                           <div>
-                            <div>{v.operateTime && v.operateTime[0]}</div>
+                            <div>{v.AcceptTime}</div>
                           </div>
                         }
                         status={getData.state === 4 && i === 0 ? 'finish' : i === 0 ? 'process' : 'wait'}
                         description={
                           <div>
-                            <p>{v.operateContent && v.operateContent[0]}</p>
-                            <p>{v.opcode && v.opcode[0]}</p>
+                            <p>{v.AcceptStation}</p>
+                            {/* <p>{v.opcode && v.opcode[0]}</p> */}
                           </div>
                         }
                       />
