@@ -185,7 +185,7 @@ export class PrizeList extends React.Component {
     ]
     
     const where = urlParams && urlParams.q && this.searchsToWhere(JSON.parse(decodeURIComponent(urlParams.q))) || {}
-    const filter = Object.assign({}, {...where}, { order: "createdAt DESC" })
+    const filter = Object.assign({}, {...where}, { order: "updatedAt DESC" })
 
     const config = {
       api: {
