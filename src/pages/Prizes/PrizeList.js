@@ -193,6 +193,7 @@ export class PrizeList extends React.Component {
         uuid: this.uuid,
         data: "/stockAwardRecords/all",
         total: "/stockAwardRecords/getCount",
+        order: 'updatedAt DESC'
       },
       buttons: [],
       // search: [{
@@ -261,8 +262,8 @@ export class PrizeList extends React.Component {
         },
         {
           title: "中奖时间",
-          dataIndex: "createdAt",
-          key: "createdAt",
+          dataIndex: "awardRecord.createdAt",
+          key: "awardRecord.createdAt",
           type: "date"
         },
         {
@@ -335,7 +336,7 @@ export class PrizeList extends React.Component {
                   </Button>
                   <Divider type="vertical"/>
                   <Button
-                    className="orangeButton"
+                    className="successMoreButton"
                     size="small"
                     onClick={() => {
                       this.setState({ curRow: record, getData: {}, show: true });
