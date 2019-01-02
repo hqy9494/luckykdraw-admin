@@ -192,7 +192,7 @@ export class AwardManagement extends React.Component {
                  }
               </Popconfirm>
                 <Divider type="vertical" />
-              {/* <Button style={{background: '#FF6933', color: '#fff'}} onClick={() => this.handleToUrl(record.id)} size="small">设置权重</Button> */}
+              <Button style={{background: '#FF6933', color: '#fff'}} onClick={() => this.handleToUrl(record.id)} size="small">设置权重</Button>
             </span>
           )
         }
