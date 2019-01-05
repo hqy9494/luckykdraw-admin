@@ -6,6 +6,7 @@ import { Route, Switch, withRouter, Redirect } from "react-router-dom";
 import ProtectedRoute from "components/ProtectedRoute";
 import { makeSelectUser } from "services/Auth/selectors";
 import Login from "../Login";
+// import Login from "../Login/index.1";
 import fullRouters from "./makeRouters";
 import routerConfig from "../../routers";
 import { TransitionGroup, CSSTransition } from "react-transition-group";

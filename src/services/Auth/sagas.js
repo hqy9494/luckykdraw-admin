@@ -20,14 +20,33 @@ const loginRts = (data) => {
     })
 }
 
+const loginRtsCode = (data) => {
+  return axios({
+    method: 'post',
+    url: `${config.apiUrl}${config.apiBasePath}/Logins/mobile/code`,
+    data: data
+  })
+    .then(res => {
+      return res.data
+    })
+    .catch(err => {
+      let error = err.response.data.error;
+      return {error: error.msg || error.message || '系统出错'}
+    })
+}
+
 /**
  * Github repos request/response handler
  */
 
 export function* authenticate(action) {
   try {
+
+    // const result = yield loginRtsCode(action.creds);
+
     const result = yield loginRts(action.creds);
     yield put(authClient(result.id || result));
+    
   } catch (err) {
     yield put(authFailure(err));
   }

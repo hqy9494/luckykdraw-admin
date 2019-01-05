@@ -44,10 +44,11 @@ const getMenu = token => {
 export function* clientToken(action) {
   try {
     if (action.token && !action.token.error) {
+      
       localStorage.token = action.token;
       yield put(fetchUserState("fetching"));
       const user = yield getme(action.token);
-      const menu = yield getMenu(action.token);
+      // const menu = yield getMenu(action.token);
       if (user && menu) {
         user.menu = menu;
       }

@@ -8,7 +8,7 @@ import TableExpand from "../../components/AsyncTable";
 import FormExpand from "../../components/FormExpand";
 import "../DefineAward/DefineAwardList.scss";
 import moment from "../../components/Moment";
-let timer = null; 
+ 
 export class AwardWeight extends React.Component {
   constructor(props) {
     super(props);
@@ -32,8 +32,19 @@ export class AwardWeight extends React.Component {
       this.getClassLevels(id);
     }
     this.getAwardTypes()
-    this.getClassPercent()
+    this.getClassPercent();
   }
+
+  componentWillReceiveProps(nextProps) {
+    const {getClassPercent} = nextProps
+    if(getClassPercent && getClassPercent[this.uuid]) {
+      this.setState({
+        classPercent: getClassPercent[this.uuid]
+      });
+    }
+    
+  }
+  
   //获取中奖列表详情
   getClassLevels = (id) => {
     id && this.props.rts({
@@ -47,26 +58,31 @@ export class AwardWeight extends React.Component {
   }
 
   getClassPercent = () => {
-    this.props.rts({
+    const { match } = this.props
+    const id = match.params.id
+
+    id && this.props.rts({
       method: 'get',
-      url: `/classAwards`
-    }, this.uuid, 'getClassPercent', (res = {}) => {
-      this.setState({
-        classPercent: this.getPercent(res)
-      });
-    });
+      url: `/classAwards/getTotalWeight`,
+      params: {
+        classLevelId: id,
+      }
+    }, this.uuid, 'getClassPercent');
+    
   }
 
-  getPercent = (res) => {
-    const num = res && Array.isArray(res) && res.reduce((a, c) => {
-      if(c && c.weight) {
-        a += isNaN(c.weight) ? 0 : Number(c.weight)
-      }
-      return a
-    }, 0) || 0
+  // getPercent = (res) => {
+  //   const num = res && Array.isArray(res) && res.reduce((a, c) => {
+  //     if(c && c.weight) {
+  //       a += isNaN(c.weight) ? 0 : Number(c.weight)
+  //     } else {
+  //       a += 0
+  //     }
+  //     return a
+  //   }, 0) || 0
     
-    return num
-  }
+  //   return num
+  // }
 
   // 获取中奖列表名称
   getClassLevelsName = (id) => {
@@ -113,7 +129,6 @@ export class AwardWeight extends React.Component {
     });
   }
   
-
   //切换中奖
   changeAward = () => {
     let { curRow } = this.state
@@ -139,6 +154,7 @@ export class AwardWeight extends React.Component {
               curRow: {}
             }, () => {
               this.props.form.resetFields(['weight'])
+              window.location.reload();
               message.success("修改成功");
             });
           });
@@ -149,18 +165,10 @@ export class AwardWeight extends React.Component {
   render() {
     const { match } = this.props
     const classLevelId = match.params && match.params.id || ''
-    // const rowSelection = {
-    //   onChange: (selectedRowKeys, selectedRows) => {
-    //     this.setState({selectAllId:selectedRowKeys});
-    //   },
-    //   getCheckboxProps: record => ({
-    //     disabled:!(record.editable === true && record.enable === false), // Column configuration not to be checked
-    //     name: record.name,
-    //   }),
-    // };
+    
     const { getFieldDecorator } = this.props.form;
     const { visible, status, AwardTypesList, classPercent, awardList, classLevelDetail } = this.state;
-    const statusTitle = {add:"发布",edit: "撤销"}
+
     const config = {
       // rowSelection:rowSelection,
       api: {
@@ -169,7 +177,8 @@ export class AwardWeight extends React.Component {
         data: "/classAwards",
         total: "/classAwards/count",
         where: {
-          classLevelId
+          classLevelId,
+          enable: true
         }
       },
       search: [
@@ -195,8 +204,14 @@ export class AwardWeight extends React.Component {
           title: "奖品权重",
           dataIndex: "weight",
           key: "weight",
-          render:(test)=>{
-            return test || "未设置奖品权重";
+          render:(test)=> {
+            if(!test) {
+              if(typeof test === 'number') {
+                return test
+              } 
+              return "未设置奖品权重"
+            }
+            return test;
           }
         },
         {
@@ -208,7 +223,7 @@ export class AwardWeight extends React.Component {
             if(!classPercent) {
               return '0.00%'
             }
-            return record.weight && `${(record.weight / classPercent).toFixed(2)}%` || '0.00%';
+            return record.weight && `${((record.weight / classPercent) * 100).toFixed(2)}%` || '0.00%';
           }
         },
         {
@@ -263,7 +278,8 @@ export class AwardWeight extends React.Component {
           cancelText="取消"
           okText="确定"
           onCancel={()=> {
-            if(this.props.form.getFieldValue('weight')) {
+            const weight = this.props.form.getFieldValue('weight')
+            if(weight || typeof weight === 'number') {
               this.setState({
                 visible: false,
               },() => {
@@ -273,15 +289,16 @@ export class AwardWeight extends React.Component {
                 this.props.form.resetFields(['weight'])
               })
             }
+              
         }}
         >
           <div>
             <Form.Item label="奖品权重" style={{display: 'flex'}}>
               {getFieldDecorator('weight', {
-                initialValue: this.state.curRow && this.state.curRow.weight || 1,
+                initialValue: this.state.curRow && this.state.curRow.weight || 0,
                 rules: [{ required: true, message: "必填项" }]
               })(
-                <InputNumber min={1} style={{width: "300px"}}/>
+                <InputNumber min={0} style={{width: "300px"}}/>
               )}
             </Form.Item>
           </div>
@@ -297,10 +314,12 @@ const mapDispatchToProps = dispatch => {
 
 const AwardAgainListuuid = state => state.get("rts").get("uuid");
 const getLevels = state => state.get("rts").get("getLevels");
+const getClassPercent = state => state.get("rts").get("getClassPercent");
 
 const mapStateToProps = createStructuredSelector({
   AwardAgainListuuid,
-  getLevels
+  getLevels,
+  getClassPercent,
 });
 const WrappeAwardWeight = Form.create()(AwardWeight);
 export default connect(mapStateToProps, mapDispatchToProps)(WrappeAwardWeight);
