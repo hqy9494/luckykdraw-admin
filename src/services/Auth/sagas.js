@@ -45,6 +45,7 @@ export function* authenticate(action) {
     // const result = yield loginRtsCode(action.creds);
 
     const result = yield loginRts(action.creds);
+
     yield put(authClient(result.id || result));
     
   } catch (err) {

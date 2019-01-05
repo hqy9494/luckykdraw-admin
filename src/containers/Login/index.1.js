@@ -14,8 +14,8 @@ import config from "../../config";
 
 import { message, Card, Form, Icon, Input, Row, Col, Button } from "antd";
 
-// import mqttr from "mqttr";
-var mqttr = require("mqttr")
+import mqtt from "mqtt";
+// var mqttr = require("mqttr")
 // import config from "../../config";
 
 
@@ -90,13 +90,13 @@ class Login extends React.Component {
         
         this.setState({ qr: res.data.url });
         
-        this.client = mqttr.connect(
+        this.client = mqtt.connect(
           config.loginMqtt,
-          // { username: res.data.code, rejectUnauthorized: false }
+          { username: res.data.code, rejectUnauthorized: false }
         );
-        console.log(this.client, 94)
+        
         this.client.on("connect", (err) => {
-          console.log(err, 96)
+          
           this.client.subscribe(
             `luckydraw/qrcode/login/${res.data.code}/state`,
             function(err) {

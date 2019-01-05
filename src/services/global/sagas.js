@@ -48,7 +48,7 @@ export function* clientToken(action) {
       localStorage.token = action.token;
       yield put(fetchUserState("fetching"));
       const user = yield getme(action.token);
-      // const menu = yield getMenu(action.token);
+      const menu = yield getMenu(action.token);
       if (user && menu) {
         user.menu = menu;
       }
