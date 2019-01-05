@@ -5,6 +5,7 @@ import { Col, Row, Form, Input, Switch, Select, Button, message, InputNumber, Da
 import uuid from "uuid";
 import moment from "moment";
 import locale from 'antd/lib/date-picker/locale/zh_CN';
+import { getRegular } from '../../components/CheckInput';
 
 const FormItem = Form.Item
 const Option = Select.Option
@@ -14,7 +15,7 @@ const formItemLayout = {
   wrapperCol: { span: 6 },
 };
 
-export class AwardAgainSetting extends React.Component {
+export class DirectionWinningSetting extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -29,6 +30,7 @@ export class AwardAgainSetting extends React.Component {
       switchChecked: false,
     };
     this.uuid = uuid.v1();
+    this.reg = this.getRegular('mobile-phone')
     this.fetchNum = 0
   }
 
@@ -108,6 +110,19 @@ export class AwardAgainSetting extends React.Component {
       }
     })
   }
+
+  handleChange = (value) => {
+    console.log(`selected ${value}`);
+  }
+  
+  handleBlur = () => {
+    console.log('blur');
+  }
+  
+  handleFocus = () => {
+    console.log('focus');
+  }
+
   render() {
     
     const { getFieldDecorator } = this.props.form
@@ -117,51 +132,77 @@ export class AwardAgainSetting extends React.Component {
     const endTime = moment().format()
 
     return (
-      <section className="AwardAgainSetting-page">
+      <section className="DirectionWinningSetting-page">
       	<Form style={{backgroundColor: '#fff', padding: '20px'}} onSubmit={this.handleSubmit}>
-          <div className="project-title">优惠码基础信息</div>
+          <div className="project-title">中奖人信息</div>
           <Row gutter={24} style={{lineHeight: '35px'}}>
             <Col sm={11}>
-              <FormItem label={`优惠码名称`}
+              <FormItem label={`中奖人电话`}
                 {...formItemLayout}
               >
-                {getFieldDecorator(`name`, {
-                  rules: [{ message: '请输入优惠码名称', required: true}],
-                  initialValue: drawSettingDetail && drawSettingDetail.name || ''
+                {getFieldDecorator(`mobile`, {
+                  rules: [
+                    {message: '请输入中奖人电话', required: true},
+                    {message: '请输入合法的手机格式', pattern: this.reg,}
+                  ],
+                  initialValue: drawSettingDetail && drawSettingDetail.mobile || ''
                 })(
-                  <Input placeholder="请输入优惠码名称"/>
+                  <Input placeholder="请输入中奖人电话"/>
                 )}
               </FormItem>
+            </Col>
+            <Col sm={3}>
+              <Button type="primary" onClick={() => {console.log(123)}}>校验</Button>
             </Col>
           </Row>
+          <div className="project-title">奖品信息</div>
           <Row gutter={24} style={{lineHeight: '35px'}}>
             <Col sm={11}>
-              <FormItem label={`面额(元)`}
+              <FormItem label={`奖品`}
                 {...formItemLayout}
               >
-                {getFieldDecorator(`lowPrice`, {
-                  rules: [{ message: '请输入面额', required: true}],
-                  initialValue: drawSettingDetail && !isNaN(drawSettingDetail.lowPrice) ? (drawSettingDetail.lowPrice / 100).toFixed(2) : 0.01
+                {getFieldDecorator(`classAwardId`, {
+                  rules: [{ message: '请选择奖品', required: true}],
+                  initialValue: drawSettingDetail && drawSettingDetail.classAwardId || ''
                 })(
-                  <InputNumber min={0.01} max={29.99} style={{ width: '100%'}}/>
-                )}
-              </FormItem>
-            </Col>
-            <Col sm={1}>
-              <div>至</div>
-            </Col>
-            <Col sm={10}>
-              <FormItem wrapperCol={{ span: 8 }} extra="最多只能输入到(29.99)元">
-                {getFieldDecorator(`highPrice`, {
-                  rules: [{message: '请输入面额', required: true}],
-                  initialValue: drawSettingDetail && !isNaN(drawSettingDetail.highPrice) ? (drawSettingDetail.highPrice / 100).toFixed(2) : 0.01
-                })(
-                  <InputNumber min={0.01} max={29.99} style={{ width: '100%'}}/>
+                  <Select
+                    showSearch
+                    style={{ width: 200 }}
+                    placeholder="请选择奖品"
+                    optionFilterProp="children"
+                    onChange={handleChange}
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
+                    filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                  >
+                    <Option value="jack">Jack</Option>
+                    <Option value="lucy">Lucy</Option>
+                    <Option value="tom">Tom</Option>
+                  </Select>
                 )}
               </FormItem>
             </Col>
           </Row>
           <div className="project-title">使用规则</div>
+          <Row gutter={24} style={{lineHeight: '35px'}}>
+            <Col sm={11}>
+              <FormItem 
+                label={`中奖概率`}
+                {...formItemLayout}
+                extra={<div style={{color: 'red'}}>最大可填数额为100，最小可填数额为0</div>}
+              >
+                {getFieldDecorator(`probability`, {
+                  rules: [{ message: '请输入中奖概率', required: true}],
+                  initialValue: drawSettingDetail && drawSettingDetail.probability || ''
+                })(
+                  <InputNumber min={0} max={100} style={{ width: '100%'}}/>
+                )}
+              </FormItem>
+            </Col>
+            <Col sm={1}>
+              <div>%</div>
+            </Col>
+          </Row>
           <Row gutter={24} style={{lineHeight: '35px'}}>
             <Col sm={24}>
               <FormItem 
@@ -175,7 +216,6 @@ export class AwardAgainSetting extends React.Component {
                 })(
                   <DatePicker
                     locale={locale}
-                    // format="YYYY-MM-DD HH:mm:ss"
                     dateRender={(current) => {
                       const style = {};
                       if (current.date() === 1) {
@@ -199,7 +239,7 @@ export class AwardAgainSetting extends React.Component {
                 label={`过期时间`}
                 labelCol={{ span: 8 }}
                 wrapperCol={{ span: 7 }}
-                extra={"生效时间必须大于领取时间小于过期时间"}
+                extra={<div style={{color: 'red'}}>生效时间必须大于领取时间小于过期时间</div>}
               >
                 {getFieldDecorator(`endTime`, {
                   rules: [{ message: '请输入过期时间', required: true}],
@@ -207,7 +247,6 @@ export class AwardAgainSetting extends React.Component {
                 })(
                   <DatePicker
                     locale={locale}
-                    // format="YYYY-MM-DD HH:mm:ss"
                     dateRender={(current) => {
                       const style = {};
                       if (current.date() === 1) {
@@ -226,26 +265,9 @@ export class AwardAgainSetting extends React.Component {
             </Col>
           </Row>
           <Row gutter={24} style={{lineHeight: '35px'}}>
-            <Col sm={11}>
-              <FormItem label={`领取优惠码后`}
-                {...formItemLayout}
-              >
-                {getFieldDecorator(`duration`, {
-                  rules: [{ message: '请输入优惠码有效时间', required: true}],
-                  initialValue: drawSettingDetail && drawSettingDetail.duration / 24 || 0
-                })(
-                  <InputNumber min={1} style={{ width: '100%'}}/>
-                )}
-              </FormItem>
-            </Col>
-            <Col sm={3}>
-              <div>天内有效</div>
-            </Col>
-          </Row>
-          <Row gutter={24} style={{lineHeight: '35px'}}>
             <Col sm={24}>
               <FormItem 
-                label={`功能开启`}
+                label={`投放设备`}
                 labelCol={{ span: 8 }}
                 wrapperCol={{ span: 7 }}
               >
@@ -253,14 +275,25 @@ export class AwardAgainSetting extends React.Component {
                   rules: [{ message: '', required: true}],
                   initialValue: drawSettingDetail && drawSettingDetail.enable || false
                 })(
-                  <Switch 
-                    checkedChildren="开启" 
-                    unCheckedChildren="关闭" 
-                    checked={switchChecked || false}
-                    onChange={(v)=>{ this.setState({ switchChecked: v }) }}
-                  />
+                  <Select
+                    showSearch
+                    style={{ width: 200 }}
+                    placeholder="请选择奖品"
+                    optionFilterProp="children"
+                    onChange={handleChange}
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
+                    filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                  >
+                    <Option value="jack">Jack</Option>
+                    <Option value="lucy">Lucy</Option>
+                    <Option value="tom">Tom</Option>
+                  </Select>
                 )}
               </FormItem>
+            </Col>
+            <Col sm={3}>
+              <Button type="danger" size="small">删除</Button>
             </Col>
           </Row>
           <div className="ta-c mt-20">
@@ -280,11 +313,11 @@ const mapDispatchToProps = dispatch => {
 const UUid = state => state.get("rts").get("uuid")
 const getDrawSettings = state => state.get("rts").get("getDrawSettings")
 
-const AwardAgainSettingForm = Form.create()(AwardAgainSetting)
+const DirectionWinningSettingForm = Form.create()(DirectionWinningSetting)
 
 const mapStateToProps = createStructuredSelector({
   UUid,
   getDrawSettings
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AwardAgainSettingForm);
+export default connect(mapStateToProps, mapDispatchToProps)(DirectionWinningSettingForm);

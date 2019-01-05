@@ -17,6 +17,7 @@ import Clue from './Prizes/Clue';
 import PrizeAward from './Prizes/PrizeAward';
 import AwardSetting from './Prizes/AwardSetting';
 import StockAwardConsume from './Prizes/StockAwardConsume';
+import PrizeList from './Prizes/PrizeList';
 //
 import Balance from './Balances/Balance';
 //
@@ -54,6 +55,7 @@ import StockAward from "./Prizes/StockAward"
 
 // Award
 import AwardList from "./Award/AwardList"
+import AwardEdit from "./Award/AwardEdit"
 import AwardListSetting from "./Award/AwardListSetting"
 import AwardManagement from "./Award/AwardManagement"
 import AwardManagementSetting from "./Award/AwardManagementSetting"
@@ -61,6 +63,13 @@ import WinningList from "./Award/WinningList"
 import WinningSetting from "./Award/WinningSetting"
 import AwardAgainList from "./Award/AwardAgainList"
 import AwardAgainSetting from "./Award/AwardAgainSetting"
+import AwardWeight from "./Award/AwardWeight"
+
+
+//DefineAward
+import DefineAwardList from "./DefineAward/DefineAwardList";
+import DefineAwardSetting from "./DefineAward/DefineAwardSetting";
+import DefineAwardDetail from "./DefineAward/DefineAwardDetail";
 
 const modules = {
   Index,
@@ -107,8 +116,10 @@ const modules = {
   AwardRecord,
   PostActive,
   StockAward,
+  PrizeList,
 
   AwardList,
+  AwardEdit,
   AwardListSetting,
   AwardManagement,
   AwardManagementSetting,
@@ -116,6 +127,12 @@ const modules = {
   WinningSetting,
   AwardAgainList,
   AwardAgainSetting,
+  AwardWeight,
+
+  //定制中将
+  DefineAwardList,
+  DefineAwardSetting,
+  DefineAwardDetail
 };
 
 export default modules;

@@ -102,6 +102,8 @@ export class AwardManagement extends React.Component {
   
   handleEdit = (id) => this.props.to(`${this.props.match.url}/detail/${id}`)
 
+  handleToUrl = (id) => this.props.to(`${this.props.match.url}/management/${id}`)
+
   render() {
     
     const config = {
@@ -190,14 +192,7 @@ export class AwardManagement extends React.Component {
                  }
               </Popconfirm>
                 <Divider type="vertical" />
-              {/* <Popconfirm
-                title={`确认删除${record.name || ''}奖品?`}
-                onConfirm={() => { this.isDelete(record.id) }}
-                okText="是"
-                cancelText="否"
-              >
-                <Button type="danger" size="small">删除</Button>
-              </Popconfirm> */}
+              {/* <Button style={{background: '#FF6933', color: '#fff'}} onClick={() => this.handleToUrl(record.id)} size="small">设置权重</Button> */}
             </span>
           )
         }

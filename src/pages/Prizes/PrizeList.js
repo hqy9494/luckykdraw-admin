@@ -4,18 +4,16 @@ import {createStructuredSelector} from "reselect";
 import moment from "moment";
 import uuid from "uuid";
 import {Col, Grid, Row} from "react-bootstrap";
-import { Modal, Divider,Button, Form, Input, Select, message, Steps, DatePicker } from "antd";
+import { Modal, Divider,Button, Form, Input, Select, message, Steps } from "antd";
 import TableExpand from "../../components/TableExpand";
 import FormExpand from "../../components/FormExpand";
 import configDevUrl from '../../config/dev'
 import configProdUrl from "../../config/prod"
 import { getUrlParams } from "../../utils/utils"
-import locale from 'antd/lib/date-picker/locale/zh_CN';
 
 const FormItem = Form.Item
 const Option = Select.Option
 const Step = Steps.Step
-const { RangePicker } = DatePicker
 
 const formItemLayout = {
   labelCol: {span: 6},
@@ -24,7 +22,7 @@ const formItemLayout = {
 
 const configUrl =  process.env.NODE_ENV === 'prod' || process.env.NODE_ENV === 'production' ? configProdUrl : configDevUrl
 
-export class WinningList extends React.Component {
+export class PrizeList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -32,13 +30,12 @@ export class WinningList extends React.Component {
       refreshTable: false,
       isOrderEdit: false,
       getData:{},
-      optionLevels: []
     };
     this.uuid = uuid.v1();
   }
 
   componentWillMount() {
-    this.getLevels()
+    // this.getLevels()
   }
 
   componentWillReceiveProps(nextProps) {
@@ -69,20 +66,7 @@ export class WinningList extends React.Component {
       this.setState({
         levelList: v
       })
-      this.optionLevels(v)
     });
-  }
-
-  optionLevels = (option) => {
-    let optionLevels = option && Array.isArray(option) && option.map(v => {
-      return {
-        title: v.name || '',
-        value: v.name || ''
-      }
-    }) || []
-    this.setState({
-      optionLevels
-    })
   }
 
   searchsToWhere = (search = {}) => {
@@ -112,7 +96,6 @@ export class WinningList extends React.Component {
 
   // 获取物流信息
   getLogisticsDetail = (id) => {
-    console.log(id, 115)
     this.props.rts({
         method: "get",
         url: `/awardrecords/${id}/logistics`,
@@ -120,15 +103,17 @@ export class WinningList extends React.Component {
   };
 
   isShowDeliver = ( record = {}) => {
-    if(record.fahuoed) {
+    
+    if(record && record.awardRecord && record.awardRecord.fahuoed) {
+      
       this.setState({
         show: true,
         isOrderEdit: true,
         orderRecord: record,
         curRow: record,
-        getData: {}
+        getData: {},
       },() => {
-        this.getLogisticsDetail(record.id)
+        this.getLogisticsDetail(record.awardRecordId)
       })
     } else {
       this.setState({
@@ -136,16 +121,16 @@ export class WinningList extends React.Component {
         isOrderEdit: true,
         orderRecord: record,
         curRow: record,
-        getData: {}
+        getData: {},
       })
     }
   }
 
   submitNew = values => {
-    if (this.state.curRow && this.state.curRow.classAwardRecord && this.state.curRow.classAwardRecord.awardRecordId) {
+    if (this.state.curRow && this.state.curRow.awardRecordId) {
       this.props.rts({
         method: "post",
-        url: `/awardrecords/${this.state.curRow.classAwardRecord.awardRecordId}/fahuo`,
+        url: `/awardrecords/${this.state.curRow.awardRecordId}/fahuo`,
         data: values
       }, this.uuid, "submitNew", () => {
           this.setState({refreshTable: true, visible: false});
@@ -159,20 +144,6 @@ export class WinningList extends React.Component {
       // }, 2001)
     }
   };
-
-  handleExcel = (type) => {
-    this.setState({
-      outputVisible: false,
-    }, () => {
-      if(type === 'success') {
-        message.success('导出成功', 1, () => {
-          this.props.form.resetFields(['award','time'])
-        })
-      } else {
-        this.props.form.resetFields(['award','time'])
-      }
-    })
-  }
 
   deliverCheck = (orderId) => {
     this.props.form.validateFieldsAndScroll((err, values) => {
@@ -198,11 +169,8 @@ export class WinningList extends React.Component {
   };
 
   render() {
-    const that = this
-    const {orderRecord, getData, optionLevels} = this.state
-    const {getFieldDecorator, getFieldValue} = this.props.form;
-    
-    console.log(getData, 201)
+    const {orderRecord, getData} = this.state
+    const {getFieldDecorator} = this.props.form;
 
     const { isEdit, isOrderEdit } = this.state;
 
@@ -217,14 +185,15 @@ export class WinningList extends React.Component {
     ]
     
     const where = urlParams && urlParams.q && this.searchsToWhere(JSON.parse(decodeURIComponent(urlParams.q))) || {}
-    const filter = Object.assign({}, {...where}, { order: "createdAt DESC" })
+    const filter = Object.assign({}, {...where}, { order: "updatedAt DESC" })
 
     const config = {
       api: {
         rts: this.props.rts,
         uuid: this.uuid,
-        data: "/classAwardRecords/getAwardRecords",
-        total: "/classAwardRecords/getCount",
+        data: "/stockAwardRecords/all",
+        total: "/stockAwardRecords/getCount",
+        order: 'updatedAt DESC'
       },
       buttons: [],
       // search: [{
@@ -253,26 +222,26 @@ export class WinningList extends React.Component {
       //   ]
       // }],
       search: [
-        {
-          type: "field",
-          field: "userFullname",
-          title: "姓名"
-        },
-        {
-          type: "field",
-          field: "userContactMobile",
-          title: "联系方式"
-        },
-        {
-          type: "field",
-          field: "city",
-          title: "邮寄地址"
-        },
-        {
-          type: "field",
-          field: "address",
-          title: "详细地址"
-        },
+        // {
+        //   type: "field",
+        //   field: "userFullname",
+        //   title: "姓名"
+        // },
+        // {
+        //   type: "field",
+        //   field: "userContactMobile",
+        //   title: "联系方式"
+        // },
+        // {
+        //   type: "field",
+        //   field: "city",
+        //   title: "邮寄地址"
+        // },
+        // {
+        //   type: "field",
+        //   field: "address",
+        //   title: "详细地址"
+        // },
       ],
       columns: [
         {
@@ -281,44 +250,44 @@ export class WinningList extends React.Component {
           key: "user.nickname"
         },
         {
-          title: "奖品名称",
-          dataIndex: "classAwardRecord.classAward.name",
-          key: "classAwardRecord.classAward.name"
+          title: "绑定号码",
+          dataIndex: "user.mobile",
+          key: "user.mobile",
+          render: (text) => <span>{text ? text : '---'}</span>
         },
         {
-          title: "奖品级别",
-          dataIndex: "classAwardRecord.classAward.classLevelId",
-          key: "classAwardRecord.classAward.classLevelId",
-          render: text => <span> {this.getOneClassLevels(text)}</span>
+          title: "中奖设备",
+          dataIndex: "box.name",
+          key: "box.name"
         },
         {
           title: "中奖时间",
-          dataIndex: "classAwardRecord.createdAt",
-          key: "classAwardRecord.createdAt",
+          dataIndex: "awardRecord.createdAt",
+          key: "awardRecord.createdAt",
           type: "date"
         },
         {
           title: "邮寄地址",
-          dataIndex: "city",
-          key: "city",
+          dataIndex: "awardRecord.city",
+          key: "awardRecord.city",
           render: (text) => <span>{text ? text : '---'}</span>
         },
         {
           title: "详细地址",
-          dataIndex: "address",
-          key: "address",
+          dataIndex: "awardRecord.address",
+          key: "awardRecord.address",
           render: (text) => <span>{text ? text : '---'}</span>
         },
         {
           title: "姓名",
-          dataIndex: "userFullname",
-          key: "userFullname",
+          dataIndex: "awardRecord.userFullname",
+          key: "awardRecord.userFullname",
           render: (text) => <span>{text ? text : '---'}</span>
         },
         {
           title: "联系方式",
-          dataIndex: "userContactMobile",
-          key: "userContactMobile",
+          dataIndex: "awardRecord.userContactMobile",
+          key: "awardRecord.userContactMobile",
           render: (text) => <span>{text ? text : '---'}</span>
         },
         {
@@ -327,52 +296,54 @@ export class WinningList extends React.Component {
           render: (text, record) => (
             <span>
             {
-              record.classAwardRecord &&
-              record.classAwardRecord.classAward &&
-              record.classAwardRecord.classAward.type === "METARIAL" &&
-              record.hasAddress ? (
-                record.fahuoed ? (
+              
+              record.awardRecord && 
+              record.awardRecord.hasAddress ? (
+                record.awardRecord.fahuoed ? (
                   <div>
-                    <span>已发货</span>
+                    <Button className="unUseButton" size="small">已发货</Button>
                     <Divider type="vertical"/>
-                    <a
-                      href="javascript:;"
+                    <Button
+                      className="successMoreButton"
+                      size="small"
                       onClick={() => {
                         this.isShowDeliver(record)
-                        
                       }}
                     >
                       物流信息
-                    </a>
+                    </Button>
                     {/* <Divider type="vertical"/>
-                    <a
-                      href="javascript:;"
+                    <Button
+                      className="purpleMoreButton"
+                      size="small"
                       onClick={() => {
                         this.setState({ curRow: record, visible: true });
                       }}
                     >
                       修改物流
-                    </a> */}
+                    </Button> */}
                   </div>
                 ) : (
                 <div>
-                  <a
-                    href="javascript:;"
+                  <Button
+                    className="infoButton"
+                    size="small"
                     onClick={() => {
                       this.setState({curRow: record, visible: true});
                     }}
                   >
                     发货
-                  </a>
+                  </Button>
                   <Divider type="vertical"/>
-                  <a
-                    href="javascript:;"
+                  <Button
+                    className="successMoreButton"
+                    size="small"
                     onClick={() => {
                       this.setState({ curRow: record, getData: {}, show: true });
                     }}
                   >
                     物流信息
-                  </a>
+                  </Button>
                 </div>
                 )
               ): '---'
@@ -385,9 +356,9 @@ export class WinningList extends React.Component {
 
     return (
       <section>
-        {/* <a download={'订单列表.xlsx'} href={`${configUrl.apiUrl}${configUrl.apiBasePath}/classAwardRecords/exportAwardRecord?filter=${JSON.stringify(filter)}&access_token=${localStorage.token}` || '#'}> */}
-          <Button style={{marginBottom: '5px', marginLeft: '5px'}} onClick={() => {this.setState({ outputVisible: true })}}> 导出EXCEL </Button>
-        {/* </a> */}
+        {/* <a download={'订单列表.xlsx'} href={`${configUrl.apiUrl}${configUrl.apiBasePath}/classAwardRecords/exportAwardRecord?filter=${JSON.stringify(filter)}&access_token=${localStorage.token}` || '#'}>
+          <Button style={{marginBottom: '5px', marginLeft: '5px'}}> 导出EXCEL </Button>
+        </a> */}
         <Grid fluid>
           <Row>
             <Col lg={12}>
@@ -461,86 +432,10 @@ export class WinningList extends React.Component {
               }}
             />
           </Modal>
-          {/** 导出EXCEL */}
-          <Modal
-            visible={this.state.outputVisible}
-            title="导出EXCEL"
-            onCancel={() => {
-              this.setState({outputVisible: false});
-            }}
-            footer={null}
-          >
-            <Form>
-              <FormItem {...formItemLayout} label="时间">
-                {getFieldDecorator(`time`, {
-                  rules: [{message: '请选择时间范围', required: true}],
-                  initialValue: null
-                })(
-                  <DatePicker
-                    locale={locale}
-                    dateRender={(current) => {
-                      const style = {};
-                      if (current.date() === 1) {
-                        style.border = '1px solid #1890ff';
-                        style.borderRadius = '50%';
-                      }
-                      return (
-                        <div className="ant-calendar-date" style={style}>
-                          {current.date()}
-                        </div>
-                      );
-                    }}
-                  />
-                )}
-              </FormItem>
-              <FormItem {...formItemLayout} label="奖项">
-                {getFieldDecorator(`award`, {
-                  rules: [{message: '请选择奖项', required: true}],
-                  initialValue: optionLevels && optionLevels[0] && optionLevels[0].value || []
-                })(
-                  <Select 
-                    placeholder="请选择奖项"
-                    notFoundContent="暂无数据"
-                  >
-                    {
-                      optionLevels && optionLevels.length ? optionLevels.map((v, i) =>
-                        <Option value={v.value} key={v.value}>{v.title}</Option>
-                      ) : null
-                    }
-                  </Select>
-                )}
-              </FormItem>
-              <div className="ta-c mt-20">
-                <Button style={{ marginRight: 8 }} onClick={() => {
-                  this.handleExcel('fail')
-                }}>
-                  取消
-                </Button>
-                {(function(){
-                  
-                  const name = getFieldValue('award')
-                  const time = getFieldValue('time')
-                  if(name && time) {
-                    const start = moment(time).format('YYYY-MM-DD')
-
-                    if(start) {
-                      return <a download={'订单列表.xlsx'} href={`${configUrl.apiUrl}${configUrl.apiBasePath}/classAwardRecords/exportAwardRecord?name=${name}&start=${start}&end=${start}&access_token=${localStorage.token}` || '#'}>
-                        <Button style={{marginBottom: '5px', marginLeft: '5px'}} type="primary" onClick={() => that.handleExcel('success')}>确定</Button>
-                      </a>
-                    }
-                  } else {
-                    return <Button style={{marginBottom: '5px', marginLeft: '5px'}} disabled={true} type="primary">确定</Button>
-                  }
-                }())}
-                
-              </div>
-            </Form>
-            
-          </Modal>
           {/*更改物流*/}
           <Modal
             visible={this.state.show}
-            title={`${getData && getData.no || ''} 物流信息`}
+            title={`物流信息`}
             okText="确定"
             cancelText="取消"
             footer={null}
@@ -626,13 +521,13 @@ const mapDispatchToProps = dispatch => {
   return {};
 };
 
-const WinningListuuid = state => state.get("rts").get("uuid");
+const PrizeListuuid = state => state.get("rts").get("uuid");
 const getLogisticsDetail = state => state.get("rts").get("getLogisticsDetail");
 
 const mapStateToProps = createStructuredSelector({
-  WinningListuuid,
+  PrizeListuuid,
   getLogisticsDetail,
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Form.create()(WinningList));
+export default connect(mapStateToProps, mapDispatchToProps)(Form.create()(PrizeList));
 

@@ -136,7 +136,12 @@ const menu = [
         id: "consume/2",
         name: "大奖池消耗",
         component: "consume/2"
-      }
+      },
+      {
+        id: "PrizeList",
+        name: "惊喜奖列表",
+        component: "PrizeList"
+      },
     ]
   },
   {
@@ -154,6 +159,25 @@ const menu = [
         name: "申请管理",
         component: "apply"
       },
+    ]
+  },
+  {
+    id: "DefineAward",
+    icon: "printer",
+    name: "定向中奖",
+    component: "DefineAward",
+    children: [
+      {
+        id: "DefineAwardList",
+        name: "定向中奖",
+        component: "DefineAwardList"
+      },
+      {
+        id: "DefineAwardDetail",
+        name: "定向中奖设置",
+        component: "DefineAwardDetail"
+      },
+      
     ]
   },
   {
@@ -230,6 +254,11 @@ const menu = [
         id: "AwardList",
         name: "奖品列表",
         component: "AwardList"
+      },
+      {
+        id: "AwardEdit",
+        name: "抽奖协议设置",
+        component: "AwardEdit"
       },
       {
         id: "WinningList",

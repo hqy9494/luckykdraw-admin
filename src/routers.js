@@ -27,12 +27,27 @@ export default {
         component: 'Record',
         title: '中奖记录'
       },
-      superRecord: {
-        path: 'Record/super',
-        module: 'Records',
-        component: 'SuperRecord',
-        title: '大奖记录'
+      DefineAwardList: {
+        path: 'DefineAward/DefineAwardList',
+        module: 'DefineAward',
+        component: 'DefineAwardList',
+        title: '定向中奖',
+        subs: {
+          DefineAwardSetting: {
+            path: "/detail/:id",
+            module: "DefineAward",
+            component: "DefineAwardSetting",
+            title: "新建定向中奖"
+          }
+        }
       },
+      DefineAwardDetail: {
+        path: 'DefineAward/DefineAwardDetail',
+        module: 'DefineAward',
+        component: 'DefineAwardDetail',
+        title: '定向中奖设置'
+      },
+      
       // 二维码
       qrCode: {
         path: 'qrCodes/qrCode',
@@ -124,6 +139,12 @@ export default {
         module: 'Prizes',
         component: 'Specification',
         title: '商品规格'
+      },
+      PrizeList: {
+        path: 'prizes/PrizeList',
+        module: 'Prizes',
+        component: 'PrizeList',
+        title: '惊喜奖列表',
       },
       // 库存
       balance: {
@@ -339,8 +360,14 @@ export default {
             module: 'Award',
             component: 'AwardListSetting',
             title: '奖项列表设置',
-          }
+          },
         }
+      },
+      AwardEdit: {
+        path: 'Award/AwardEdit',
+        module: 'Award',
+        component: 'AwardEdit',
+        title: '抽奖协议设置'
       },
       AwardManagement: {
         path: 'Award/AwardManagement',
@@ -353,7 +380,13 @@ export default {
             module: 'Award',
             component: 'AwardManagementSetting',
             title: '奖项管理设置',
-          }
+          },
+          AwardWeight: {
+            path: '/management/:id',
+            module: 'Award',
+            component: 'AwardWeight',
+            title: '奖项权重',
+          },
         }
       },
       WinningList: {
