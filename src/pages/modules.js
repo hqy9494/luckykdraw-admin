@@ -55,6 +55,7 @@ import StockAward from "./Prizes/StockAward"
 
 // Award
 import AwardList from "./Award/AwardList"
+import AwardEdit from "./Award/AwardEdit"
 import AwardListSetting from "./Award/AwardListSetting"
 import AwardManagement from "./Award/AwardManagement"
 import AwardManagementSetting from "./Award/AwardManagementSetting"
@@ -118,6 +119,7 @@ const modules = {
   PrizeList,
 
   AwardList,
+  AwardEdit,
   AwardListSetting,
   AwardManagement,
   AwardManagementSetting,

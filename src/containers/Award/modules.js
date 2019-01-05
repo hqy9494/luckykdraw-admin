@@ -8,6 +8,7 @@ import WinningSetting from './WinningSetting';
 import AwardAgainList from './AwardAgainList';
 import AwardAgainSetting from './AwardAgainSetting';
 import AwardWeight from './AwardWeight';
+import AwardEdit from './AwardEdit';
 
 
 const Award = {
@@ -20,6 +21,7 @@ const Award = {
   AwardAgainList,
   AwardAgainSetting,
   AwardWeight,
+  AwardEdit
 };
 
 export default Award;
