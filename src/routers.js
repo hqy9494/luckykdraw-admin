@@ -363,6 +363,12 @@ export default {
           },
         }
       },
+      AwardEdit: {
+        path: 'Award/AwardEdit',
+        module: 'Award',
+        component: 'AwardEdit',
+        title: '抽奖协议设置'
+      },
       AwardManagement: {
         path: 'Award/AwardManagement',
         module: 'Award',

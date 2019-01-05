@@ -256,6 +256,11 @@ const menu = [
         component: "AwardList"
       },
       {
+        id: "AwardEdit",
+        name: "抽奖协议设置",
+        component: "AwardEdit"
+      },
+      {
         id: "WinningList",
         name: "中奖列表",
         component: "WinningList"
