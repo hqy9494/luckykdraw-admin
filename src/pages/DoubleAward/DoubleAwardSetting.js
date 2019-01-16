@@ -9,7 +9,7 @@ import { Col, Row, Form, Input, Switch, Select, Button, message, InputNumber } f
 const FormItem = Form.Item
 const Option = Select.Option
 
-const reg = /^100$|^(\d|[1-9]\d)$/;
+const reg = /^([1-9][0-9]{0,1}|100)$/;
 const formItemLayout = {
   labelCol: { span: 7 },
   wrapperCol: { span: 17 },
@@ -98,7 +98,7 @@ export class DoubleAwardSetting extends React.Component {
 
   handlePercenChange = (e,type) => {
     
-    let proportion = ((100-e)/e).toFixed(2);
+    let proportion = (100/e).toFixed(2);
     console.log('pp',proportion)
     if(type === "class"){
       this.setState({
@@ -116,20 +116,14 @@ export class DoubleAwardSetting extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    if(reg.test(this.state.classPercen) && reg.test(this.state.normalPercen)){
+    if(reg.test(this.state.classPercen)) {
       let classParams = {
         id: this.state.classId,
         type: "class",
         enable: this.state.classEnable,
         proportion: this.state.classProportion,
       }
-      let normalParams = {
-        id: this.state.normalId,
-        type: "normal",
-        enable: this.state.normalEnable,
-        proportion: this.state.normalProportion,
-      }
-      this.props.rts(
+       this.props.rts(
         {
           method: this.state.classId? 'put':'post',
           url: '/DoubleAwardSettings',
@@ -138,9 +132,22 @@ export class DoubleAwardSetting extends React.Component {
         this.uuid,
         'setClass',
         (res = {}) => {
-          message.success("等级奖设置成功！");
+          message.success("等级奖设置成功！",1);
         }
       )
+    }
+    else{
+      message.error("等级奖设置失败！",1)
+    } 
+    
+    if(reg.test(this.state.normalPercen)){
+      let normalParams = {
+        id: this.state.normalId,
+        type: "normal",
+        enable: this.state.normalEnable,
+        proportion: this.state.normalProportion,
+      }
+     
       this.props.rts(
         {
           method: this.state.normalId?'put':'post',
@@ -150,10 +157,13 @@ export class DoubleAwardSetting extends React.Component {
         this.uuid,
         'setNormal',
         (res = {}) => {
-          message.success("轮次奖设置成功！");
+          message.success("轮次奖设置成功！",1);
         }
       )
-    }
+    } 
+    else{
+      message.error("轮次奖设置失败！",1)
+    } 
     
   } 
 
@@ -199,7 +209,7 @@ export class DoubleAwardSetting extends React.Component {
                     rules: [{ message: '输入百分比数值格式错误', required: true,pattern: reg}],
                     initialValue: this.state.classPercen || 0
                   })( 
-                    <InputNumber min={0} max={100} style={{display:'block',float:'left',margin: '0 10px '}} onChange={e => {this.handlePercenChange(e,"class")}}/>
+                    <InputNumber min={1} max={100} style={{display:'block',float:'left',margin: '0 10px '}} onChange={e => {this.handlePercenChange(e,"class")}}/>
                  )}
                   <div style={{float:'left'}}>%，分享后获得总奖金 <strong style={{color: 'red',fontWeight: 'bold',fontSize: '20px'}}>{reg.test(classPercen)?(100-classPercen)+"%":"--"}</strong></div>
                 </FormItem>
@@ -237,7 +247,7 @@ export class DoubleAwardSetting extends React.Component {
                   rules: [{ message: "输入百分比数值格式错误", required: true,pattern: reg}],
                   initialValue: normalPercen || 0
                 })(
-                  <InputNumber min={0} max={100} style={{display:'block',float:'left',margin: '0 10px '}} onChange={e => {this.handlePercenChange(e,"normal")}}/>
+                  <InputNumber min={1} max={100} style={{display:'block',float:'left',margin: '0 10px '}} onChange={e => {this.handlePercenChange(e,"normal")}}/>
                  )}
                 <div style={{float:'left'}}>%，分享后获得总奖金 <strong style={{color: 'red',fontWeight: 'bold',fontSize: '20px'}}>{reg.test(normalPercen)?(100-normalPercen)+"%":"--"}</strong></div>
               </FormItem>
@@ -247,7 +257,7 @@ export class DoubleAwardSetting extends React.Component {
           
           
             <div className="ta-c mt-20">
-              <Button style={{marginRight: 10}} onClick={this.handleCancel}>取消</Button>
+              <Button style={{marginRight: 10}} onClick={()=>window.rel}>取消</Button>
               <Button type="primary" htmlType="submit">确定</Button>
             </div>
           </Form>

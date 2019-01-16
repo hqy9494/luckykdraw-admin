@@ -149,7 +149,7 @@ export class AwardRecord extends React.Component {
               >
                 取消派奖
               </a>
-            </span>
+        </span>
       )
     }];
 
