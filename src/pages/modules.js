@@ -71,6 +71,11 @@ import DefineAwardList from "./DefineAward/DefineAwardList";
 import DefineAwardSetting from "./DefineAward/DefineAwardSetting";
 import DefineAwardDetail from "./DefineAward/DefineAwardDetail";
 
+//Magnifiy
+import DoubleAwardSetting from "./DoubleAward/DoubleAwardSetting";
+import DoubleAwardsList from "./DoubleAward/DoubleAwardsList";
+
+
 const modules = {
   Index,
   Tenant,
@@ -132,7 +137,11 @@ const modules = {
   //定制中将
   DefineAwardList,
   DefineAwardSetting,
-  DefineAwardDetail
+  DefineAwardDetail,
+
+  //奖品翻倍活动
+  DoubleAwardSetting,
+  DoubleAwardsList,
 };
 
 export default modules;

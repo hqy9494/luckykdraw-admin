@@ -277,6 +277,19 @@ const menu = [
       }
     ]
   },
+  {
+    id: "DoubleAward",
+    icon: "coffee",
+    name: "奖品翻倍活动",
+    component: "DoubleAward",
+    children: [
+      {
+        id: "DoubleAwardSetting",
+        name: "翻倍活动设置",
+        component: "DoubleAwardSetting"
+      },
+    ]
+  }
 ];
 
 export default menu;

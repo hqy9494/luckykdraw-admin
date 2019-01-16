@@ -196,6 +196,7 @@ export default class TableExpand extends React.Component {
 		  api.uuid,
 		  'data',
 		  (result = {}) => {
+				console.log(result);
 				if(api.success && typeof api.success==="function"){
 					api.success(result);
 				}

@@ -409,6 +409,27 @@ export default {
           }
         }
       },
+      //奖品翻倍活动
+      DoubleAward: {
+        path: 'DoubleAward',
+        module: 'DoubleAward',
+        component: 'DoubleAward',
+        title: '奖品翻倍活动',
+        subs: {
+          MagnificationSetting: {
+            path: '/DoubleAwardSetting',
+            module: 'DoubleAward',
+            component: 'DoubleAwardSetting',
+            title: '翻倍活动设置',
+          },
+          DoubleAwardsList: {
+            path: '/DoubleAwardsList',
+            module: 'DoubleAward',
+            component: 'DoubleAwardsList',
+            title: '中奖信息',
+          }
+        }
+      },
     }
   }
 };
