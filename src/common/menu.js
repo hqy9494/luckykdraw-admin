@@ -288,6 +288,11 @@ const menu = [
         name: "翻倍活动设置",
         component: "DoubleAwardSetting"
       },
+      {
+        id: "DoubleAwardsList",
+        name: "中奖信息",
+        component: "DoubleAwardsList"
+      }
     ]
   }
 ];

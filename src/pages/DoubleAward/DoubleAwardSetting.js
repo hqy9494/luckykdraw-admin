@@ -116,7 +116,7 @@ export class DoubleAwardSetting extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    if(classPercen>=0 && classPercen>=0 && normalPercen>=0 && normalPercen<=100){
+    if(reg.test(this.state.classPercen) && reg.test(this.state.normalPercen)){
       let classParams = {
         id: this.state.classId,
         type: "class",
