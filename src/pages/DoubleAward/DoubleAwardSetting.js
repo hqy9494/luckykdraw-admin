@@ -52,7 +52,7 @@ export class DoubleAwardSetting extends React.Component {
               normalId: res[0].id,
               normalEnable: res[0].enable,
               normalProportion: res[0].proportion,
-              normalPercen: parseInt(100/(1+res[0].proportion)),
+              // normalPercen: parseInt(100/res[0].proportion),
             })
           }
       });
@@ -72,7 +72,7 @@ export class DoubleAwardSetting extends React.Component {
             classId: res[0].id,
             classEnable: res[0].enable,
             classProportion: res[0].proportion,
-            classPercen: parseInt(100/(1+res[0].proportion)),
+            // classPercen: parseInt(100/res[0].proportion),
           })
         }
       });
@@ -97,17 +97,17 @@ export class DoubleAwardSetting extends React.Component {
   // }
 
   handlePercenChange = (e,type) => {
-    
-    let proportion = (100/e).toFixed(2);
-    console.log('pp',proportion)
+    // console.log(e)
+    let proportion = (e/100).toFixed(4);
+    // console.log('pp',proportion)
     if(type === "class"){
       this.setState({
-        classPercen: e,
+        // classPercen: e,
         classProportion: proportion,
       })
     }else{
       this.setState({
-        normalPercen: e,
+        // normalPercen: e,
         normalProportion: proportion,
       })
     }
@@ -116,13 +116,15 @@ export class DoubleAwardSetting extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    if(reg.test(this.state.classPercen)) {
+    if(reg.test(parseInt(this.state.classProportion*100))) {
       let classParams = {
         id: this.state.classId,
         type: "class",
         enable: this.state.classEnable,
         proportion: this.state.classProportion,
       }
+    //  console.log(classParams)
+
        this.props.rts(
         {
           method: this.state.classId? 'put':'post',
@@ -140,14 +142,14 @@ export class DoubleAwardSetting extends React.Component {
       message.error("等级奖设置失败！",1)
     } 
     
-    if(reg.test(this.state.normalPercen)){
+    if(reg.test(parseInt(this.state.normalProportion*100))){
       let normalParams = {
         id: this.state.normalId,
         type: "normal",
         enable: this.state.normalEnable,
         proportion: this.state.normalProportion,
       }
-     
+    //  console.log(normalParams)
       this.props.rts(
         {
           method: this.state.normalId?'put':'post',
@@ -170,7 +172,7 @@ export class DoubleAwardSetting extends React.Component {
 
   render() {
     const { normalEnable,normalPercen,normalProportion,classEnable,classPercen,classProportion } = this.state;
-    console.log( normalEnable,normalPercen,normalProportion,classEnable,classPercen,classProportion )
+    // console.log( normalEnable,normalPercen,normalProportion,classEnable,classPercen,classProportion )
 
     const { getFieldDecorator } = this.props.form;
     return (
@@ -207,11 +209,11 @@ export class DoubleAwardSetting extends React.Component {
                 <div style={{float:'left'}}>中奖获得总奖金</div>
                   {getFieldDecorator(`classPercen`, {
                     rules: [{ message: '输入百分比数值格式错误', required: true,pattern: reg}],
-                    initialValue: this.state.classPercen || 0
+                    initialValue: this.state.classProportion*100 || 0
                   })( 
                     <InputNumber min={1} max={100} style={{display:'block',float:'left',margin: '0 10px '}} onChange={e => {this.handlePercenChange(e,"class")}}/>
                  )}
-                  <div style={{float:'left'}}>%，分享后获得总奖金 <strong style={{color: 'red',fontWeight: 'bold',fontSize: '20px'}}>{reg.test(classPercen)?(100-classPercen)+"%":"--"}</strong></div>
+                  <div style={{float:'left'}}>%，分享后获得总奖金 <strong style={{color: 'red',fontWeight: 'bold',fontSize: '20px'}}>{reg.test(parseInt(classProportion*100))?(100-classProportion*100)+"%":"--"}</strong></div>
                 </FormItem>
               </Col>
             </Row>
@@ -245,11 +247,11 @@ export class DoubleAwardSetting extends React.Component {
               <div style={{float:'left'}}>中奖获得总奖金</div>
                 {getFieldDecorator(`normalPercen`, {
                   rules: [{ message: "输入百分比数值格式错误", required: true,pattern: reg}],
-                  initialValue: normalPercen || 0
+                  initialValue: normalProportion*100 || 0
                 })(
                   <InputNumber min={1} max={100} style={{display:'block',float:'left',margin: '0 10px '}} onChange={e => {this.handlePercenChange(e,"normal")}}/>
                  )}
-                <div style={{float:'left'}}>%，分享后获得总奖金 <strong style={{color: 'red',fontWeight: 'bold',fontSize: '20px'}}>{reg.test(normalPercen)?(100-normalPercen)+"%":"--"}</strong></div>
+                <div style={{float:'left'}}>%，分享后获得总奖金 <strong style={{color: 'red',fontWeight: 'bold',fontSize: '20px'}}>{reg.test(parseInt(normalProportion*100))?(100-normalProportion*100)+"%":"--"}</strong></div>
               </FormItem>
             </Col>
           

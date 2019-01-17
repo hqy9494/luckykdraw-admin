@@ -11,7 +11,7 @@ import locale from 'antd/lib/locale-provider/zh_CN';
 const Option = Select.Option;
 const Search = Input.Search;
 
-export class AwardRecord extends React.Component {
+export class DoubleAwardsList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -31,9 +31,9 @@ export class AwardRecord extends React.Component {
 
   componentWillReceiveProps(nextProps) {}
 
-  getDoubleAwards = (filter = {},userFilter = {}) => {
+  getDoubleAwards = (filter = {},userFilter = {},ini) => {
     // filter = filter || {};
-    console.log(filter,userFilter)
+    // console.log(filter,userFilter)
     this.props.rts(
       {
         method: "get",
@@ -51,17 +51,23 @@ export class AwardRecord extends React.Component {
           {
             method: "get",
             url: '/DoubleAwardRecords/count',
+            params: {
+              where: filter.where||{},
+            }
+            
           },
           this.uuid,
           "count",
           val => {
             this.setState({ 
-              count:val.count || 0 ,
+              count:userFilter.where?50:val.count,
               dataList:records,
               filter,
               userFilter,
-              page: (filter.skip)/10+1,
-              pageSize: filter.pageSize,
+              page: (filter.skip)/filter.limit+1 || 1,
+              pageSize: filter.limit || 10,
+            },()=>{
+              // console.log(this.state)
             });
           }
         )
@@ -78,34 +84,22 @@ export class AwardRecord extends React.Component {
     //   page: page
     // })
   }
+
   handleShowSizeChange = (page,pageSize) =>{
-
-    this.getDoubleAwards(Object.assign({},this.state.filter,{limit: pageSize,skip:(page-1)*pageSize}),this.state.userFilter)
-    // console.log('page+',page,pageSize)
-    // console.log('page',pageSize)
-
-    // this.setState({
-    //   pageSize: pageSize,
-    //   page: page
-    // })
-
+    this.getDoubleAwards(Object.assign({},this.state.filter,{limit: pageSize,skip:0}),this.state.userFilter)
   }
-//   cancelSendAward = (id) => {
-//     this.props.rts(
-//       {
-//         method: "put",
-//         url: `/BuyTimesAwardRecords`,
-//         params: {
-//           buyTimesAwardRecordId: id
-//         }
-//       },
-//       this.uuid,
-//       "cancel",
-//       cancel => {
-//         this.getRecords()
-//       }
-//     );
-//   };
+
+  handleSearchChange = (value) =>{
+    if(value !== "") {
+      this.getDoubleAwards(Object.assign({},this.state.filter,{limit: 50}),{where: {nickname: value}})
+    } 
+    else {
+      this.getDoubleAwards(Object.assign({},this.state.filter,{skip:0},{limit:10}))
+    }
+    
+  }
+
+
   handleDateChange = (val) => {
     let where = {};
     if(val.length > 0){
@@ -117,8 +111,8 @@ export class AwardRecord extends React.Component {
       where = this.state.filter.where;
     }
     
-    let filter = Object.assign({},{skip:this.state.page},{pageSize:this.state.pageSize},{where:where})
-    console.log("f",filter)
+    let filter = Object.assign({},{skip:0},{limit:this.state.userFilter.where?50:10},{where:where})
+    // console.log("f",filter)
     this.getDoubleAwards(filter,this.state.userFilter)
   }
 
@@ -130,14 +124,13 @@ export class AwardRecord extends React.Component {
       status = {isDoubled:false}
     }else {
       status = {};
-      if(this.state.filter.where) {
-        this.state.filter.where = {
-          
-        }
+      if(this.state.filter.where){
+        delete this.state.filter.where.isDoubled;
       }
     }
+    
     let where = Object.assign({},this.state.filter.where || {},status)
-    let filter = Object.assign({},{skip:this.state.page},{limit:this.state.pageSize},{where:where});
+    let filter = Object.assign({},{skip:0},{limit:this.state.userFilter.where?50:10},{where:where});
     this.getDoubleAwards(filter,this.state.userFilter)
   }
 
@@ -165,7 +158,11 @@ export class AwardRecord extends React.Component {
           dataIndex: "updateAt",
           key: "updateAt",
           render:(text,record)=>{
-            return record.isHexiaoed? moment(text).format('YYYY-MM-DD') : "--";
+            if(record.isHexiaoed){
+              return moment(text).format('YYYY-MM-DD')
+            }else{
+              return "--"
+            }
           }
         },
         {
@@ -173,14 +170,24 @@ export class AwardRecord extends React.Component {
           dataIndex: "isDoubled",
           key: "isDoubled",
           render: (text,record) => {
-            return  record.isDoubled?<span style={{color:"#green"}}>已分享</span> : <span style={{color:"#aaa"}}>未分享</span>
+            // return <span>{record.isDoubled?'已分享':'未分享'}</span>
+            if(record.isDoubled){
+              return <span style={{color:"#3AD0B1"}}>已分享</span>
+            }else{
+              return <span style={{color:"#aaa"}}>未分享</span>
+            }
+            // return  record.isDoubled? : <span style={{color:"#aaa"}}>未分享</span>
           }
         },
         {
           title: "领取状态",
           key: "isHexiaoed",
           render: (text,record) => {
-            return record.isHexiaoed? "已领取" : "未领取";
+            if(record.isHexiaoed){
+              return <span style={{color:"#23b7e5"}}>已领取</span>
+            }else{
+              return <span style={{color:"#f5222d"}}>未领取</span>
+            }
           }
         },
         {
@@ -190,10 +197,19 @@ export class AwardRecord extends React.Component {
         },
         {
           title: "领取金额",
-          dataIndex: "awardRecord.value",
-          key: "awardRecord.value",
+          dataIndex: "awardRecord.prizeValue",
+          key: "awardRecord.prizeValue",
           render: (text,record) => {
-            return record.isHexiaoed? record.awardRecord.value : "--" 
+            if(record.isHexiaoed) {
+              if(record.isDoubled) {
+                return record.doublyValue;
+              }else{
+                return record.value;
+              }
+            }
+            else {
+              return  "--"
+            }
           }
         },
       ]
@@ -209,9 +225,10 @@ export class AwardRecord extends React.Component {
         >重置</Button>
         <Search
           placeholder="用户昵称"
-          onSearch={value => this.getDoubleAwards({limit: 50},{where: {nickname: value}})}
+          onSearch={value => this.handleSearchChange(value)}
           style={{ width: 200, float: "left", margin: 10 }}
           enterButton
+          allowClear
         />
         <Select  style={{width: 200, float: "left", margin: 10}} placeholder="分享状态" onChange={value => this.handleStatusChange(value)}>
             <Option value="true">是</Option>
@@ -275,4 +292,4 @@ const mapStateToProps = createStructuredSelector({
   staff
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AwardRecord);
+export default connect(mapStateToProps, mapDispatchToProps)(DoubleAwardsList);
