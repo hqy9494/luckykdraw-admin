@@ -80,21 +80,27 @@ export class DoubleAwardsList extends React.Component {
   handlePageChange = (page,pageSize) => {    //当前页码变化
     // console.log(page,pageSize)
     this.getDoubleAwards(Object.assign({},this.state.filter,{limit: pageSize,skip: (page-1)*pageSize}),this.state.userFilter)
-    // this.setState({
-    //   page: page
-    // })
+
   }
 
   handleShowSizeChange = (page,pageSize) =>{
     this.getDoubleAwards(Object.assign({},this.state.filter,{limit: pageSize,skip:0}),this.state.userFilter)
   }
 
-  handleSearchChange = (value) =>{
+  
+  handleSearchChange = (key,value) =>{
     if(value !== "") {
-      this.getDoubleAwards(Object.assign({},this.state.filter,{limit: 50}),{where: {nickname: value}})
+      let where = Object.assign({},this.state.userFilter.where||{},{[key]: value});
+      this.getDoubleAwards(Object.assign({},this.state.filter,{limit: 50}),{where:where})
     } 
     else {
-      this.getDoubleAwards(Object.assign({},this.state.filter,{skip:0},{limit:10}))
+      if(this.state.userFilter.where){
+        delete this.state.userFilter.where[key];
+        if(JSON.stringify(this.state.userFilter.where) === "{}"){
+          this.state.userFilter = {};
+        }
+        this.getDoubleAwards(Object.assign({},this.state.filter,{skip:0},{limit:10}),this.state.userFilter);
+      }
     }
     
   }
@@ -159,7 +165,7 @@ export class DoubleAwardsList extends React.Component {
           key: "updateAt",
           render:(text,record)=>{
             if(record.isHexiaoed){
-              return moment(text).format('YYYY-MM-DD')
+              return moment(text).format('YYYY-MM-DD HH:mm:ss')
             }else{
               return "--"
             }
@@ -224,14 +230,14 @@ export class DoubleAwardsList extends React.Component {
         >重置</Button>
         <Search
           placeholder="用户昵称"
-          onSearch={value => this.handleSearchChange(value)}
+          onSearch={value => this.handleSearchChange("nickname",value)}
           style={{ width: 200, float: "left", margin: 10 }}
           enterButton
           allowClear
         />
         <Select  style={{width: 200, float: "left", margin: 10}} placeholder="分享状态" onChange={value => this.handleStatusChange(value)}>
-            <Option value="true">是</Option>
-            <Option value="false">否</Option>
+            <Option value="true">已分享</Option>
+            <Option value="false">未分享</Option>
             <Option value="all">所有状态</Option>
         </Select>
         <RangePicker
@@ -268,12 +274,10 @@ export class DoubleAwardsList extends React.Component {
                   emptyText: '暂无数据'
                 }}
               />
-              {/* <Pagination className="pagination-statistic" defaultPageSize={10} onChange={(page) => {this.getDoubleAwards(Object.assign({}, this.state.filter))}} total={ this.state.dataList.length || 10 } /> */}
             </div>
           </Col>
         </Row>
       </Grid>
-    // <div>123</div>
     );
     
   }

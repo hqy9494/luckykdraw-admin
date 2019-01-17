@@ -259,7 +259,7 @@ export class DoubleAwardSetting extends React.Component {
           
           
             <div className="ta-c mt-20">
-              <Button style={{marginRight: 10}} onClick={()=>window.rel}>取消</Button>
+              <Button style={{marginRight: 10}} onClick={()=>window.location.reload()}>取消</Button>
               <Button type="primary" htmlType="submit">确定</Button>
             </div>
           </Form>
