@@ -176,7 +176,6 @@ export class DoubleAwardsList extends React.Component {
             }else{
               return <span style={{color:"#aaa"}}>未分享</span>
             }
-            // return  record.isDoubled? : <span style={{color:"#aaa"}}>未分享</span>
           }
         },
         {
